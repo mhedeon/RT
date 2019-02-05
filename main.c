@@ -1,46 +1,8 @@
 #include "test.h"
 
-double dot(t_vector *v1, t_vector *v2)
-{
-	return (v1->x * v2->x + v1->y * v2->y + v1->z * v2->z);
-}
 
-t_vector substruct(t_vector *v1, t_vector *v2)
-{
-	t_vector oc;
 
-	oc.x = v1->x - v2->x;
-	oc.y = v1->y - v2->y;
-	oc.z = v1->z - v2->z;
-	return (oc);
-}
-
-double length(t_vector *v1)
-{
-	return (sqrt(dot(v1, v1)));
-}
-
-t_vector multiply(double k, t_vector *v1)
-{
-	t_vector tmp;
-
-	tmp.x = v1->x * k;
-	tmp.y = v1->y * k;
-	tmp.z = v1->z * k;
-	return (tmp);
-}
-
-t_vector add(t_vector *v1, t_vector *v2)
-{
-	t_vector tmp;
-
-	tmp.x = v1->x + v2->x;
-	tmp.y = v1->y + v2->y;
-	tmp.z = v1->z + v2->z;
-	return (tmp);
-}
-
-double* intersect(t_vector *camera, t_vector *dir, t_sphere *sphere, double *ts)
+double* intersect_sphere(t_vector *camera, t_vector *dir, t_sphere *sphere, double *ts)
 {
 	t_vector oc = substruct(camera, &sphere->center);
 	double k1 = dot(dir, dir);
@@ -60,63 +22,106 @@ double* intersect(t_vector *camera, t_vector *dir, t_sphere *sphere, double *ts)
 
 }
 
-double lighting(t_vector *point, t_vector *normal, t_light *light)
+void close_inters(t_test *test, t_vector *origin, t_vector *dir, double min, double max)
 {
-	double in = 0.0;
-	double len = length(normal);
-
-	for (int i = 0; i < 3; i++)
-	{
-		if ((light[i]).type == AMBIENT)
-			in += (light[i]).intens;
-		else
-		{
-			t_vector vec;
-			if ((light[i]).type == POINT)
-				vec = substruct(&(light[i]).pos, point);
-			else
-				vec = (light[i]).pos;
-			double n_dot = dot(normal, &vec);
-			if (n_dot > 0.0)
-				in += (light[i]).intens * n_dot /
-						(len * length(&vec));
-		}
-	}
-	return (in);
-}
-
-SDL_Color trace(t_vector *camera, t_vector *dir, double min, double max, t_sphere *sphere, t_light *light)
-{
-	double close = INFINITY;
-	t_sphere *closest_sph = NULL;
+	test->close = INFINITY;
+	test->close_sph = NULL;
 	double *ts = malloc(sizeof(double) * 2);
 
-	for (int i = 3; i >= 0; i--)
+	for (int i = 0; i < 5; i++)
 	{
-		intersect(camera, dir, &sphere[i], ts);
-		if (ts[0] < close && min < ts[0] && ts[0] < max)
+		intersect_sphere(origin, dir, &test->sphere[i], ts);
+		if (ts[0] < test->close && min < ts[0] && ts[0] < max)
 		{
-			close = ts[0];
-			closest_sph = &sphere[i];
+			test->close = ts[0];
+			test->close_sph = &test->sphere[i];
 		}
-		if (ts[1] < close && min < ts[1] && ts[1] < max)
+		if (ts[1] < test->close && min < ts[1] && ts[1] < max)
 		{
-			close = ts[1];
-			closest_sph = &sphere[i];
+			test->close = ts[1];
+			test->close_sph = &test->sphere[i];
 		}
 	}
 	free(ts);
-	if (closest_sph == NULL)
-		return ((SDL_Color) { 255, 255, 255 });
+}
+
+double lighting(t_test *test, t_vector *point, t_vector *normal, t_vector *view, int specular)
+{
+	double in = 0.0;
+	double len = length(normal);
+	double len_v = length(view);
+
+	for (int i = 0; i < 3; i++)
+	{
+		if (test->light[i].type == AMBIENT)
+			in += (test->light[i]).intens;
+		else
+		{
+			t_vector vec_l;
+			if (test->light[i].type == POINT)
+				vec_l = substruct(&test->light[i].pos, point);
+			else
+				vec_l = test->light[i].pos;
+
+			close_inters(test, point, &vec_l, 0.00001, INFINITY);
+			if (test->close_sph != NULL)
+				continue ;
+
+			 // difuse
+			double n_dot = dot(normal, &vec_l);
+			if (n_dot > 0.0)
+				in += test->light[i].intens * n_dot /
+						(len * length(&vec_l));
+
+			// specular
+			if (specular != -1)
+			{
+				t_vector vec_r = multiply(2.0 * dot(normal, &vec_l), normal);
+				vec_r = substruct(&vec_r, &vec_l);
+				double r_dot = dot(&vec_r, view);
+				if (r_dot > 0.0)
+					in += test->light[i].intens * pow(r_dot / (length(&vec_r) * len_v), specular);
+			}
+		}
+	}
+	if (in > 1.0)
+		in = 1.0;
+	return (in);
+}
+
+SDL_Color trace(t_test *test, t_vector *origin, t_vector *dir, double min, double max, int depth)
+{
+	double close;
+	t_sphere *close_sph;
+	close_inters(test, origin, dir,  min, max);
+
+	close = test->close;
+	close_sph = test->close_sph;
+
+	if (close_sph == NULL)
+		return ((SDL_Color) { 0, 0, 0 });
+
 	t_vector tmp = multiply(close, dir);
-	t_vector point = add(camera, &tmp);
-	t_vector normal = substruct(&point, &closest_sph->center);
+	t_vector point = add(origin, &tmp);
+	t_vector normal = substruct(&point, &close_sph->center);
 	normal = multiply(1.0 / length(&normal), &normal);
 
-	close = lighting(&point, &normal, light);
-	return ((SDL_Color) {
-		(int)(close * closest_sph->color.r), (int)(close * closest_sph->color.g),
-			(int)(close * closest_sph->color.b) });
+	t_vector view = multiply(-1.0, dir);
+	close = lighting(test, &point, &normal, &view, close_sph->specular);
+	SDL_Color local_color = { (Uint8)(close * close_sph->color.r),
+								(Uint8)(close * close_sph->color.g),
+								(Uint8)(close * close_sph->color.b) };
+
+	if (close_sph->reflective <= 0.0 || depth <= 0)
+		return (local_color);
+
+	t_vector ray = reflect(&view, &normal);
+	
+	SDL_Color ref_c = trace(test, &point, &ray, 0.0001, max, depth - 1);
+	//printf("ers\n");
+	return ((SDL_Color) { (Uint8)((1.0 - close_sph->reflective) * local_color.r + close_sph->reflective * ref_c.r),
+							(Uint8)((1.0 - close_sph->reflective) * local_color.g + close_sph->reflective * ref_c.g),
+							(Uint8)((1.0 - close_sph->reflective) * local_color.b + close_sph->reflective * ref_c.b) });
 }
 
 void put_pixel(t_test *test, int x, int y)
@@ -131,25 +136,38 @@ int main(int ac, char **av)
 {
 	t_test *test = (t_test *)malloc(sizeof(t_test));
 	init(test);
-	t_vector camera = { 0.0, 0.0, 0.0 };
-	t_sphere sphere[4] = { { { 0.0, -1.0, 3.0 }, 1.0, { 255, 0, 0 } },
-							{ { 2.0, 0.0, 4.0 }, 1.0, { 0, 0, 255 } },
-							{ { -2.0, 0.0, 4.0 }, 1.0, { 0, 255, 0} },
-							{ { 0.0, -5001, 0.0}, 5000.0, {255, 255, 0} } };
+	t_vector camera = { 0.0, 0.0, -1.5 };
+	t_sphere sphere[5] = { { { 0.0, -1.0, 3.0 }, 1.0, { 255, 0, 0 }, 500, 0.2 },
+							{ { 2.0, 0.0, 4.0 }, 1.0, { 0, 0, 255 }, 500, 0.3 },
+							{ { -2.0, 0.0, 4.0 }, 1.0, { 0, 255, 0}, 10, 0.4 },
+							{ { 1.0, 1.0, 1.0}, 0.3, {255, 255, 0}, 1000, 0.5 },
+							{ { 0.0, 1.5, 3.5}, 0.8, { 123, 123, 123}, 150, 0.3} };
 	t_light light[3] = { { AMBIENT, 0.2, { 0.0, 0.0, 0.0 } },
-						{ POINT, 0.8, {2.0, 1.0, 0.0 } },
+						{ POINT, 0.6, {2.0, 1.0, 0.0 } },
 						{ DIRECTIONAL, 0.2, { 1.0, 4.0, 4.0 } } };
+
+	test->sphere[0] = sphere[0];
+	test->sphere[1] = sphere[1];
+	test->sphere[2] = sphere[2];
+	test->sphere[3] = sphere[3];
+	test->sphere[4] = sphere[4];
+	test->light[0] = light[0];
+	test->light[1] = light[1];
+	test->light[2] = light[2];
+	test->camera = camera;
+
+
 
 	for (int y = -(SCREEN_HEIGHT / 2); y < SCREEN_HEIGHT / 2; y++)
 	{
 		for (int x = -(SCREEN_WIDTH / 2); x < SCREEN_WIDTH / 2; x++)
 		{
-			// t_vector direction = { (double)x * 1.0 / (double)SCREEN_WIDTH, (double)y / 1.0 / (double)SCREEN_HEIGHT, 1.0 };
+			
 			t_vector direction = { (double)x * 1.0 / (double)SCREEN_WIDTH, (double)y * 1.0 / (double)SCREEN_HEIGHT, 1.0 };
-			test->color = trace(&camera, &direction, 1, INFINITY, sphere, light);
+			test->dir = direction;
+			test->color = trace(test, &test->camera, &test->dir, 1.0, INFINITY, 10);
 			put_pixel(test, x, y);
 		}
-		//screen_upd(test);
 	}
 	screen_upd(test);
 	SDL_Event e;

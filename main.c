@@ -22,6 +22,24 @@ double* intersect_sphere(t_vector *camera, t_vector *dir, t_sphere *sphere, doub
 
 }
 
+
+double *intersect_plane(t_vector *camera, t_vector *dir, t_sphere *sphere, double *ts)
+{
+	t_vector C = { 0.0, -0.5, 0.0 };
+	t_vector N = { 0.0, 1.0, 0.0 };
+	t_vector tmp = substruct(camera, &C);
+	ts[0] = -dot(&tmp, &N);
+	ts[1] = dot(dir, &N);
+	if (ts[1] != 0.0)
+	{
+		ts[0] = ts[0] / ts[1];
+		ts[1] = INFINITY;
+		return (ts);
+	}
+	ts[0] = INFINITY;
+	ts[1] = INFINITY;
+	return (ts);
+}
 void close_inters(t_test *test, t_vector *origin, t_vector *dir, double min, double max)
 {
 	test->close = INFINITY;
@@ -30,7 +48,10 @@ void close_inters(t_test *test, t_vector *origin, t_vector *dir, double min, dou
 
 	for (int i = 0; i < 5; i++)
 	{
-		intersect_sphere(origin, dir, &test->sphere[i], ts);
+		if (i == 3)
+			intersect_plane(origin, dir, &test->sphere[i], ts);
+		else
+			intersect_sphere(origin, dir, &test->sphere[i], ts);
 		if (ts[0] < test->close && min < ts[0] && ts[0] < max)
 		{
 			test->close = ts[0];
@@ -103,8 +124,18 @@ SDL_Color trace(t_test *test, t_vector *origin, t_vector *dir, double min, doubl
 
 	t_vector tmp = multiply(close, dir);
 	t_vector point = add(origin, &tmp);
-	t_vector normal = substruct(&point, &close_sph->center);
-	normal = multiply(1.0 / length(&normal), &normal);
+	t_vector normal;
+	if (close_sph->radius == 5000.0)
+	{
+		normal.x = 0.0;
+		normal.y = 1.0;
+		normal.z = 0.0;
+	}
+	else
+	{
+		normal = substruct(&point, &close_sph->center);
+		normal = multiply(1.0 / length(&normal), &normal);
+	}
 
 	t_vector view = multiply(-1.0, dir);
 	close = lighting(test, &point, &normal, &view, close_sph->specular);
@@ -118,7 +149,6 @@ SDL_Color trace(t_test *test, t_vector *origin, t_vector *dir, double min, doubl
 	t_vector ray = reflect(&view, &normal);
 	
 	SDL_Color ref_c = trace(test, &point, &ray, 0.0001, max, depth - 1);
-	//printf("ers\n");
 	return ((SDL_Color) { (Uint8)((1.0 - close_sph->reflective) * local_color.r + close_sph->reflective * ref_c.r),
 							(Uint8)((1.0 - close_sph->reflective) * local_color.g + close_sph->reflective * ref_c.g),
 							(Uint8)((1.0 - close_sph->reflective) * local_color.b + close_sph->reflective * ref_c.b) });
@@ -132,19 +162,34 @@ void put_pixel(t_test *test, int x, int y)
 		set_pixel(test, &test->color, x, y);
 }
 
+void go(t_test *test)
+{
+	for (int y = test->start; y < test->end; y++)
+	{
+		for (int x = -(SCREEN_WIDTH / 2); x < SCREEN_WIDTH / 2; x++)
+		{
+
+			t_vector direction = { (double)x * 1.0 / (double)SCREEN_WIDTH, (double)y * 1.0 / (double)SCREEN_HEIGHT, 1.0 };
+			test->dir = direction;
+			test->color = trace(test, &test->camera, &test->dir, 1.0, INFINITY, 3);
+			put_pixel(test, x, y);
+		}
+	}
+}
+
 int main(int ac, char **av)
 {
 	t_test *test = (t_test *)malloc(sizeof(t_test));
 	init(test);
-	t_vector camera = { 0.0, 0.0, -1.5 };
-	t_sphere sphere[5] = { { { 0.0, -1.0, 3.0 }, 1.0, { 255, 0, 0 }, 500, 0.2 },
-							{ { 2.0, 0.0, 4.0 }, 1.0, { 0, 0, 255 }, 500, 0.3 },
-							{ { -2.0, 0.0, 4.0 }, 1.0, { 0, 255, 0}, 10, 0.4 },
-							{ { 1.0, 1.0, 1.0}, 0.3, {255, 255, 0}, 1000, 0.5 },
+	t_vector camera = { 0.0, 0.5, -1.5 };
+	t_sphere sphere[5] = { { { 0.0, -0.5, 3.0 }, 1.0, { 255, 0, 0 }, 1000, 0.2 },
+							{ { 2.0, 0.5, 4.0 }, 1.0, { 0, 0, 255 }, 500, 0.3 },
+							{ { -2.0, 0.5, 4.0 }, 1.0, { 0, 255, 0}, 10, 0.4 },
+							{ { 0.0, 0.0, 0.0}, 5000.0, {255, 255, 0}, 100, 0.2 },
 							{ { 0.0, 1.5, 3.5}, 0.8, { 123, 123, 123}, 150, 0.3} };
-	t_light light[3] = { { AMBIENT, 0.2, { 0.0, 0.0, 0.0 } },
-						{ POINT, 0.6, {2.0, 1.0, 0.0 } },
-						{ DIRECTIONAL, 0.2, { 1.0, 4.0, 4.0 } } };
+	t_light light[3] = { { AMBIENT, 0.1, { 0.0, 0.0, 0.0 } },
+						{ POINT, 0.8, {2.0, 2.0, 0.0 } },
+						{ DIRECTIONAL, 0.0, { 1.0, 4.0, 4.0 } } };
 
 	test->sphere[0] = sphere[0];
 	test->sphere[1] = sphere[1];
@@ -156,8 +201,6 @@ int main(int ac, char **av)
 	test->light[2] = light[2];
 	test->camera = camera;
 
-
-
 	for (int y = -(SCREEN_HEIGHT / 2); y < SCREEN_HEIGHT / 2; y++)
 	{
 		for (int x = -(SCREEN_WIDTH / 2); x < SCREEN_WIDTH / 2; x++)
@@ -165,7 +208,7 @@ int main(int ac, char **av)
 			
 			t_vector direction = { (double)x * 1.0 / (double)SCREEN_WIDTH, (double)y * 1.0 / (double)SCREEN_HEIGHT, 1.0 };
 			test->dir = direction;
-			test->color = trace(test, &test->camera, &test->dir, 1.0, INFINITY, 10);
+			test->color = trace(test, &test->camera, &test->dir, 1.0, INFINITY, 3);
 			put_pixel(test, x, y);
 		}
 	}
@@ -173,10 +216,50 @@ int main(int ac, char **av)
 	SDL_Event e;
 	while (1)
 	{
-		if (SDL_PollEvent(&e))
+		while (SDL_PollEvent(&e))
+		{
 			if (e.type == SDL_QUIT ||
 				(KEY == SDLK_ESCAPE))
-				break ;
+				break;
+			if (KEY == SDLK_LEFT)
+			{
+				test->camera.x -= 0.25;
+				printf("go left\n");
+			}
+			if (KEY == SDLK_RIGHT)
+			{
+				test->camera.x += 0.25;
+				printf("go right\n");
+			}
+			if (KEY == SDLK_UP)
+			{
+				test->camera.y += 0.25;
+				printf("go up\n");
+			}
+			if (KEY == SDLK_DOWN)
+			{
+				test->camera.y -= 0.25;
+				printf("go down\n");
+			}
+			if (e.type == SDL_KEYDOWN)
+			{
+				SDL_Thread *thread[THREADS];
+				t_test ttt[THREADS];
+
+				for (int i = 0; i < THREADS; i++)
+				{
+					ttt[i] = *test;
+					ttt[i].start = i * SCREEN_HEIGHT / THREADS - SCREEN_HEIGHT / 2;
+					ttt[i].end = (i + 1) * SCREEN_HEIGHT / THREADS - SCREEN_HEIGHT / 2;
+					thread[i] = SDL_CreateThread(go, "go", (void(__cdecl *)(t_test *))&ttt[i]);
+					printf("[%d] start: %d | end: %d\n", i, ttt[i].start, ttt[i].end);
+				}
+				for (int i = 0; i < THREADS; i++)
+					SDL_WaitThread(thread[i], NULL);
+				screen_upd(test);
+				printf("DONE\n");
+			}
+		}
 	}
 
 	garbage(test);

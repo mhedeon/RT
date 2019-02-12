@@ -6,7 +6,7 @@
 /*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/11 17:27:52 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/02/11 19:12:10 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/02/12 22:55:05 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,8 @@ void close_inters(t_rtv *rtv, t_vector *origin, t_vector *dir, double min, doubl
 			intersect_plane(origin, dir, tmp, ts);
 		else if (tmp->type == SPHERE)
 			intersect_sphere(origin, dir, tmp, ts);
+		else if (tmp->type == CYLINDER)
+			intersect_cylinder(origin, dir, tmp, ts);
 		if (ts[0] < rtv->close && min < ts[0] && ts[0] < max)
 		{
 			rtv->close = ts[0];
@@ -37,28 +39,6 @@ void close_inters(t_rtv *rtv, t_vector *origin, t_vector *dir, double min, doubl
 		}
 		tmp = tmp->next;
 	}
-
-	// if (rtv->close_sph == NULL)
-	// 	printf("NULL\n");
-	// else
-	// 	printf("----------------------------------------\n");
-	// for (int i = 0; i < 5; i++)
-	// {
-	// 	if (i == 3)
-	// 		intersect_plane(origin, dir, &rtv->sphere[i], ts);
-	// 	else
-	// 		intersect_sphere(origin, dir, &rtv->sphere[i], ts);
-	// 	if (ts[0] < rtv->close && min < ts[0] && ts[0] < max)
-	// 	{
-	// 		rtv->close = ts[0];
-	// 		rtv->close_sph = &rtv->sphere[i];
-	// 	}
-	// 	if (ts[1] < rtv->close && min < ts[1] && ts[1] < max)
-	// 	{
-	// 		rtv->close = ts[1];
-	// 		rtv->close_sph = &rtv->sphere[i];
-	// 	}
-	// }
 	free(ts);
 }
 
@@ -94,5 +74,28 @@ double *intersect_plane(t_vector *camera, t_vector *dir, t_object *plane, double
 	}
 	ts[0] = INFINITY;
 	ts[1] = INFINITY;
+	return (ts);
+}
+
+double *intersect_cylinder(t_vector *camera, t_vector *dir, t_object *cylinder, double *ts)
+{
+	t_vector oc = substruct(*camera, cylinder->center);
+	double k1 = dot(*dir, *dir) - dot(*dir, cylinder->normal) * dot(*dir, cylinder->normal);
+	double k2 = 2.0 * ( dot(*dir, oc) - dot(*dir, cylinder->normal) * dot(oc, cylinder->normal) );
+	double k3 = dot(oc, oc) - pow(dot(oc, cylinder->normal), 2.0) - pow(cylinder->radius, 2.0);
+
+	double dis = k2 * k2 - 4.0 * k1 * k3;
+	if (dis < 0.0)
+	{
+		ts[0] = INFINITY;
+		ts[1] = INFINITY;
+		return (ts);
+	}
+	ts[0] = (-k2 + sqrt(dis)) / (2.0 * k1);
+	// if (ts[0] < 0.0 || ts[0] > 9.0)
+	// 	ts[0] = INFINITY;
+	ts[1] = (-k2 - sqrt(dis)) / (2.0 * k1);
+	// if (ts[1] < 0.0 || ts[1] > 9.0)
+	// 	ts[1] = INFINITY;
 	return (ts);
 }

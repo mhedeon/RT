@@ -6,7 +6,7 @@
 /*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/11 16:08:48 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/02/11 20:46:22 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/02/12 20:59:18 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,11 +94,12 @@ typedef struct	s_rtv
 
 
 /*
-**	main.c
+**	intersect.c
 */
 void close_inters(t_rtv *rtv, t_vector *origin, t_vector *dir, double min, double max);
 double *intersect_sphere(t_vector *camera, t_vector *dir, t_object *sphere, double *ts);
 double *intersect_plane(t_vector *camera, t_vector *dir, t_object *plane, double *ts);
+double *intersect_cylinder(t_vector *camera, t_vector *dir, t_object *cylinder, double *ts);
 
 /*
 **	window,c

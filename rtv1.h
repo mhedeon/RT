@@ -6,7 +6,7 @@
 /*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/11 16:08:48 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/02/12 20:59:18 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/02/13 15:03:36 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,7 @@ typedef struct	s_object
 	double		radius;
 	double		specular;
 	double		reflective;
+	int p;
 	struct s_object *next;
 }				t_object;
 
@@ -124,7 +125,7 @@ t_vector reflect(t_vector v1, t_vector v2);
 /*
 **	objects.c
 */
-t_object *new_obj(t_object *obj, int type, t_vector center, t_vector normal, SDL_Color color, double radius, double specular, double reflect);
+t_object *new_obj(t_object *obj, int type, t_vector center, t_vector normal, SDL_Color color, double radius, double specular, double reflect, int tmp);
 t_light *new_light(t_light *l, int type, double intens, t_vector pos);
 
 #endif

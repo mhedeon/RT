@@ -6,7 +6,7 @@
 /*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/11 15:42:36 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/02/12 23:11:37 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/02/13 17:27:39 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ double lighting(t_rtv *rtv, t_vector *point, t_vector *normal, t_vector *view, i
 						(len * length(vec_l));
 
 			// specular
-			if (specular != -1)
+			if (specular != -1.0)
 			{
 				t_vector vec_r = multiply(2.0 * dot(*normal, vec_l), *normal);
 				vec_r = substruct(vec_r, vec_l);
@@ -122,6 +122,8 @@ void go(t_rtv *rtv)
 		{
 
 			t_vector direction = { (double)x * 1.0 / (double)SCREEN_WIDTH, (double)y * 1.0 / (double)SCREEN_HEIGHT, 1.0 };
+			direction.x = direction.x * cos(1) + direction.z * sin(1);
+			direction.z = direction.x * sin(1) + direction.z * cos(1);
 			rtv->dir = direction;
 			rtv->color = trace(rtv, &rtv->camera, &rtv->dir, 1.0, INFINITY, 3);
 			put_pixel(rtv, x, y);
@@ -152,21 +154,22 @@ int main(int ac, char **av)
 {
 	t_rtv *rtv = (t_rtv *)malloc(sizeof(t_rtv));
 	init(rtv);
+	
 	rtv->obj = new_obj(rtv->obj, PLANE, (t_vector) { 0.0, -0.5, 0.0}, (t_vector) { 0.0, 1.0, 0.0 },
-											(SDL_Color) {255, 255, 0}, 0.0, -1.0, 0.0);
+											(SDL_Color) {255, 255, 0}, 0.0, 1000.0, 0.1, 0);
 	rtv->obj = new_obj(rtv->obj, SPHERE, (t_vector) { 0.0, -0.25, 3.0 }, (t_vector) { 0.0, 0.0, 0.0 },
-											(SDL_Color) {255, 0, 0}, 1.0, 1000.0, 0.2);
+											(SDL_Color) {255, 0, 0}, 1.0, 1000.0, 0.2, 0);
 	rtv->obj = new_obj(rtv->obj, SPHERE, (t_vector) { 2.0, 0.5, 4.0 }, (t_vector) { 0.0, 0.0, 0.0 },
-											(SDL_Color) {0, 0, 255}, 1.0, 500.0, 0.3);
+											(SDL_Color) {0, 0, 255}, 1.0, 500.0, 0.3, 0);
 	rtv->obj = new_obj(rtv->obj, SPHERE, (t_vector) { -2.0, 0.5, 4.0 }, (t_vector) { 0.0, 0.0, 0.0 },
-											(SDL_Color) {0, 255, 0}, 1.0, 10.0, 0.4);
+											(SDL_Color) {0, 255, 0}, 1.0, 10000.0, -1.0, 0);
 	rtv->obj = new_obj(rtv->obj, SPHERE, (t_vector) { 0.0, 1.5, 3.5 }, (t_vector) { 0.0, 0.0, 0.0 },
-											(SDL_Color) {123, 123, 123}, 1.0, 150.0, 0.3);
+											(SDL_Color) {123, 123, 123}, 1.0, 150.0, 0.3, 0);
 	rtv->obj = new_obj(rtv->obj, CYLINDER, (t_vector) { 3.0, 1.0, 4.0 }, (t_vector) { 0.0, 1.0, 0.0 },
-											(SDL_Color) {0, 255, 255}, 1.0, 150.0, 0.3);
+											(SDL_Color) {0, 255, 255}, 1.0, 10.0, 0.0, 0);
 
 	rtv->light = new_light(rtv->light, AMBIENT, 0.2, (t_vector) { 0.0, 0.0, 0.0 });
-	rtv->light = new_light(rtv->light, POINT, 0.8, (t_vector) { 2.0, 0.0, 0.0 });
+	rtv->light = new_light(rtv->light, POINT, 0.4, (t_vector) { 2.0, 1.0, 0.0 });
 	rtv->light = new_light(rtv->light, DIRECTIONAL, 0.0, (t_vector) { 1.0, 4.0, 4.0 });
 
 	t_vector camera = { 0.0, 0.5, -5.0 };

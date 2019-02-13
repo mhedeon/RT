@@ -6,7 +6,7 @@
 /*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/11 17:27:52 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/02/12 22:55:05 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/02/13 16:01:52 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,10 +92,6 @@ double *intersect_cylinder(t_vector *camera, t_vector *dir, t_object *cylinder, 
 		return (ts);
 	}
 	ts[0] = (-k2 + sqrt(dis)) / (2.0 * k1);
-	// if (ts[0] < 0.0 || ts[0] > 9.0)
-	// 	ts[0] = INFINITY;
 	ts[1] = (-k2 - sqrt(dis)) / (2.0 * k1);
-	// if (ts[1] < 0.0 || ts[1] > 9.0)
-	// 	ts[1] = INFINITY;
 	return (ts);
 }

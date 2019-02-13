@@ -6,13 +6,13 @@
 /*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/11 20:45:03 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/02/11 20:45:29 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/02/13 15:02:52 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "rtv1.h"
 
-t_object *new_obj(t_object *obj, int type, t_vector center, t_vector normal, SDL_Color color, double radius, double specular, double reflect)
+t_object *new_obj(t_object *obj, int type, t_vector center, t_vector normal, SDL_Color color, double radius, double specular, double reflect, int tmp)
 {
 	t_object	*start;
 	t_object	*new;
@@ -28,6 +28,9 @@ t_object *new_obj(t_object *obj, int type, t_vector center, t_vector normal, SDL
 	new->radius = radius;
 	new->specular = specular;
 	new->reflective = reflect;
+	///////////
+	new->p = tmp;
+	///////////
 	new->next = NULL;
 	if (obj == NULL)
 		obj = new;

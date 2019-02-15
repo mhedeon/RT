@@ -6,7 +6,7 @@
 /*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/11 17:27:52 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/02/13 16:01:52 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/02/15 21:43:38 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void close_inters(t_rtv *rtv, t_vector *origin, t_vector *dir, double min, doubl
 		if (ts[0] < rtv->close && min < ts[0] && ts[0] < max)
 		{
 			rtv->close = ts[0];
-			rtv->close_sph = rtv->obj;
+			rtv->close_sph = tmp;
 		}
 		if (ts[1] < rtv->close && min < ts[1] && ts[1] < max)
 		{

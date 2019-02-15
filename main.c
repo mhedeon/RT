@@ -6,7 +6,7 @@
 /*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/11 15:42:36 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/02/13 17:27:39 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/02/15 21:45:59 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,17 +114,40 @@ SDL_Color trace(t_rtv *rtv, t_vector *origin, t_vector *dir, double min, double 
 							(Uint8)((1.0 - close_sph->reflective) * local_color.b + close_sph->reflective * ref_c.b), 0 });
 }
 
+t_vector rot_y(t_vector v, int angle)
+{
+	double x = v.x;
+	double z = v.z;
+	v.x = x * cos(RAD(angle)) + z * sin(RAD(angle));
+	v.z = -x * sin(RAD(angle)) + z * cos(RAD(angle));
+	return (v);
+}
+
+t_vector rot_x(t_vector v, int angle)
+{
+	double y = v.y;
+	double z = v.z;
+	v.y = y * cos(RAD(angle)) + z * sin(RAD(angle));
+	v.z = -y * sin(RAD(angle)) + z * cos(RAD(angle));
+	return (v);
+}
+
+t_vector direction(int x, int y, int angle_x, int angle_y)
+{
+	t_vector direction = { (double)x * 1.0 / (double)SCREEN_WIDTH, (double)y * 1.0 / (double)SCREEN_HEIGHT, 1.0 };
+	direction = rot_x(direction, angle_x);
+	direction = rot_y(direction, angle_y);
+	direction = normalize(direction);
+	return (direction);
+}
+
 void go(t_rtv *rtv)
 {
 	for (int y = rtv->start; y < rtv->end; y++)
 	{
 		for (int x = -(SCREEN_WIDTH / 2); x < SCREEN_WIDTH / 2; x++)
 		{
-
-			t_vector direction = { (double)x * 1.0 / (double)SCREEN_WIDTH, (double)y * 1.0 / (double)SCREEN_HEIGHT, 1.0 };
-			direction.x = direction.x * cos(1) + direction.z * sin(1);
-			direction.z = direction.x * sin(1) + direction.z * cos(1);
-			rtv->dir = direction;
+			rtv->dir = direction(x, y, rtv->angle_x, rtv->angle_y);
 			rtv->color = trace(rtv, &rtv->camera, &rtv->dir, 1.0, INFINITY, 3);
 			put_pixel(rtv, x, y);
 		}
@@ -154,22 +177,29 @@ int main(int ac, char **av)
 {
 	t_rtv *rtv = (t_rtv *)malloc(sizeof(t_rtv));
 	init(rtv);
+	rtv->angle_x = 0;
+	rtv->angle_y = 0;
 	
-	rtv->obj = new_obj(rtv->obj, PLANE, (t_vector) { 0.0, -0.5, 0.0}, (t_vector) { 0.0, 1.0, 0.0 },
-											(SDL_Color) {255, 255, 0}, 0.0, 1000.0, 0.1, 0);
+	rtv->obj = new_obj(rtv->obj, CYLINDER, (t_vector) { 3.0, 1.0, 4.0 }, (t_vector) { 0.0, 1.0, 0.0 },
+											(SDL_Color) {0, 255, 255}, 1.0, 100000, 0.5, 0);
 	rtv->obj = new_obj(rtv->obj, SPHERE, (t_vector) { 0.0, -0.25, 3.0 }, (t_vector) { 0.0, 0.0, 0.0 },
 											(SDL_Color) {255, 0, 0}, 1.0, 1000.0, 0.2, 0);
+	rtv->obj = new_obj(rtv->obj, PLANE, (t_vector) { 0.0, -0.5, 0.0}, (t_vector) { 0.0, 1.0, 0.0 },
+											(SDL_Color) {255, 255, 0}, 0.0, -1, 0.1, 0);
 	rtv->obj = new_obj(rtv->obj, SPHERE, (t_vector) { 2.0, 0.5, 4.0 }, (t_vector) { 0.0, 0.0, 0.0 },
 											(SDL_Color) {0, 0, 255}, 1.0, 500.0, 0.3, 0);
 	rtv->obj = new_obj(rtv->obj, SPHERE, (t_vector) { -2.0, 0.5, 4.0 }, (t_vector) { 0.0, 0.0, 0.0 },
 											(SDL_Color) {0, 255, 0}, 1.0, 10000.0, -1.0, 0);
 	rtv->obj = new_obj(rtv->obj, SPHERE, (t_vector) { 0.0, 1.5, 3.5 }, (t_vector) { 0.0, 0.0, 0.0 },
 											(SDL_Color) {123, 123, 123}, 1.0, 150.0, 0.3, 0);
-	rtv->obj = new_obj(rtv->obj, CYLINDER, (t_vector) { 3.0, 1.0, 4.0 }, (t_vector) { 0.0, 1.0, 0.0 },
-											(SDL_Color) {0, 255, 255}, 1.0, 10.0, 0.0, 0);
 
-	rtv->light = new_light(rtv->light, AMBIENT, 0.2, (t_vector) { 0.0, 0.0, 0.0 });
-	rtv->light = new_light(rtv->light, POINT, 0.4, (t_vector) { 2.0, 1.0, 0.0 });
+	double xx = rtv->obj->normal.x;
+	double yy = rtv->obj->normal.y;
+	rtv->obj->normal.x = xx * cos(RAD(-45)) - yy * sin(RAD(-45));
+	rtv->obj->normal.y = -xx * sin(RAD(-45)) + yy * cos(RAD(-45));
+
+	rtv->light = new_light(rtv->light, AMBIENT, 0.1, (t_vector) { 0.0, 0.0, 0.0 });
+	rtv->light = new_light(rtv->light, POINT, 1.0, (t_vector) { 2.0, 1.0, 0.0 });
 	rtv->light = new_light(rtv->light, DIRECTIONAL, 0.0, (t_vector) { 1.0, 4.0, 4.0 });
 
 	t_vector camera = { 0.0, 0.5, -5.0 };
@@ -185,24 +215,38 @@ int main(int ac, char **av)
 			break;
 		if (KEY == SDLK_LEFT)
 		{
-			rtv->camera.x -= 0.25;
+			// rtv->camera.x -= 0.25;
+			rtv->dir = direction(0, 0, 0, rtv->angle_y - 90);
+			rtv->camera = add(rtv->camera, multiply(0.25, rtv->dir));
 			printf("go left\n");
 		}
 		if (KEY == SDLK_RIGHT)
 		{
-			rtv->camera.x += 0.25;
+			// rtv->camera.x += 0.25;
+			rtv->dir = direction(0, 0, 0, rtv->angle_y + 90);
+			rtv->camera = add(rtv->camera, multiply(0.25, rtv->dir));
 			printf("go right\n");
 		}
 		if (KEY == SDLK_UP)
 		{
-			rtv->camera.y += 0.25;
+			rtv->dir = direction(0, 0, rtv->angle_x, rtv->angle_y);
+			rtv->camera = add(rtv->camera, multiply(0.25, rtv->dir));
 			printf("go up\n");
 		}
 		if (KEY == SDLK_DOWN)
 		{
-			rtv->camera.y -= 0.25;
+			rtv->dir = direction(0, 0, rtv->angle_x, rtv->angle_y);
+			rtv->camera = add(rtv->camera, multiply(-0.25, rtv->dir));
 			printf("go down\n");
 		}
+		if (KEY == SDLK_w)
+			rtv->angle_x -= 5;
+		if (KEY == SDLK_s)
+			rtv->angle_x += 5;
+		if (KEY == SDLK_a)
+			rtv->angle_y -= 5;
+		if (KEY == SDLK_d)
+			rtv->angle_y += 5;
 		if (e.type == SDL_KEYDOWN)
 		{
 			threads(rtv);

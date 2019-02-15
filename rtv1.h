@@ -6,7 +6,7 @@
 /*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/11 16:08:48 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/02/13 15:03:36 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/02/15 21:44:00 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,10 +23,16 @@
 # include <float.h>
 # include "limits.h"
 
-# define SCREEN_WIDTH 800
-# define SCREEN_HEIGHT 800
+# define SCREEN_WIDTH 600
+# define SCREEN_HEIGHT 600
 
 # define THREADS 8
+
+
+/*
+**	from radians to degrees
+*/
+# define RAD(a) ((double)a * M_PI / 180.0)
 
 /*
 **	types of light
@@ -89,6 +95,9 @@ typedef struct	s_rtv
 	t_object *obj;
 	t_light *light;
 
+	int angle_y;
+	int angle_x;
+
 	int start;
 	int end;
 }				t_rtv;
@@ -121,6 +130,7 @@ double length(t_vector v1);
 t_vector multiply(double k, t_vector v1);
 t_vector add(t_vector v1, t_vector v2);
 t_vector reflect(t_vector v1, t_vector v2);
+t_vector normalize(t_vector v);
 
 /*
 **	objects.c

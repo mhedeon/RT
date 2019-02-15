@@ -6,7 +6,7 @@
 /*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/11 15:42:36 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/02/15 21:45:59 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/02/15 22:04:00 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -185,7 +185,7 @@ int main(int ac, char **av)
 	rtv->obj = new_obj(rtv->obj, SPHERE, (t_vector) { 0.0, -0.25, 3.0 }, (t_vector) { 0.0, 0.0, 0.0 },
 											(SDL_Color) {255, 0, 0}, 1.0, 1000.0, 0.2, 0);
 	rtv->obj = new_obj(rtv->obj, PLANE, (t_vector) { 0.0, -0.5, 0.0}, (t_vector) { 0.0, 1.0, 0.0 },
-											(SDL_Color) {255, 255, 0}, 0.0, -1, 0.1, 0);
+											(SDL_Color) {255, 255, 0}, 0.0, 5000, 0.1, 0);
 	rtv->obj = new_obj(rtv->obj, SPHERE, (t_vector) { 2.0, 0.5, 4.0 }, (t_vector) { 0.0, 0.0, 0.0 },
 											(SDL_Color) {0, 0, 255}, 1.0, 500.0, 0.3, 0);
 	rtv->obj = new_obj(rtv->obj, SPHERE, (t_vector) { -2.0, 0.5, 4.0 }, (t_vector) { 0.0, 0.0, 0.0 },
@@ -198,9 +198,9 @@ int main(int ac, char **av)
 	rtv->obj->normal.x = xx * cos(RAD(-45)) - yy * sin(RAD(-45));
 	rtv->obj->normal.y = -xx * sin(RAD(-45)) + yy * cos(RAD(-45));
 
-	rtv->light = new_light(rtv->light, AMBIENT, 0.1, (t_vector) { 0.0, 0.0, 0.0 });
-	rtv->light = new_light(rtv->light, POINT, 1.0, (t_vector) { 2.0, 1.0, 0.0 });
-	rtv->light = new_light(rtv->light, DIRECTIONAL, 0.0, (t_vector) { 1.0, 4.0, 4.0 });
+	rtv->light = new_light(rtv->light, AMBIENT, 0.2, (t_vector) { 0.0, 0.0, 0.0 });
+	rtv->light = new_light(rtv->light, POINT, 0.2, (t_vector) { 2.0, 1.0, 0.0 });
+	rtv->light = new_light(rtv->light, DIRECTIONAL, 0.3, (t_vector) { 1.0, 4.0, 4.0 });
 
 	t_vector camera = { 0.0, 0.5, -5.0 };
 	rtv->camera = camera;

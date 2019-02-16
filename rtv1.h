@@ -6,7 +6,7 @@
 /*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/11 16:08:48 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/02/16 18:03:39 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/02/16 22:27:26 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,26 +50,26 @@
 
 # define KEY e.type == SDL_KEYDOWN && e.key.keysym.sym
 
-typedef struct	s_vector
+typedef struct	s_vec
 {
 	double		x;
 	double		y;
 	double		z;
-}				t_vector;
+}				t_vec;
 
 typedef struct	s_light
 {
 	int			type;
 	double		intens;
-	t_vector	pos;
+	t_vec	pos;
 	struct s_light		*next;
 }				t_light;
 
 typedef struct	s_object
 {
 	int			type;
-	t_vector	center;
-	t_vector	normal;
+	t_vec	center;
+	t_vec	normal;
 	SDL_Color	color;
 	double		radius;
 	double		specular;
@@ -85,8 +85,8 @@ typedef struct	s_rtv
 	SDL_Texture	*tex;
 	Uint32	*buff;
 	SDL_Color color;
-	t_vector camera;
-	t_vector  dir;
+	t_vec camera;
+	t_vec  dir;
 	double close;
 	t_object *close_sph;
 
@@ -100,15 +100,23 @@ typedef struct	s_rtv
 	int end;
 }				t_rtv;
 
+/*
+**	main.c
+*/
+double lighting(t_rtv *rtv, t_vec *point, t_vec *normal, t_vec *view, int specular);
+SDL_Color trace(t_rtv *rtv, t_vec *origin, t_vec *dir, double min, double max, int depth);
+t_vec rot_y(t_vec v, int angle);
+t_vec rot_x(t_vec v, int angle);
+t_vec direction(int x, int y, int angle_x, int angle_y);
 
 /*
 **	intersect.c
 */
-void close_inters(t_rtv *rtv, t_vector *origin, t_vector *dir, double min, double max);
-double *intersect_sphere(t_vector *camera, t_vector *dir, t_object *sphere, double *ts);
-double *intersect_plane(t_vector *camera, t_vector *dir, t_object *plane, double *ts);
-double *intersect_cylinder(t_vector *camera, t_vector *dir, t_object *cylinder, double *ts);
-double *intersect_cone(t_vector *camera, t_vector *dir, t_object *cone, double *ts);
+void close_inters(t_rtv *rtv, t_vec *origin, t_vec *dir, double min, double max);
+double *intersect_sphere(t_vec *camera, t_vec *dir, t_object *sphere, double *ts);
+double *intersect_plane(t_vec *camera, t_vec *dir, t_object *plane, double *ts);
+double *intersect_cylinder(t_vec *camera, t_vec *dir, t_object *cylinder, double *ts);
+double *intersect_cone(t_vec *camera, t_vec *dir, t_object *cone, double *ts);
 
 /*
 **	window,c
@@ -123,18 +131,18 @@ void	screen_upd(t_rtv *test);
 /*
 **	vector.c
 */
-double dot(t_vector v1, t_vector v2);
-t_vector substruct(t_vector v1, t_vector v2);
-double length(t_vector v1);
-t_vector multiply(double k, t_vector v1);
-t_vector add(t_vector v1, t_vector v2);
-t_vector reflect(t_vector v1, t_vector v2);
-t_vector normalize(t_vector v);
+double dot(t_vec v1, t_vec v2);
+t_vec substruct(t_vec v1, t_vec v2);
+double length(t_vec v1);
+t_vec multiply(double k, t_vec v1);
+t_vec add(t_vec v1, t_vec v2);
+t_vec reflect(t_vec v1, t_vec v2);
+t_vec normalize(t_vec v);
 
 /*
 **	objects.c
 */
-t_object *new_obj(t_object *obj, int type, t_vector center, t_vector normal, SDL_Color color, double radius, double specular, double reflect);
-t_light *new_light(t_light *l, int type, double intens, t_vector pos);
+t_object *new_obj(t_object *obj, int type, t_vec center, t_vec normal, SDL_Color color, double radius, double specular, double reflect);
+t_light *new_light(t_light *l, int type, double intens, t_vec pos);
 
 #endif

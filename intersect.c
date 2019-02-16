@@ -6,13 +6,13 @@
 /*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/11 17:27:52 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/02/16 18:16:41 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/02/16 22:27:30 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "rtv1.h"
 
-void close_inters(t_rtv *rtv, t_vector *origin, t_vector *dir, double min, double max)
+void close_inters(t_rtv *rtv, t_vec *origin, t_vec *dir, double min, double max)
 {
 	t_object *tmp = rtv->obj;
 	rtv->close = INFINITY;
@@ -44,9 +44,9 @@ void close_inters(t_rtv *rtv, t_vector *origin, t_vector *dir, double min, doubl
 	free(ts);
 }
 
-double *intersect_sphere(t_vector *camera, t_vector *dir, t_object *sphere, double *ts)
+double *intersect_sphere(t_vec *camera, t_vec *dir, t_object *sphere, double *ts)
 {
-	t_vector oc = substruct(*camera, sphere->center);
+	t_vec oc = substruct(*camera, sphere->center);
 	double k1 = dot(*dir, *dir);
 	double k2 = 2.0 * dot(oc, *dir);
 	double k3 = dot(oc, oc) - sphere->radius * sphere->radius;
@@ -64,7 +64,7 @@ double *intersect_sphere(t_vector *camera, t_vector *dir, t_object *sphere, doub
 
 }
 
-double *intersect_plane(t_vector *camera, t_vector *dir, t_object *plane, double *ts)
+double *intersect_plane(t_vec *camera, t_vec *dir, t_object *plane, double *ts)
 {
 	ts[0] = -dot(substruct(*camera, plane->center), plane->normal);
 	ts[1] = dot(*dir, plane->normal);
@@ -79,9 +79,9 @@ double *intersect_plane(t_vector *camera, t_vector *dir, t_object *plane, double
 	return (ts);
 }
 
-double *intersect_cylinder(t_vector *camera, t_vector *dir, t_object *cylinder, double *ts)
+double *intersect_cylinder(t_vec *camera, t_vec *dir, t_object *cylinder, double *ts)
 {
-	t_vector oc = substruct(*camera, cylinder->center);
+	t_vec oc = substruct(*camera, cylinder->center);
 	double k1 = dot(*dir, *dir) - dot(*dir, cylinder->normal) * dot(*dir, cylinder->normal);
 	double k2 = 2.0 * ( dot(*dir, oc) - dot(*dir, cylinder->normal) * dot(oc, cylinder->normal) );
 	double k3 = dot(oc, oc) - pow(dot(oc, cylinder->normal), 2.0) - pow(cylinder->radius, 2.0);
@@ -104,9 +104,9 @@ double *intersect_cylinder(t_vector *camera, t_vector *dir, t_object *cylinder, 
 	return (ts);
 }
 
-double *intersect_cone(t_vector *camera, t_vector *dir, t_object *cone, double *ts)
+double *intersect_cone(t_vec *camera, t_vec *dir, t_object *cone, double *ts)
 {
-	t_vector oc = substruct(*camera, cone->center);
+	t_vec oc = substruct(*camera, cone->center);
 	double k1 = dot(*dir, *dir) - (1.0 + pow(cone->radius, 2.0)) * pow(dot(*dir, cone->normal), 2.0);
 	double k2 = 2.0 * ( dot(*dir, oc) - (1.0 + pow(cone->radius, 2.0)) * dot(*dir, cone->normal) * dot(oc, cone->normal) );
 	double k3 = dot(oc, oc) - (1.0 + pow(cone->radius, 2.0)) * pow(dot(oc, cone->normal), 2.0);

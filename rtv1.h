@@ -6,7 +6,7 @@
 /*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/11 16:08:48 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/02/15 22:08:41 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/02/16 18:03:39 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,6 @@
 # define SCREEN_HEIGHT 600
 
 # define THREADS 8
-
 
 /*
 **	from radians to degrees
@@ -75,7 +74,6 @@ typedef struct	s_object
 	double		radius;
 	double		specular;
 	double		reflective;
-	int p;
 	struct s_object *next;
 }				t_object;
 
@@ -110,6 +108,7 @@ void close_inters(t_rtv *rtv, t_vector *origin, t_vector *dir, double min, doubl
 double *intersect_sphere(t_vector *camera, t_vector *dir, t_object *sphere, double *ts);
 double *intersect_plane(t_vector *camera, t_vector *dir, t_object *plane, double *ts);
 double *intersect_cylinder(t_vector *camera, t_vector *dir, t_object *cylinder, double *ts);
+double *intersect_cone(t_vector *camera, t_vector *dir, t_object *cone, double *ts);
 
 /*
 **	window,c
@@ -135,7 +134,7 @@ t_vector normalize(t_vector v);
 /*
 **	objects.c
 */
-t_object *new_obj(t_object *obj, int type, t_vector center, t_vector normal, SDL_Color color, double radius, double specular, double reflect, int tmp);
+t_object *new_obj(t_object *obj, int type, t_vector center, t_vector normal, SDL_Color color, double radius, double specular, double reflect);
 t_light *new_light(t_light *l, int type, double intens, t_vector pos);
 
 #endif

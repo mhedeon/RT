@@ -6,7 +6,7 @@
 /*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/11 15:42:43 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/02/15 21:43:44 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/02/16 17:14:23 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,8 +45,6 @@ t_vector reflect(t_vector v1, t_vector v2)
 t_vector normalize(t_vector v)
 {
 	double len = length(v);
-	v.x *= 1.0 / len;
-	v.y *= 1.0 / len;
-	v.z *= 1.0 / len;
+	v = multiply(1.0 / len, v);
 	return (v);
 }

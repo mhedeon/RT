@@ -6,7 +6,7 @@
 /*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/11 15:42:36 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/02/15 22:04:00 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/02/16 18:17:36 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ double lighting(t_rtv *rtv, t_vector *point, t_vector *normal, t_vector *view, i
 	double len_v = length(*view);
 	t_light *tmp = rtv->light;
 
-	for (int i = 0; i < 3; i++)
+	while (tmp != NULL)
 	{
 		if (tmp->type == AMBIENT)
 			in += tmp->intens;
@@ -37,9 +37,11 @@ double lighting(t_rtv *rtv, t_vector *point, t_vector *normal, t_vector *view, i
 				close_inters(rtv, point, &vec_l, 0.001, INFINITY);
 			}
 
-			// close_inters(rtv, point, &vec_l, 0.001, INFINITY);
 			if (rtv->close_sph != NULL)
+			{
+				tmp = tmp->next;
 				continue ;
+			}
 
 			 // difuse
 			double n_dot = dot(*normal, vec_l);
@@ -88,13 +90,22 @@ SDL_Color trace(t_rtv *rtv, t_vector *origin, t_vector *dir, double min, double 
 	}
 	else if (close_sph->type == SPHERE)
 	{
-		normal = substruct(point, close_sph->center);
-		normal = multiply(1.0 / length(normal), normal);
+		// normal = substruct(point, close_sph->center);
+		// normal = multiply(1.0 / length(normal), normal);
+		normal = normalize(substruct(point, close_sph->center));
 	}
 	else if (close_sph->type == CYLINDER)
 	{
 		double m = dot(*dir, close_sph->normal) * close + dot(substruct(*origin, close_sph->center), close_sph->normal);
 		normal = substruct(substruct(point, close_sph->center), multiply(m, close_sph->normal));
+		normal = normalize(normal);
+	}
+	else if (close_sph->type == CONE)
+	{
+		double m = dot(*dir, close_sph->normal) * close + dot(substruct(*origin, close_sph->center), close_sph->normal);
+		normal = substruct(substruct(point, close_sph->center), multiply(m, close_sph->normal));
+		normal = substruct(normal, multiply(1.0 + pow(close_sph->radius, 2.0), multiply(m, close_sph->normal)));
+		// normal = substruct(substruct(point, close_sph->center), multiply(1.0 + pow(close_sph->radius, 2.0), multiply(m, close_sph->normal)));
 	}
 
 	t_vector view = multiply(-1.0, *dir);
@@ -107,7 +118,6 @@ SDL_Color trace(t_rtv *rtv, t_vector *origin, t_vector *dir, double min, double 
 		return (local_color);
 
 	t_vector ray = reflect(view, normal);
-	
 	SDL_Color ref_c = trace(rtv, &point, &ray, 0.0001, max, depth - 1);
 	return ((SDL_Color) { (Uint8)((1.0 - close_sph->reflective) * local_color.r + close_sph->reflective * ref_c.r),
 							(Uint8)((1.0 - close_sph->reflective) * local_color.g + close_sph->reflective * ref_c.g),
@@ -180,27 +190,30 @@ int main(int ac, char **av)
 	rtv->angle_x = 0;
 	rtv->angle_y = 0;
 	
+	rtv->obj = new_obj(rtv->obj, CONE, (t_vector) { -1.0, 3.0, 0.0 }, (t_vector) { 0.0, -1.0, 0.0 },
+											(SDL_Color) {204, 102, 255}, 30.0, 5000.0, 0.3);
 	rtv->obj = new_obj(rtv->obj, CYLINDER, (t_vector) { 3.0, 1.0, 4.0 }, (t_vector) { 0.0, 1.0, 0.0 },
-											(SDL_Color) {0, 255, 255}, 1.0, 100000, 0.5, 0);
+											(SDL_Color) {0, 255, 255}, 1.0, 100000, -1.0);
 	rtv->obj = new_obj(rtv->obj, SPHERE, (t_vector) { 0.0, -0.25, 3.0 }, (t_vector) { 0.0, 0.0, 0.0 },
-											(SDL_Color) {255, 0, 0}, 1.0, 1000.0, 0.2, 0);
+											(SDL_Color) {255, 0, 0}, 1.0, 1000.0, 0.2);
 	rtv->obj = new_obj(rtv->obj, PLANE, (t_vector) { 0.0, -0.5, 0.0}, (t_vector) { 0.0, 1.0, 0.0 },
-											(SDL_Color) {255, 255, 0}, 0.0, 5000, 0.1, 0);
+											(SDL_Color) {255, 255, 0}, 0.0, 5000, 0.1);
 	rtv->obj = new_obj(rtv->obj, SPHERE, (t_vector) { 2.0, 0.5, 4.0 }, (t_vector) { 0.0, 0.0, 0.0 },
-											(SDL_Color) {0, 0, 255}, 1.0, 500.0, 0.3, 0);
+											(SDL_Color) {0, 0, 255}, 1.0, 500.0, 0.3);
 	rtv->obj = new_obj(rtv->obj, SPHERE, (t_vector) { -2.0, 0.5, 4.0 }, (t_vector) { 0.0, 0.0, 0.0 },
-											(SDL_Color) {0, 255, 0}, 1.0, 10000.0, -1.0, 0);
+											(SDL_Color) {0, 255, 0}, 1.0, 10000.0, 0.2);
 	rtv->obj = new_obj(rtv->obj, SPHERE, (t_vector) { 0.0, 1.5, 3.5 }, (t_vector) { 0.0, 0.0, 0.0 },
-											(SDL_Color) {123, 123, 123}, 1.0, 150.0, 0.3, 0);
+											(SDL_Color) {123, 123, 123}, 1.0, 150.0, 0.3);
 
-	double xx = rtv->obj->normal.x;
-	double yy = rtv->obj->normal.y;
-	rtv->obj->normal.x = xx * cos(RAD(-45)) - yy * sin(RAD(-45));
-	rtv->obj->normal.y = -xx * sin(RAD(-45)) + yy * cos(RAD(-45));
+	rtv->obj->radius = tan(RAD(rtv->obj->radius));
+	double xx = rtv->obj->next->normal.x;
+	double yy = rtv->obj->next->normal.y;
+	rtv->obj->next->normal.x = xx * cos(RAD(-45)) - yy * sin(RAD(-45));
+	rtv->obj->next->normal.y = -xx * sin(RAD(-45)) + yy * cos(RAD(-45));
 
 	rtv->light = new_light(rtv->light, AMBIENT, 0.2, (t_vector) { 0.0, 0.0, 0.0 });
 	rtv->light = new_light(rtv->light, POINT, 0.2, (t_vector) { 2.0, 1.0, 0.0 });
-	rtv->light = new_light(rtv->light, DIRECTIONAL, 0.3, (t_vector) { 1.0, 4.0, 4.0 });
+	rtv->light = new_light(rtv->light, DIRECTIONAL, 0.0, (t_vector) { 1.0, 4.0, 4.0 });
 
 	t_vector camera = { 0.0, 0.5, -5.0 };
 	rtv->camera = camera;

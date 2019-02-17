@@ -6,7 +6,7 @@
 /*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/11 16:08:48 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/02/17 18:55:38 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/02/17 19:45:21 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,14 @@
 # define CYLINDER 3
 # define CONE 4
 
+/*
+**	cast
+*/
+# define PLANE_D ((t_plane*)(plane->data))
+# define SPHERE_D ((t_sphere*)(sphere->data))
+# define CYLINDER_D ((t_cylinder*)(cylinder->data))
+# define CONED_D ((t_cone*)(cone->data))
+
 # define KEY e.type == SDL_KEYDOWN && e.key.keysym.sym
 
 typedef struct	s_vec
@@ -65,15 +73,22 @@ typedef struct	s_light
 	struct s_light		*next;
 }				t_light;
 
-typedef struct	s_sphere
-{
-	double		radius;
-}				t_sphere;
-
 typedef struct	s_plane
 {
-	/* data */
+	double		radius;
 }				t_plane;
+
+typedef struct	s_sphere
+{
+	double		radius_square;
+}				t_sphere;
+
+typedef struct	s_cylinder
+{
+	double		radius;
+	double		height;
+}				t_cylinder;
+
 
 
 typedef struct	s_object
@@ -82,10 +97,9 @@ typedef struct	s_object
 	t_vec	center;
 	t_vec	normal;
 	SDL_Color	color;
-	double		radius;
 	double		specular;
 	double		reflective;
-	void		*obj;
+	void		*data;
 	struct s_object *next;
 }				t_object;
 

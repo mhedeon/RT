@@ -6,7 +6,7 @@
 /*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/11 17:27:52 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/02/17 20:19:53 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/02/17 22:31:24 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,9 +113,9 @@ double *intersect_cylinder(t_vec *camera, t_vec *dir, t_object *cylinder, double
 double *intersect_cone(t_vec *camera, t_vec *dir, t_object *cone, double *ts)
 {
 	t_vec oc = substruct(*camera, cone->center);
-	double k1 = dot(*dir, *dir) - (1.0 + pow(CONE_D->radius, 2.0)) * pow(dot(*dir, cone->normal), 2.0);
-	double k2 = 2.0 * ( dot(*dir, oc) - (1.0 + pow(CONE_D->radius, 2.0)) * dot(*dir, cone->normal) * dot(oc, cone->normal) );
-	double k3 = dot(oc, oc) - (1.0 + pow(CONE_D->radius, 2.0)) * pow(dot(oc, cone->normal), 2.0);
+	double k1 = dot(*dir, *dir) - (1.0 + pow(CONE_D->angle, 2.0)) * pow(dot(*dir, cone->normal), 2.0);
+	double k2 = 2.0 * ( dot(*dir, oc) - (1.0 + pow(CONE_D->angle, 2.0)) * dot(*dir, cone->normal) * dot(oc, cone->normal) );
+	double k3 = dot(oc, oc) - (1.0 + pow(CONE_D->angle, 2.0)) * pow(dot(oc, cone->normal), 2.0);
 
 	double dis = k2 * k2 - 4.0 * k1 * k3;
 	if (dis < 0.0)

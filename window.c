@@ -6,7 +6,7 @@
 /*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/11 15:42:47 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/02/11 20:44:22 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/02/17 22:06:51 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ void garbage(t_rtv *rtv)
 	SDL_DestroyWindow(rtv->win);
 	while (rtv->obj != NULL)
 	{
+		free(rtv->obj->data);
 		free(rtv->obj);
 		rtv->obj = rtv->obj->next;
 	}

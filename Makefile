@@ -6,7 +6,7 @@
 #    By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/02/11 15:37:02 by mhedeon           #+#    #+#              #
-#    Updated: 2019/02/11 20:44:59 by mhedeon          ###   ########.fr        #
+#    Updated: 2019/02/17 20:26:51 by mhedeon          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,7 +22,7 @@ INCLUDES = -I./frameworks/SDL2.framework/Headers/ \
 			-I./frameworks/SDL2_image.framework/Headers/ \
 			-I./frameworks/SDL2_mixer.framework/Headers/ \
 			-I./frameworks/SDL2_ttf.framework/Headers/ \
-			-F./frameworks
+			-F./frameworks -I./libft
 
 FRAMEWORKS = -F./frameworks -rpath ./frameworks -framework SDL2 \
 												-framework SDL2_image \
@@ -32,20 +32,20 @@ FRAMEWORKS = -F./frameworks -rpath ./frameworks -framework SDL2 \
 all: $(NAME)
 
 $(NAME): $(OBJ)
-#	@make -C libft
-	@gcc -g -o $(NAME) $(OBJ) $(FRAMEWORKS)
+	@make -C libft
+	@gcc -g -o $(NAME) $(OBJ) $(FRAMEWORKS) -L./libft -lft
 
 %.o: %.c
-	@gcc -c $< -o $@ $(INCLUDES)
+	@gcc $(FLAGS) -c $< -o $@ $(INCLUDES)
 
 clean:
-#	@make -C libft clean
+	@make -C libft clean
 	@rm -f $(OBJ)
 
 fclean: clean
-#	@make -C libft fclean
+	@make -C libft fclean
 	@rm -f $(NAME)
 	@rm -f $(OBJ)
 
 re: fclean all
-#	@make -C libft re
+	@make -C libft re

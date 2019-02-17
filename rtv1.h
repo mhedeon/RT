@@ -6,7 +6,7 @@
 /*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/11 16:08:48 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/02/17 19:45:21 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/02/17 21:36:47 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 # include "SDL_mixer.h"
 # include "SDL_ttf.h"
 # include <stdio.h>
+# include <fcntl.h>
 # include <math.h>
 # include <limits.h>
 # include <float.h>
@@ -54,7 +55,7 @@
 # define PLANE_D ((t_plane*)(plane->data))
 # define SPHERE_D ((t_sphere*)(sphere->data))
 # define CYLINDER_D ((t_cylinder*)(cylinder->data))
-# define CONED_D ((t_cone*)(cone->data))
+# define CONE_D ((t_cone*)(cone->data))
 
 # define KEY e.type == SDL_KEYDOWN && e.key.keysym.sym
 
@@ -89,7 +90,12 @@ typedef struct	s_cylinder
 	double		height;
 }				t_cylinder;
 
-
+typedef struct	s_cone
+{
+	double		radius;
+	double		height;
+	double		angle;
+}				t_cone;
 
 typedef struct	s_object
 {
@@ -168,7 +174,7 @@ t_vec normalize(t_vec v);
 /*
 **	objects.c
 */
-t_object *new_obj(t_object *obj, int type, t_vec center, t_vec normal, SDL_Color color, double radius, double specular, double reflect);
+t_object *new_obj(t_object *obj, int type, t_vec center, t_vec normal, SDL_Color color, double specular, double reflect,  double radius,  double height,  double angle);
 t_light *new_light(t_light *l, int type, double intens, t_vec pos);
 
 #endif

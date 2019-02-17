@@ -6,7 +6,7 @@
 /*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/11 15:42:36 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/02/17 18:45:14 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/02/17 21:53:06 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ SDL_Color trace(t_rtv *rtv, t_vec *origin, t_vec *dir, double min, double max, i
 	close_sph = rtv->close_sph;
 
 	if (close_sph == NULL)
-		return ((SDL_Color) { 0, 0, 0 });
+		return ((SDL_Color) { 0, 0, 0, 0});
 
 	t_vec tmp = multiply(close, *dir);
 	t_vec point = add(*origin, tmp);
@@ -101,7 +101,7 @@ SDL_Color trace(t_rtv *rtv, t_vec *origin, t_vec *dir, double min, double max, i
 	else if (close_sph->type == CONE)
 	{
 		double m = dot(*dir, close_sph->normal) * close + dot(substruct(*origin, close_sph->center), close_sph->normal);
-		normal = substruct(substruct(point, close_sph->center), multiply(1.0 + pow(close_sph->radius, 2.0), multiply(m, close_sph->normal)));
+		normal = substruct(substruct(point, close_sph->center), multiply(1.0 + pow(((t_cone*)(close_sph->data))->radius, 2.0), multiply(m, close_sph->normal)));
 		normal = normalize(normal);
 	}
 
@@ -181,36 +181,36 @@ void threads(t_rtv *rtv)
 	printf("DONE\n");
 }
 
-int main(int ac, char **av)
+int main()
 {
 	t_rtv *rtv = (t_rtv *)malloc(sizeof(t_rtv));
 	init(rtv);
 	rtv->angle_x = 0;
 	rtv->angle_y = 0;
 	
-	rtv->obj = new_obj(rtv->obj, CONE, (t_vec) { -1.0, 2.0, -2.0 }, (t_vec) { 0.0, -1.0, 0.0 },
-											(SDL_Color) {204, 102, 255}, 15.0, 500.0, 0.6);
+	// rtv->obj = new_obj(rtv->obj, CONE, (t_vec) { -1.0, 2.0, -2.0 }, (t_vec) { 0.0, -1.0, 0.0 },
+	// 										(SDL_Color) {204, 102, 255, 0}, 500.0, 0.6, -1, 5.6, 15.0);
 	rtv->obj = new_obj(rtv->obj, CYLINDER, (t_vec) { 3.0, 1.0, 4.0 }, (t_vec) { 0.0, 1.0, 0.0 },
-											(SDL_Color) {0, 255, 255}, 1.0, 500.0, 0);
+											(SDL_Color) {0, 255, 255, 0}, 500.0, 0.5, 1.5, 4.0, -1);
 	rtv->obj = new_obj(rtv->obj, SPHERE, (t_vec) { 0.0, -0.25, 3.0 }, (t_vec) { 0.0, 0.0, 0.0 },
-											(SDL_Color) {255, 0, 0}, 1.0, 1000.0, 0.2);
+											(SDL_Color) {255, 0, 0, 0}, 1000.0, 0.2, 1.0, -1, -1);
 	rtv->obj = new_obj(rtv->obj, PLANE, (t_vec) { 0.0, 0.0, 0.0}, (t_vec) { 0.0, 1.0, 0.0 },
-											(SDL_Color) {255, 255, 0}, 5.0, 5000, 0.1);
+											(SDL_Color) {255, 255, 0, 0}, 5000, 0.1, -1, -1, -1);
 	rtv->obj = new_obj(rtv->obj, SPHERE, (t_vec) { 2.0, 0.5, 4.0 }, (t_vec) { 0.0, 0.0, 0.0 },
-											(SDL_Color) {0, 0, 255}, 1.0, 500.0, 0.3);
+											(SDL_Color) {0, 0, 255, 0}, 500.0, 0.3, 1.0, -1, -1);
 	rtv->obj = new_obj(rtv->obj, SPHERE, (t_vec) { -2.0, 0.5, 4.0 }, (t_vec) { 0.0, 0.0, 0.0 },
-											(SDL_Color) {0, 255, 0}, 1.0, 10000.0, 0.2);
+											(SDL_Color) {0, 255, 0, 0}, 10000.0, 0.2, 1.0, -1, -1);
 	rtv->obj = new_obj(rtv->obj, SPHERE, (t_vec) { 0.0, 1.5, 3.5 }, (t_vec) { 0.0, 0.0, 0.0 },
-											(SDL_Color) {123, 123, 123}, 1.0, 150.0, 0.3);
+											(SDL_Color) {123, 123, 123, 0}, 150.0, 0.3, 1.0, -1, -1);
 
-	rtv->obj->radius = tan(RAD(rtv->obj->radius));
-	double xx = rtv->obj->next->normal.x;
-	double yy = rtv->obj->next->normal.y;
-	rtv->obj->next->normal.x = xx * cos(RAD(-45)) - yy * sin(RAD(-45));
-	rtv->obj->next->normal.y = -xx * sin(RAD(-45)) + yy * cos(RAD(-45));
+	// ((t_cone*)(rtv->obj->data))->radius = tan(RAD(((t_cone*)(rtv->obj->data))->radius));
+	// double xx = rtv->obj->next->normal.x;
+	// double yy = rtv->obj->next->normal.y;
+	// rtv->obj->next->normal.x = xx * cos(RAD(-45)) - yy * sin(RAD(-45));
+	// rtv->obj->next->normal.y = -xx * sin(RAD(-45)) + yy * cos(RAD(-45));
 
 	rtv->light = new_light(rtv->light, AMBIENT, 0.2, (t_vec) { 0.0, 0.0, 0.0 });
-	rtv->light = new_light(rtv->light, POINT, 0.4, (t_vec) { 3.0, 1.0, 0.0 });
+	rtv->light = new_light(rtv->light, POINT, 0.4, (t_vec) { 0.0, 1.0, -4.0 });
 	rtv->light = new_light(rtv->light, DIRECTIONAL, 0.2, (t_vec) { 1.0, 4.0, 4.0 });
 
 	t_vec camera = { 0.0, 0.5, -5.0 };
@@ -226,14 +226,12 @@ int main(int ac, char **av)
 			break;
 		if (KEY == SDLK_LEFT)
 		{
-			// rtv->camera.x -= 0.25;
 			rtv->dir = direction(0, 0, 0, rtv->angle_y - 90);
 			rtv->camera = add(rtv->camera, multiply(0.25, rtv->dir));
 			printf("go left\n");
 		}
 		if (KEY == SDLK_RIGHT)
 		{
-			// rtv->camera.x += 0.25;
 			rtv->dir = direction(0, 0, 0, rtv->angle_y + 90);
 			rtv->camera = add(rtv->camera, multiply(0.25, rtv->dir));
 			printf("go right\n");

@@ -6,13 +6,18 @@
 /*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/11 20:45:03 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/02/16 22:27:37 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/02/17 21:44:00 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "rtv1.h"
+/*
+SPHERE | center 1.0 2.0 3.0 | color 255 255 255 | specular 100 | reflective 0.5 | radius 1.5
+PLANE | center 0.0 0.0 0.0 | normal 1.0.0.0 0.0 | color 255 255 255 | specular 200 | reflective 0.5 | radius 25.0
+*/
 
-t_object *new_obj(t_object *obj, int type, t_vec center, t_vec normal, SDL_Color color, double radius, double specular, double reflect)
+// t_object *new_obj(t_object *obj, char *line)
+t_object *new_obj(t_object *obj, int type, t_vec center, t_vec normal, SDL_Color color, double specular, double reflect,  double radius,  double height,  double angle)
 {
 	t_object	*start;
 	t_object	*new;
@@ -25,9 +30,31 @@ t_object *new_obj(t_object *obj, int type, t_vec center, t_vec normal, SDL_Color
 	new->center = center;
 	new->normal = normal;
 	new->color = color;
-	new->radius = radius;
 	new->specular = specular;
 	new->reflective = reflect;
+	if (type == SPHERE)
+	{
+		new->data = (t_sphere *)malloc(sizeof(t_sphere));
+		((t_sphere*)(new->data))->radius_square = pow(radius, 2.0);
+	}
+	else if (type == PLANE)
+	{
+		new->data = (t_plane *)malloc(sizeof(t_plane));
+		((t_plane*)(new->data))->radius = radius;
+	}
+	else if (type == CYLINDER)
+	{
+		new->data = (t_cylinder *)malloc(sizeof(t_cylinder));
+		((t_cylinder*)(new->data))->radius = radius;
+		((t_cylinder*)(new->data))->height = height;
+	}
+	else if (type == CYLINDER)
+	{
+		new->data = (t_cone *)malloc(sizeof(t_cone));
+		((t_cone*)(new->data))->radius = radius;
+		((t_cone*)(new->data))->height = height;
+		((t_cone*)(new->data))->angle = angle;
+	}
 	new->next = NULL;
 	if (obj == NULL)
 		obj = new;

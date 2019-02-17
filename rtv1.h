@@ -6,7 +6,7 @@
 /*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/11 16:08:48 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/02/16 22:27:26 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/02/17 18:55:38 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,17 @@ typedef struct	s_light
 	struct s_light		*next;
 }				t_light;
 
+typedef struct	s_sphere
+{
+	double		radius;
+}				t_sphere;
+
+typedef struct	s_plane
+{
+	/* data */
+}				t_plane;
+
+
 typedef struct	s_object
 {
 	int			type;
@@ -74,6 +85,7 @@ typedef struct	s_object
 	double		radius;
 	double		specular;
 	double		reflective;
+	void		*obj;
 	struct s_object *next;
 }				t_object;
 

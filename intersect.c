@@ -6,7 +6,7 @@
 /*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/11 17:27:52 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/02/16 22:27:30 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/02/17 18:44:59 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,9 @@ double *intersect_plane(t_vec *camera, t_vec *dir, t_object *plane, double *ts)
 	{
 		ts[0] = ts[0] / ts[1];
 		ts[1] = INFINITY;
+		t_vec p = add(multiply(ts[0], *dir), *camera);
+		if (length(p) > plane->radius)
+			ts[0] = INFINITY;
 		return (ts);
 	}
 	ts[0] = INFINITY;

@@ -6,7 +6,7 @@
 /*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/11 16:08:48 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/02/18 22:44:50 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/02/18 23:20:11 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -154,7 +154,7 @@ typedef struct	s_rtv
 **	main.c
 */
 double lighting(t_rtv *rtv, t_vec *point, t_vec *normal, t_vec *view, int specular);
-SDL_Color trace(t_rtv *rtv, t_fov *fov/*t_vec *origin, t_vec *dir*/, double min, double max, int depth);
+SDL_Color trace(t_rtv *rtv, t_fov *fov, double min, double max, int depth);
 t_vec rot_y(t_vec v, int angle);
 t_vec rot_x(t_vec v, int angle);
 t_vec direction(int x, int y, int angle_x, int angle_y);

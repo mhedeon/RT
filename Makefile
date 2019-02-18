@@ -6,7 +6,7 @@
 #    By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/02/11 15:37:02 by mhedeon           #+#    #+#              #
-#    Updated: 2019/02/11 20:44:59 by mhedeon          ###   ########.fr        #
+#    Updated: 2019/02/17 22:05:18 by mhedeon          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -36,7 +36,7 @@ $(NAME): $(OBJ)
 	@gcc -g -o $(NAME) $(OBJ) $(FRAMEWORKS)
 
 %.o: %.c
-	@gcc -c $< -o $@ $(INCLUDES)
+	@gcc $(FLAGS) -c $< -o $@ $(INCLUDES)
 
 clean:
 #	@make -C libft clean

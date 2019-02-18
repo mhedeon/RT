@@ -6,7 +6,7 @@
 /*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/11 16:08:48 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/02/17 22:31:54 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/02/18 21:59:36 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,18 +70,21 @@ typedef struct	s_light
 {
 	int			type;
 	double		intens;
-	t_vec	pos;
+	t_vec		pos;
 	struct s_light		*next;
 }				t_light;
 
 typedef struct	s_plane
 {
 	double		radius;
+	double		dot1;
 }				t_plane;
 
 typedef struct	s_sphere
 {
 	double		radius_square;
+	t_vec		oc;
+	double		k3;
 }				t_sphere;
 
 typedef struct	s_cylinder
@@ -92,10 +95,21 @@ typedef struct	s_cylinder
 
 typedef struct	s_cone
 {
-	double		radius;
 	double		height;
 	double		angle;
 }				t_cone;
+
+typedef struct	s_buffer
+{
+	double		plane_dot1;
+	double		plane_dot2;
+}				t_buffer;
+
+typedef struct	s_fov
+{
+	t_vec		c;
+	t_vec		d;
+}				t_fov;
 
 typedef struct	s_object
 {
@@ -106,6 +120,7 @@ typedef struct	s_object
 	int		specular;
 	double		reflective;
 	void		*data;
+	t_buffer	buff;
 	struct s_object *next;
 }				t_object;
 
@@ -145,10 +160,10 @@ t_vec direction(int x, int y, int angle_x, int angle_y);
 **	intersect.c
 */
 void close_inters(t_rtv *rtv, t_vec *origin, t_vec *dir, double min, double max);
-double *intersect_sphere(t_vec *camera, t_vec *dir, t_object *sphere, double *ts);
-double *intersect_plane(t_vec *camera, t_vec *dir, t_object *plane, double *ts);
-double *intersect_cylinder(t_vec *camera, t_vec *dir, t_object *cylinder, double *ts);
-double *intersect_cone(t_vec *camera, t_vec *dir, t_object *cone, double *ts);
+void intersect_sphere(t_vec *camera, t_vec *dir, t_object *sphere, double *ts);
+void intersect_plane(t_vec *camera, t_vec *dir, t_object *plane, double *ts);
+void intersect_cylinder(t_vec *camera, t_vec *dir, t_object *cylinder, double *ts);
+void intersect_cone(t_vec *camera, t_vec *dir, t_object *cone, double *ts);
 
 /*
 **	window,c

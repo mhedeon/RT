@@ -6,7 +6,7 @@
 /*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/11 15:42:36 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/02/17 22:31:21 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/02/18 21:50:04 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,6 +149,25 @@ t_vec direction(int x, int y, int angle_x, int angle_y)
 	return (direction);
 }
 
+void optimisation(t_vec *camera, t_object *obj)
+{
+	while (obj != NULL)
+	{
+		if(obj->type == PLANE)
+			((t_plane*)obj->data)->dot1 = -dot(substruct(*camera,
+												obj->center), obj->normal);
+		else if (obj->type == SPHERE)
+		{
+			((t_sphere*)obj->data)->oc = substruct(*camera, obj->center);
+			((t_sphere*)obj->data)->k3 = dot(((t_sphere*)obj->data)->oc,
+			((t_sphere*)obj->data)->oc) - ((t_sphere*)obj->data)->radius_square;
+		}
+		// else if ()
+
+		obj = obj->next;
+	}
+}
+
 void go(t_rtv *rtv)
 {
 	for (int y = rtv->start; y < rtv->end; y++)
@@ -156,7 +175,7 @@ void go(t_rtv *rtv)
 		for (int x = -(SCREEN_WIDTH / 2); x < SCREEN_WIDTH / 2; x++)
 		{
 			rtv->dir = direction(x, y, rtv->angle_x, rtv->angle_y);
-			rtv->color = trace(rtv, &rtv->camera, &rtv->dir, 1.0, INFINITY, 3);
+			rtv->color = trace(rtv, &rtv->camera, &rtv->dir, 1.0, INFINITY, 10);
 			put_pixel(rtv, x, y);
 		}
 	}
@@ -167,12 +186,13 @@ void threads(t_rtv *rtv)
 	SDL_Thread *thread[THREADS];
 	t_rtv ttt[THREADS];
 
+	// optimisation(&rtv->camera, rtv->obj);
 	for (int i = 0; i < THREADS; i++)
 	{
 		ttt[i] = *rtv;
 		ttt[i].start = i * SCREEN_HEIGHT / THREADS - SCREEN_HEIGHT / 2;
 		ttt[i].end = (i + 1) * SCREEN_HEIGHT / THREADS - SCREEN_HEIGHT / 2;
-		thread[i] = SDL_CreateThread((int(_cdecl*)())go, "go", &ttt[i]);
+		thread[i] = SDL_CreateThread((int(*)())go, "go", &ttt[i]);
 		printf("[%d] start: %d | end: %d\n", i, ttt[i].start, ttt[i].end);
 	}
 	for (int i = 0; i < THREADS; i++)
@@ -199,7 +219,7 @@ int main()
 	rtv->obj = new_obj(rtv->obj, SPHERE, (t_vec) { 2.0, 0.5, 4.0 }, (t_vec) { 0.0, 0.0, 0.0 },
 											(SDL_Color) {0, 0, 255, 0}, 500, 0.3, 1.0, -1, -1);
 	rtv->obj = new_obj(rtv->obj, SPHERE, (t_vec) { -2.0, 0.5, 4.0 }, (t_vec) { 0.0, 0.0, 0.0 },
-											(SDL_Color) {0, 255, 0, 0}, 10000, 0.2, 1.0, -1, -1);
+											(SDL_Color) {0, 255, 0, 0}, 3000, 0.4, 1.0, -1, -1);
 	rtv->obj = new_obj(rtv->obj, SPHERE, (t_vec) { 0.0, 1.5, 3.5 }, (t_vec) { 0.0, 0.0, 0.0 },
 											(SDL_Color) {123, 123, 123, 0}, 150, 0.3, 1.0, -1, -1);
 
@@ -210,8 +230,8 @@ int main()
 	rtv->obj->next->normal.y = -xx * sin(RAD(-45)) + yy * cos(RAD(-45));
 
 	rtv->light = new_light(rtv->light, AMBIENT, 0.2, (t_vec) { 0.0, 0.0, 0.0 });
-	rtv->light = new_light(rtv->light, POINT, 0.4, (t_vec) { 0.0, 1.0, -4.0 });
-	rtv->light = new_light(rtv->light, DIRECTIONAL, 0.2, (t_vec) { 1.0, 4.0, 4.0 });
+	rtv->light = new_light(rtv->light, POINT, 0.8, (t_vec) { 0.0, 1.0, -4.0 });
+	rtv->light = new_light(rtv->light, DIRECTIONAL, 0.0, (t_vec) { 1.0, 4.0, 4.0 });
 
 	t_vec camera = { 0.0, 0.5, -5.0 };
 	rtv->camera = camera;

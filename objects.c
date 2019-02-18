@@ -6,7 +6,7 @@
 /*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/11 20:45:03 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/02/17 21:44:00 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/02/18 19:18:32 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,6 @@ t_object *new_obj(t_object *obj, int type, t_vec center, t_vec normal, SDL_Color
 	else if (type == CONE)
 	{
 		new->data = (t_cone *)malloc(sizeof(t_cone));
-		((t_cone*)(new->data))->radius = radius;
 		((t_cone*)(new->data))->height = height;
 		((t_cone*)(new->data))->angle = angle;
 	}

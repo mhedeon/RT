@@ -6,7 +6,7 @@
 /*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/11 15:42:36 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/02/18 21:50:04 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/02/18 22:46:42 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,12 +29,12 @@ double lighting(t_rtv *rtv, t_vec *point, t_vec *normal, t_vec *view, int specul
 			if (tmp->type == POINT)
 			{
 				vec_l = substruct(tmp->pos, *point);
-				close_inters(rtv, point, &vec_l, 0.001, 1.0);
+				close_inters(rtv, (t_fov){*point, vec_l}/*point, &vec_l*/, 0.0001, 1.0);
 			}
 			else
 			{
 				vec_l = tmp->pos;
-				close_inters(rtv, point, &vec_l, 0.001, INFINITY);
+				close_inters(rtv, (t_fov){*point, vec_l}/*point, &vec_l*/, 0.0001, INFINITY);
 			}
 
 			if (rtv->close_sph != NULL)
@@ -66,11 +66,11 @@ double lighting(t_rtv *rtv, t_vec *point, t_vec *normal, t_vec *view, int specul
 	return (in);
 }
 
-SDL_Color trace(t_rtv *rtv, t_vec *origin, t_vec *dir, double min, double max, int depth)
+SDL_Color trace(t_rtv *rtv, t_fov *fov/*t_vec *origin, t_vec *dir*/, double min, double max, int depth)
 {
 	double close;
 	t_object *close_sph;
-	close_inters(rtv, origin, dir,  min, max);
+	close_inters(rtv, *fov,  min, max);
 
 	close = rtv->close;
 	close_sph = rtv->close_sph;
@@ -78,12 +78,12 @@ SDL_Color trace(t_rtv *rtv, t_vec *origin, t_vec *dir, double min, double max, i
 	if (close_sph == NULL)
 		return ((SDL_Color) { 0, 0, 0, 0});
 
-	t_vec tmp = multiply(close, *dir);
-	t_vec point = add(*origin, tmp);
+	t_vec tmp = multiply(close, fov->d);
+	t_vec point = add(fov->c, tmp);
 	t_vec normal;
 	if (close_sph->type == PLANE)
 	{
-		if (dot(*dir, close_sph->normal) < 0.0)
+		if (dot(fov->d, close_sph->normal) < 0.0)
 			normal = close_sph->normal;
 		else
 			normal = multiply(-1.0, close_sph->normal);
@@ -94,18 +94,18 @@ SDL_Color trace(t_rtv *rtv, t_vec *origin, t_vec *dir, double min, double max, i
 	}
 	else if (close_sph->type == CYLINDER)
 	{
-		double m = dot(*dir, close_sph->normal) * close + dot(substruct(*origin, close_sph->center), close_sph->normal);
+		double m = dot(fov->d, close_sph->normal) * close + dot(substruct(fov->c, close_sph->center), close_sph->normal);
 		normal = substruct(substruct(point, close_sph->center), multiply(m, close_sph->normal));
 		normal = normalize(normal);
 	}
 	else if (close_sph->type == CONE)
 	{
-		double m = dot(*dir, close_sph->normal) * close + dot(substruct(*origin, close_sph->center), close_sph->normal);
+		double m = dot(fov->d, close_sph->normal) * close + dot(substruct(fov->c, close_sph->center), close_sph->normal);
 		normal = substruct(substruct(point, close_sph->center), multiply(1.0 + pow(((t_cone*)(close_sph->data))->angle, 2.0), multiply(m, close_sph->normal)));
 		normal = normalize(normal);
 	}
 
-	t_vec view = multiply(-1.0, *dir);
+	t_vec view = multiply(-1.0, fov->d);
 	close = lighting(rtv, &point, &normal, &view, close_sph->specular);
 	SDL_Color local_color = { (Uint8)(close * close_sph->color.r),
 								(Uint8)(close * close_sph->color.g),
@@ -115,7 +115,7 @@ SDL_Color trace(t_rtv *rtv, t_vec *origin, t_vec *dir, double min, double max, i
 		return (local_color);
 
 	t_vec ray = reflect(view, normal);
-	SDL_Color ref_c = trace(rtv, &point, &ray, 0.0001, max, depth - 1);
+	SDL_Color ref_c = trace(rtv, &(t_fov){point, ray}, 0.0001, max, depth - 1);
 	return ((SDL_Color) { (Uint8)((1.0 - close_sph->reflective) * local_color.r + close_sph->reflective * ref_c.r),
 							(Uint8)((1.0 - close_sph->reflective) * local_color.g + close_sph->reflective * ref_c.g),
 							(Uint8)((1.0 - close_sph->reflective) * local_color.b + close_sph->reflective * ref_c.b), 0 });
@@ -175,7 +175,9 @@ void go(t_rtv *rtv)
 		for (int x = -(SCREEN_WIDTH / 2); x < SCREEN_WIDTH / 2; x++)
 		{
 			rtv->dir = direction(x, y, rtv->angle_x, rtv->angle_y);
-			rtv->color = trace(rtv, &rtv->camera, &rtv->dir, 1.0, INFINITY, 10);
+			rtv->fov.c = rtv->camera;
+			rtv->fov.d = rtv->dir;
+			rtv->color = trace(rtv, &rtv->fov/*&rtv->camera, &rtv->dir*/, 1.0, INFINITY, 10);
 			put_pixel(rtv, x, y);
 		}
 	}

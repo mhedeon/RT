@@ -6,7 +6,7 @@
 /*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/11 16:08:48 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/02/18 21:59:36 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/02/18 22:44:50 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,12 +105,6 @@ typedef struct	s_buffer
 	double		plane_dot2;
 }				t_buffer;
 
-typedef struct	s_fov
-{
-	t_vec		c;
-	t_vec		d;
-}				t_fov;
-
 typedef struct	s_object
 {
 	int			type;
@@ -124,6 +118,12 @@ typedef struct	s_object
 	struct s_object *next;
 }				t_object;
 
+typedef struct	s_fov
+{
+	t_vec		c;
+	t_vec		d;
+}				t_fov;
+
 
 typedef struct	s_rtv
 {
@@ -131,9 +131,12 @@ typedef struct	s_rtv
 	SDL_Renderer	*ren;
 	SDL_Texture	*tex;
 	Uint32	*buff;
-	SDL_Color color;
-	t_vec camera;
-	t_vec  dir;
+	SDL_Color	color;
+
+	t_vec	camera;
+	t_vec	dir;
+	t_fov	fov;
+
 	double close;
 	t_object *close_sph;
 
@@ -151,7 +154,7 @@ typedef struct	s_rtv
 **	main.c
 */
 double lighting(t_rtv *rtv, t_vec *point, t_vec *normal, t_vec *view, int specular);
-SDL_Color trace(t_rtv *rtv, t_vec *origin, t_vec *dir, double min, double max, int depth);
+SDL_Color trace(t_rtv *rtv, t_fov *fov/*t_vec *origin, t_vec *dir*/, double min, double max, int depth);
 t_vec rot_y(t_vec v, int angle);
 t_vec rot_x(t_vec v, int angle);
 t_vec direction(int x, int y, int angle_x, int angle_y);
@@ -159,7 +162,7 @@ t_vec direction(int x, int y, int angle_x, int angle_y);
 /*
 **	intersect.c
 */
-void close_inters(t_rtv *rtv, t_vec *origin, t_vec *dir, double min, double max);
+void			close_inters(t_rtv *rtv, t_fov fov, double min, double max);
 void intersect_sphere(t_vec *camera, t_vec *dir, t_object *sphere, double *ts);
 void intersect_plane(t_vec *camera, t_vec *dir, t_object *plane, double *ts);
 void intersect_cylinder(t_vec *camera, t_vec *dir, t_object *cylinder, double *ts);

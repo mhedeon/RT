@@ -6,13 +6,13 @@
 /*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/11 17:27:52 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/02/18 19:37:15 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/02/18 22:19:43 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "rtv1.h"
 
-void			close_inters(t_rtv *rtv, t_vec *origin, t_vec *dir, double min, double max)
+void			close_inters(t_rtv *rtv, t_fov fov, double min, double max)
 {
 	double		ts[2];
 	t_object	*tmp;
@@ -23,10 +23,10 @@ void			close_inters(t_rtv *rtv, t_vec *origin, t_vec *dir, double min, double ma
 
 	while (tmp != NULL)
 	{
-		tmp->type == PLANE ? intersect_plane(origin, dir, tmp, ts) : 0;
-		tmp->type == SPHERE ? intersect_sphere(origin, dir, tmp, ts) : 0;
-		tmp->type == CYLINDER ? intersect_cylinder(origin, dir, tmp, ts) : 0;
-		tmp->type == CONE ? intersect_cone(origin, dir, tmp, ts) : 0;
+		tmp->type == PLANE ? intersect_plane(&fov.c, &fov.d, tmp, ts) : 0;
+		tmp->type == SPHERE ? intersect_sphere(&fov.c, &fov.d, tmp, ts) : 0;
+		tmp->type == CYLINDER ? intersect_cylinder(&fov.c, &fov.d, tmp, ts) : 0;
+		tmp->type == CONE ? intersect_cone(&fov.c, &fov.d, tmp, ts) : 0;
 		if (ts[0] < rtv->close && min < ts[0] && ts[0] < max)
 		{
 			rtv->close = ts[0];

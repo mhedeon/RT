@@ -103,7 +103,7 @@ typedef struct	s_object
 	t_vec	center;
 	t_vec	normal;
 	SDL_Color	color;
-	double		specular;
+	int		specular;
 	double		reflective;
 	void		*data;
 	struct s_object *next;
@@ -174,7 +174,7 @@ t_vec normalize(t_vec v);
 /*
 **	objects.c
 */
-t_object *new_obj(t_object *obj, int type, t_vec center, t_vec normal, SDL_Color color, double specular, double reflect,  double radius,  double height,  double angle);
+t_object *new_obj(t_object *obj, int type, t_vec center, t_vec normal, SDL_Color color, int specular, double reflect,  double radius,  double height,  double angle);
 t_light *new_light(t_light *l, int type, double intens, t_vec pos);
 
 #endif

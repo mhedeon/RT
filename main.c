@@ -50,7 +50,7 @@ double lighting(t_rtv *rtv, t_vec *point, t_vec *normal, t_vec *view, int specul
 						(len * length(vec_l));
 
 			// specular
-			if (specular != -1.0)
+			if (specular != -1)
 			{
 				t_vec vec_r = multiply(2.0 * dot(*normal, vec_l), *normal);
 				vec_r = substruct(vec_r, vec_l);
@@ -172,7 +172,7 @@ void threads(t_rtv *rtv)
 		ttt[i] = *rtv;
 		ttt[i].start = i * SCREEN_HEIGHT / THREADS - SCREEN_HEIGHT / 2;
 		ttt[i].end = (i + 1) * SCREEN_HEIGHT / THREADS - SCREEN_HEIGHT / 2;
-		thread[i] = SDL_CreateThread((int(*)())go, "go", &ttt[i]);
+		thread[i] = SDL_CreateThread((int(_cdecl*)())go, "go", &ttt[i]);
 		printf("[%d] start: %d | end: %d\n", i, ttt[i].start, ttt[i].end);
 	}
 	for (int i = 0; i < THREADS; i++)
@@ -188,30 +188,30 @@ int main()
 	rtv->angle_x = 0;
 	rtv->angle_y = 0;
 	
-	rtv->obj = new_obj(rtv->obj, CONE, (t_vec) { -1.0, 2.0, -2.0 }, (t_vec) { 0.0, -1.0, 0.0 },
-											(SDL_Color) {204, 102, 255, 0}, 500.0, 0.6, 5.0, 5.6, 15.0);
+	rtv->obj = new_obj(rtv->obj, CONE, (t_vec) { -1.0, 3.5, -2.0 }, (t_vec) { 0.0, -1.0, 0.0 },
+											(SDL_Color) {204, 102, 255, 0}, 500, 0.6, 5.0, 2.0, 15.0);
 	rtv->obj = new_obj(rtv->obj, CYLINDER, (t_vec) { 3.0, 1.0, 4.0 }, (t_vec) { 0.0, 1.0, 0.0 },
-											(SDL_Color) {0, 255, 255, 0}, 500.0, 0.5, 1.5, 4.0, -1);
+											(SDL_Color) {0, 255, 255, 0}, 500, 0.5, 1.5, 4.0, -1);
 	rtv->obj = new_obj(rtv->obj, SPHERE, (t_vec) { 0.0, -0.25, 3.0 }, (t_vec) { 0.0, 0.0, 0.0 },
-											(SDL_Color) {255, 0, 0, 0}, 1000.0, 0.2, 1.0, -1, -1);
+											(SDL_Color) {255, 0, 0, 0}, 1000, 0.2, 1.0, -1, -1);
 	rtv->obj = new_obj(rtv->obj, PLANE, (t_vec) { 0.0, 0.0, 0.0}, (t_vec) { 0.0, 1.0, 0.0 },
 											(SDL_Color) {255, 255, 0, 0}, 5000, 0.1, -1, -1, -1);
 	rtv->obj = new_obj(rtv->obj, SPHERE, (t_vec) { 2.0, 0.5, 4.0 }, (t_vec) { 0.0, 0.0, 0.0 },
-											(SDL_Color) {0, 0, 255, 0}, 500.0, 0.3, 1.0, -1, -1);
+											(SDL_Color) {0, 0, 255, 0}, 500, 0.3, 1.0, -1, -1);
 	rtv->obj = new_obj(rtv->obj, SPHERE, (t_vec) { -2.0, 0.5, 4.0 }, (t_vec) { 0.0, 0.0, 0.0 },
-											(SDL_Color) {0, 255, 0, 0}, 10000.0, 0.2, 1.0, -1, -1);
+											(SDL_Color) {0, 255, 0, 0}, 10000, 0.2, 1.0, -1, -1);
 	rtv->obj = new_obj(rtv->obj, SPHERE, (t_vec) { 0.0, 1.5, 3.5 }, (t_vec) { 0.0, 0.0, 0.0 },
-											(SDL_Color) {123, 123, 123, 0}, 150.0, 0.3, 1.0, -1, -1);
+											(SDL_Color) {123, 123, 123, 0}, 150, 0.3, 1.0, -1, -1);
 
-	// ((t_cone*)(rtv->obj->data))->angle = tan(RAD(((t_cone*)(rtv->obj->data))->angle));
-	// double xx = rtv->obj->next->normal.x;
-	// double yy = rtv->obj->next->normal.y;
-	// rtv->obj->next->normal.x = xx * cos(RAD(-45)) - yy * sin(RAD(-45));
-	// rtv->obj->next->normal.y = -xx * sin(RAD(-45)) + yy * cos(RAD(-45));
+	((t_cone*)(rtv->obj->data))->angle = tan(RAD(((t_cone*)(rtv->obj->data))->angle));
+	double xx = rtv->obj->next->normal.x;
+	double yy = rtv->obj->next->normal.y;
+	rtv->obj->next->normal.x = xx * cos(RAD(-45)) - yy * sin(RAD(-45));
+	rtv->obj->next->normal.y = -xx * sin(RAD(-45)) + yy * cos(RAD(-45));
 
 	rtv->light = new_light(rtv->light, AMBIENT, 0.2, (t_vec) { 0.0, 0.0, 0.0 });
 	rtv->light = new_light(rtv->light, POINT, 0.4, (t_vec) { 0.0, 1.0, -4.0 });
-	// rtv->light = new_light(rtv->light, DIRECTIONAL, 0.2, (t_vec) { 1.0, 4.0, 4.0 });
+	rtv->light = new_light(rtv->light, DIRECTIONAL, 0.2, (t_vec) { 1.0, 4.0, 4.0 });
 
 	t_vec camera = { 0.0, 0.5, -5.0 };
 	rtv->camera = camera;

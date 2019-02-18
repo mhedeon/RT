@@ -17,7 +17,7 @@ PLANE | center 0.0 0.0 0.0 | normal 1.0.0.0 0.0 | color 255 255 255 | specular 2
 */
 
 // t_object *new_obj(t_object *obj, char *line)
-t_object *new_obj(t_object *obj, int type, t_vec center, t_vec normal, SDL_Color color, double specular, double reflect,  double radius,  double height,  double angle)
+t_object *new_obj(t_object *obj, int type, t_vec center, t_vec normal, SDL_Color color, int specular, double reflect,  double radius,  double height,  double angle)
 {
 	t_object	*start;
 	t_object	*new;
@@ -48,7 +48,7 @@ t_object *new_obj(t_object *obj, int type, t_vec center, t_vec normal, SDL_Color
 		((t_cylinder*)(new->data))->radius = radius;
 		((t_cylinder*)(new->data))->height = height;
 	}
-	else if (type == CYLINDER)
+	else if (type == CONE)
 	{
 		new->data = (t_cone *)malloc(sizeof(t_cone));
 		((t_cone*)(new->data))->radius = radius;

@@ -127,10 +127,10 @@ double *intersect_cone(t_vec *camera, t_vec *dir, t_object *cone, double *ts)
 	ts[0] = (-k2 + sqrt(dis)) / (2.0 * k1);
 	ts[1] = (-k2 - sqrt(dis)) / (2.0 * k1);
 	double m = dot(*dir, cone->normal) * ts[0] + dot(substruct(*camera, cone->center), cone->normal);
-	if (m < 0 || m > 2.0)
+	if (m < 0.0 || m > CONE_D->height)
 		ts[0] = INFINITY;
 	m = dot(*dir, cone->normal) * ts[1] + dot(substruct(*camera, cone->center), cone->normal);
-	if (m < 0 || m > 2.0)
+	if (m < 0 || m > CONE_D->height)
 		ts[1] = INFINITY;
 	return (ts);
 }

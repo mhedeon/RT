@@ -6,13 +6,13 @@
 /*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/11 15:42:36 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/02/18 23:21:58 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/02/19 23:31:58 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "rtv1.h"
 
-double lighting(t_rtv *rtv, t_vec *point, t_vec *normal, t_vec *view, int specular)
+double lighting(t_rtv *rtv, t_vec *point, t_vec *normal, t_vec *view)
 {
 	double in = 0.0;
 	double len = length(*normal);
@@ -29,15 +29,15 @@ double lighting(t_rtv *rtv, t_vec *point, t_vec *normal, t_vec *view, int specul
 			if (tmp->type == POINT)
 			{
 				vec_l = substruct(tmp->pos, *point);
-				close_inters(rtv, (t_fov){*point, vec_l}/*point, &vec_l*/, 0.0001, 1.0);
+				close_inters(rtv, (t_fov){*point, vec_l}, 0.000000001, 1.0);
 			}
 			else
 			{
 				vec_l = tmp->pos;
-				close_inters(rtv, (t_fov){*point, vec_l}/*point, &vec_l*/, 0.0001, INFINITY);
+				close_inters(rtv, (t_fov){*point, vec_l}, 0.000000001, INFINITY);
 			}
 
-			if (rtv->close_sph != NULL)
+			if (rtv->close_o != NULL)
 			{
 				tmp = tmp->next;
 				continue ;
@@ -50,13 +50,13 @@ double lighting(t_rtv *rtv, t_vec *point, t_vec *normal, t_vec *view, int specul
 						(len * length(vec_l));
 
 			// specular
-			if (specular != -1)
+			if (rtv->close_o->specular != -1)
 			{
 				t_vec vec_r = multiply(2.0 * dot(*normal, vec_l), *normal);
 				vec_r = substruct(vec_r, vec_l);
 				double r_dot = dot(vec_r, *view);
 				if (r_dot > 0.0)
-					in += tmp->intens * pow(r_dot / (length(vec_r) * len_v), specular);
+					in += tmp->intens * pow(r_dot / (length(vec_r) * len_v), rtv->close_o->specular);
 			}
 		}
 		tmp = tmp->next;
@@ -66,11 +66,30 @@ double lighting(t_rtv *rtv, t_vec *point, t_vec *normal, t_vec *view, int specul
 	return (in);
 }
 
-t_vec get_normal(t_fov pr, t_fov *fov, t_object *close_o, double close)
+void pr_v(char *s, t_vec v)
 {
-	double m;
-	t_vec normal = {0, 0, 0};
+	printf("%s: x: %f | y: %f | z: %f\n", s, v.x, v.y, v.z);
+}
 
+SDL_Color trace(t_rtv *rtv, t_fov *fov, double min, double max, int depth)
+{
+	double close;
+	t_object *close_o;
+	t_fov	pr;
+
+	close_inters(rtv, *fov,  min, max);
+
+	close = rtv->close;
+	close_o = rtv->close_o;
+
+	if (close_o == NULL)
+		return ((SDL_Color) { 0, 0, 0, 0});
+
+	// pr = *fov;
+	pr.c = add(fov->c, multiply(close, fov->d)); //point
+	// fov->d = close_o->get_normal(rtv, pr.c, pr.d, fov->c);
+	// t_vec normal = close_o->get_normal(rtv, fov->c, fov->d, pr.c);
+	t_vec normal = {0, 0, 0};
 	if (close_o->type == PLANE)
 	{
 		if (dot(fov->d, close_o->normal) < 0.0)
@@ -84,81 +103,42 @@ t_vec get_normal(t_fov pr, t_fov *fov, t_object *close_o, double close)
 	}
 	else if (close_o->type == CYLINDER)
 	{
-		m = dot(fov->d, close_o->normal) * close + dot(substruct(fov->c, close_o->center), close_o->normal);
+		double m = dot(fov->d, close_o->normal) * close + dot(substruct(fov->c, close_o->center), close_o->normal);
 		normal = substruct(substruct(pr.c, close_o->center), multiply(m, close_o->normal));
 		normal = normalize(normal);
 	}
 	else if (close_o->type == CONE)
 	{
-		m = dot(fov->d, close_o->normal) * close + dot(substruct(fov->c, close_o->center), close_o->normal);
+		double m = dot(fov->d, close_o->normal) * close + dot(substruct(fov->c, close_o->center), close_o->normal);
 		normal = substruct(substruct(pr.c, close_o->center), multiply(1.0 + pow(((t_cone*)(close_o->data))->angle, 2.0), multiply(m, close_o->normal)));
-		normal = normalize(normal);
-	}
-	return (normal);
-}
-
-SDL_Color trace(t_rtv *rtv, t_fov *fov, double min, double max, int depth)
-{
-	double close;
-	t_object *close_sph;
-	t_fov	pr;
-
-	close_inters(rtv, *fov,  min, max);
-
-	close = rtv->close;
-	close_sph = rtv->close_sph;
-
-	if (close_sph == NULL)
-		return ((SDL_Color) { 0, 0, 0, 0});
-
-
-	pr.c = add(fov->c, multiply(close, fov->d));
-	t_vec normal = {0, 0, 0};
-	if (close_sph->type == PLANE)
-	{
-		if (dot(fov->d, close_sph->normal) < 0.0)
-			normal = close_sph->normal;
-		else
-			normal = multiply(-1.0, close_sph->normal);
-	}
-	else if (close_sph->type == SPHERE)
-	{
-		normal = normalize(substruct(pr.c, close_sph->center));
-	}
-	else if (close_sph->type == CYLINDER)
-	{
-		double m = dot(fov->d, close_sph->normal) * close + dot(substruct(fov->c, close_sph->center), close_sph->normal);
-		normal = substruct(substruct(pr.c, close_sph->center), multiply(m, close_sph->normal));
-		normal = normalize(normal);
-	}
-	else if (close_sph->type == CONE)
-	{
-		double m = dot(fov->d, close_sph->normal) * close + dot(substruct(fov->c, close_sph->center), close_sph->normal);
-		normal = substruct(substruct(pr.c, close_sph->center), multiply(1.0 + pow(((t_cone*)(close_sph->data))->angle, 2.0), multiply(m, close_sph->normal)));
 		normal = normalize(normal);
 	}
 
 	t_vec view = multiply(-1.0, fov->d);
 	pr.d = multiply(-1.0, fov->d);
-	close = lighting(rtv, &pr.c, &normal, &view, close_sph->specular);
-	SDL_Color local_color = { (Uint8)(close * close_sph->color.r),
-								(Uint8)(close * close_sph->color.g),
-								(Uint8)(close * close_sph->color.b), 0 };
+	pr_v("point", pr.c);
+	pr_v("normal", normal);
+	pr_v("view", view);
+	close = lighting(rtv, &pr.c, &normal, &view);
+	SDL_Color local_color = { (Uint8)(close * close_o->color.r),
+								(Uint8)(close * close_o->color.g),
+								(Uint8)(close * close_o->color.b), 0 };
 
-	if (close_sph->reflective <= 0.0 || depth <= 0)
+	if (close_o->reflective <= 0.0 || depth <= 0)
 		return (local_color);
 
-	pr.d = reflect(view, normal);
-	SDL_Color ref_c = trace(rtv, &pr, 0.0001, max, depth - 1);
-	return ((SDL_Color) { (Uint8)((1.0 - close_sph->reflective) * local_color.r + close_sph->reflective * ref_c.r),
-							(Uint8)((1.0 - close_sph->reflective) * local_color.g + close_sph->reflective * ref_c.g),
-							(Uint8)((1.0 - close_sph->reflective) * local_color.b + close_sph->reflective * ref_c.b), 0 });
+	pr.c = reflect(view, normal);
+	SDL_Color ref_c = trace(rtv, fov, 0.000000001, max, depth - 1);
+	return ((SDL_Color) { (Uint8)((1.0 - close_o->reflective) * local_color.r + close_o->reflective * ref_c.r),
+							(Uint8)((1.0 - close_o->reflective) * local_color.g + close_o->reflective * ref_c.g),
+							(Uint8)((1.0 - close_o->reflective) * local_color.b + close_o->reflective * ref_c.b), 0 });
 }
 
 t_vec rot_y(t_vec v, int angle)
 {
 	double x = v.x;
 	double z = v.z;
+
 	v.x = x * cos(RAD(angle)) + z * sin(RAD(angle));
 	v.z = -x * sin(RAD(angle)) + z * cos(RAD(angle));
 	return (v);
@@ -168,6 +148,7 @@ t_vec rot_x(t_vec v, int angle)
 {
 	double y = v.y;
 	double z = v.z;
+	
 	v.y = y * cos(RAD(angle)) + z * sin(RAD(angle));
 	v.z = -y * sin(RAD(angle)) + z * cos(RAD(angle));
 	return (v);
@@ -266,7 +247,7 @@ int main()
 	rtv->obj->next->normal.y = -xx * sin(RAD(-45)) + yy * cos(RAD(-45));
 
 	rtv->light = new_light(rtv->light, AMBIENT, 0.2, (t_vec) { 0.0, 0.0, 0.0 });
-	rtv->light = new_light(rtv->light, POINT, 0.8, (t_vec) { 0.0, 1.0, -4.0 });
+	rtv->light = new_light(rtv->light, POINT, 0.8, (t_vec) { 0.0, -3.0, -4.0 });
 	rtv->light = new_light(rtv->light, DIRECTIONAL, 0.0, (t_vec) { 1.0, 4.0, 4.0 });
 
 	t_vec camera = { 0.0, 0.5, -5.0 };

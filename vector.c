@@ -6,7 +6,7 @@
 /*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/11 15:42:43 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/02/16 22:11:47 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/02/19 17:12:39 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,5 @@ t_vec reflect(t_vec v1, t_vec v2)
 
 t_vec normalize(t_vec v)
 {
-	double len = length(v);
-	v = multiply(1.0 / len, v);
-	return (v);
+	return (multiply(1.0 / length(v), v));
 }

@@ -6,7 +6,7 @@
 /*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/11 16:08:48 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/02/18 23:20:11 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/02/19 23:15:02 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,6 +114,8 @@ typedef struct	s_object
 	int		specular;
 	double		reflective;
 	void		*data;
+	void		(*intersect)();
+	t_vec		(*get_normal)();
 	t_buffer	buff;
 	struct s_object *next;
 }				t_object;
@@ -138,7 +140,7 @@ typedef struct	s_rtv
 	t_fov	fov;
 
 	double close;
-	t_object *close_sph;
+	t_object *close_o;
 
 	t_object *obj;
 	t_light *light;
@@ -153,7 +155,7 @@ typedef struct	s_rtv
 /*
 **	main.c
 */
-double lighting(t_rtv *rtv, t_vec *point, t_vec *normal, t_vec *view, int specular);
+double lighting(t_rtv *rtv, t_vec *point, t_vec *normal, t_vec *view);
 SDL_Color trace(t_rtv *rtv, t_fov *fov, double min, double max, int depth);
 t_vec rot_y(t_vec v, int angle);
 t_vec rot_x(t_vec v, int angle);
@@ -194,5 +196,9 @@ t_vec normalize(t_vec v);
 */
 t_object *new_obj(t_object *obj, int type, t_vec center, t_vec normal, SDL_Color color, int specular, double reflect,  double radius,  double height,  double angle);
 t_light *new_light(t_light *l, int type, double intens, t_vec pos);
+t_vec normal_plane(t_rtv *rtv, t_vec camera, t_vec dir, t_vec point);
+t_vec normal_sphere(t_rtv *rtv, t_vec camera, t_vec dir, t_vec point);
+t_vec normal_cylinder(t_rtv *rtv, t_vec camera, t_vec dir, t_vec point);
+t_vec normal_cone(t_rtv *rtv, t_vec camera, t_vec dir, t_vec point);
 
 #endif

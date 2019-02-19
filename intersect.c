@@ -6,7 +6,7 @@
 /*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/11 17:27:52 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/02/18 23:02:02 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/02/19 22:39:45 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,23 +19,20 @@ void			close_inters(t_rtv *rtv, t_fov fov, double min, double max)
 
 	tmp = rtv->obj;
 	rtv->close = INFINITY;
-	rtv->close_sph = NULL;
+	rtv->close_o = NULL;
 
 	while (tmp != NULL)
 	{
-		tmp->type == PLANE ? intersect_plane(&fov.c, &fov.d, tmp, ts) : 0;
-		tmp->type == SPHERE ? intersect_sphere(&fov.c, &fov.d, tmp, ts) : 0;
-		tmp->type == CYLINDER ? intersect_cylinder(&fov.c, &fov.d, tmp, ts) : 0;
-		tmp->type == CONE ? intersect_cone(&fov.c, &fov.d, tmp, ts) : 0;
+		tmp->intersect(&fov.c, &fov.d, tmp, ts);
 		if (ts[0] < rtv->close && min < ts[0] && ts[0] < max)
 		{
 			rtv->close = ts[0];
-			rtv->close_sph = tmp;
+			rtv->close_o = tmp;
 		}
 		if (ts[1] < rtv->close && min < ts[1] && ts[1] < max)
 		{
 			rtv->close = ts[1];
-			rtv->close_sph = tmp;
+			rtv->close_o = tmp;
 		}
 		tmp = tmp->next;
 	}

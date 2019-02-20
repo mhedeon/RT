@@ -6,7 +6,7 @@
 /*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/11 15:42:36 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/02/20 18:35:52 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/02/20 18:58:16 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,40 +77,27 @@ double lighting(t_rtv *rtv, t_vec *point, t_vec *normal, t_vec *view, int specul
 	return (in);
 }
 
-SDL_Color trace(t_rtv *rtv, t_fov fov)
+SDL_Color trace(t_rtv *rtv, t_fov tmp)
 {
 	double close;
 	t_object *close_o;
-	t_fov	pr;
 	SDL_Color local_color;
 
-	close_inters(rtv, fov, EPSILON, INFINITY);
-
+	close_inters(rtv, rtv->fov, EPSILON, INFINITY);
 	close = rtv->close;
 	close_o = rtv->close_o;
-
 	if (close_o == NULL)
 		return ((SDL_Color) { 0, 0, 0, 0});
-
-	pr.cam = add(fov.cam, multiply(close, fov.dir)); //point
-	rtv->fov.cam = add(fov.cam, multiply(close, fov.dir));;
-
-	t_vec normal = close_o->get_normal(rtv, fov.cam, fov.dir, rtv->fov.cam);
-
-	t_vec view = multiply(-1.0, fov.dir);
-	pr.dir = multiply(-1.0, fov.dir);
-	close = lighting(rtv, &pr.cam, &normal, &view, close_o->specular);
-
+	rtv->fov.cam = add(rtv->fov.cam, multiply(close, rtv->fov.dir));
+	tmp.dir = close_o->get_normal(rtv, tmp.cam, rtv->fov.dir, rtv->fov.cam);
+	rtv->fov.dir = multiply(-1.0, rtv->fov.dir);
+	close = lighting(rtv, &rtv->fov.cam, &tmp.dir, &rtv->fov.dir, close_o->specular);
 	local_color = do_color((SDL_Color){0, 0, 0, 0}, close_o->color, close);
 	if (close_o->reflective <= 0.0 || rtv->depth <= 0)
 		return (local_color);
-
-	pr.dir = reflect(view, normal);
-	fov.cam = pr.cam;
-	fov.dir = pr.dir;
+	rtv->fov.dir = reflect(rtv->fov.dir, tmp.dir);
 	rtv->depth -= 1;
-
-	return (do_color(local_color, trace(rtv, fov), close_o->reflective));
+	return (do_color(local_color, trace(rtv, rtv->fov), close_o->reflective));
 }
 
 int main()

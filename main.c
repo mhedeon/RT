@@ -12,7 +12,7 @@
 
 #include "rtv1.h"
 
-double lighting(t_rtv *rtv, t_vec *point, t_vec *normal, t_vec *view)
+double lighting(t_rtv *rtv, t_vec *point, t_vec *normal, t_vec *view, int specular)
 {
 	double in = 0.0;
 	double len = length(*normal);
@@ -50,13 +50,13 @@ double lighting(t_rtv *rtv, t_vec *point, t_vec *normal, t_vec *view)
 						(len * length(vec_l));
 
 			// specular
-			if (rtv->close_o->specular != -1)
+			if (specular != -1)
 			{
 				t_vec vec_r = multiply(2.0 * dot(*normal, vec_l), *normal);
 				vec_r = substruct(vec_r, vec_l);
 				double r_dot = dot(vec_r, *view);
 				if (r_dot > 0.0)
-					in += tmp->intens * pow(r_dot / (length(vec_r) * len_v), rtv->close_o->specular);
+					in += tmp->intens * pow(r_dot / (length(vec_r) * len_v), specular);
 			}
 		}
 		tmp = tmp->next;
@@ -87,39 +87,12 @@ SDL_Color trace(t_rtv *rtv, t_fov *fov, double min, double max, int depth)
 
 	// pr = *fov;
 	pr.c = add(fov->c, multiply(close, fov->d)); //point
-	// fov->d = close_o->get_normal(rtv, pr.c, pr.d, fov->c);
-	// t_vec normal = close_o->get_normal(rtv, fov->c, fov->d, pr.c);
-	t_vec normal = {0, 0, 0};
-	if (close_o->type == PLANE)
-	{
-		if (dot(fov->d, close_o->normal) < 0.0)
-			normal = close_o->normal;
-		else
-			normal = multiply(-1.0, close_o->normal);
-	}
-	else if (close_o->type == SPHERE)
-	{
-		normal = normalize(substruct(pr.c, close_o->center));
-	}
-	else if (close_o->type == CYLINDER)
-	{
-		double m = dot(fov->d, close_o->normal) * close + dot(substruct(fov->c, close_o->center), close_o->normal);
-		normal = substruct(substruct(pr.c, close_o->center), multiply(m, close_o->normal));
-		normal = normalize(normal);
-	}
-	else if (close_o->type == CONE)
-	{
-		double m = dot(fov->d, close_o->normal) * close + dot(substruct(fov->c, close_o->center), close_o->normal);
-		normal = substruct(substruct(pr.c, close_o->center), multiply(1.0 + pow(((t_cone*)(close_o->data))->angle, 2.0), multiply(m, close_o->normal)));
-		normal = normalize(normal);
-	}
+
+	t_vec normal = close_o->get_normal(rtv, fov->c, fov->d, pr.c);
 
 	t_vec view = multiply(-1.0, fov->d);
 	pr.d = multiply(-1.0, fov->d);
-	pr_v("point", pr.c);
-	pr_v("normal", normal);
-	pr_v("view", view);
-	close = lighting(rtv, &pr.c, &normal, &view);
+	close = lighting(rtv, &pr.c, &normal, &view, close_o->specular);
 	SDL_Color local_color = { (Uint8)(close * close_o->color.r),
 								(Uint8)(close * close_o->color.g),
 								(Uint8)(close * close_o->color.b), 0 };
@@ -127,8 +100,8 @@ SDL_Color trace(t_rtv *rtv, t_fov *fov, double min, double max, int depth)
 	if (close_o->reflective <= 0.0 || depth <= 0)
 		return (local_color);
 
-	pr.c = reflect(view, normal);
-	SDL_Color ref_c = trace(rtv, fov, 0.000000001, max, depth - 1);
+	pr.d = reflect(view, normal);
+	SDL_Color ref_c = trace(rtv, &pr, 0.000000001, max, depth - 1);
 	return ((SDL_Color) { (Uint8)((1.0 - close_o->reflective) * local_color.r + close_o->reflective * ref_c.r),
 							(Uint8)((1.0 - close_o->reflective) * local_color.g + close_o->reflective * ref_c.g),
 							(Uint8)((1.0 - close_o->reflective) * local_color.b + close_o->reflective * ref_c.b), 0 });
@@ -192,7 +165,7 @@ void go(t_rtv *rtv)
 			rtv->dir = direction(x, y, rtv->angle_x, rtv->angle_y);
 			rtv->fov.c = rtv->camera;
 			rtv->fov.d = rtv->dir;
-			rtv->color = trace(rtv, &rtv->fov/*&rtv->camera, &rtv->dir*/, 1.0, INFINITY, 10);
+			rtv->color = trace(rtv, &rtv->fov, 1.0, INFINITY, 3);
 			put_pixel(rtv, x, y);
 		}
 	}
@@ -221,9 +194,12 @@ void threads(t_rtv *rtv)
 int main()
 {
 	t_rtv *rtv = (t_rtv *)malloc(sizeof(t_rtv));
+	if (rtv == NULL)
+		return (1);
 	init(rtv);
 	rtv->angle_x = 0;
 	rtv->angle_y = 0;
+	rtv->depth = 3;
 
 	rtv->obj = new_obj(rtv->obj, CONE, (t_vec) { -1.0, 3.5, -2.0 }, (t_vec) { 0.0, -1.0, 0.0 },
 											(SDL_Color) {204, 102, 255, 0}, 500, 0.6, 5.0, 2.0, 15.0);
@@ -247,7 +223,7 @@ int main()
 	rtv->obj->next->normal.y = -xx * sin(RAD(-45)) + yy * cos(RAD(-45));
 
 	rtv->light = new_light(rtv->light, AMBIENT, 0.2, (t_vec) { 0.0, 0.0, 0.0 });
-	rtv->light = new_light(rtv->light, POINT, 0.8, (t_vec) { 0.0, -3.0, -4.0 });
+	rtv->light = new_light(rtv->light, POINT, 0.8, (t_vec) { 0.0, 4.0, -4.0 });
 	rtv->light = new_light(rtv->light, DIRECTIONAL, 0.0, (t_vec) { 1.0, 4.0, 4.0 });
 
 	t_vec camera = { 0.0, 0.5, -5.0 };
@@ -261,45 +237,44 @@ int main()
 		if (e.type == SDL_QUIT ||
 			(KEY == SDLK_ESCAPE))
 			break;
-		if (KEY == SDLK_LEFT)
+		else if (KEY == SDLK_LEFT)
 		{
 			rtv->dir = direction(0, 0, 0, rtv->angle_y - 90);
 			rtv->camera = add(rtv->camera, multiply(0.25, rtv->dir));
 			printf("go left\n");
 		}
-		if (KEY == SDLK_RIGHT)
+		else if (KEY == SDLK_RIGHT)
 		{
 			rtv->dir = direction(0, 0, 0, rtv->angle_y + 90);
 			rtv->camera = add(rtv->camera, multiply(0.25, rtv->dir));
 			printf("go right\n");
 		}
-		if (KEY == SDLK_UP)
+		else if (KEY == SDLK_UP)
 		{
 			rtv->dir = direction(0, 0, rtv->angle_x, rtv->angle_y);
 			rtv->camera = add(rtv->camera, multiply(0.25, rtv->dir));
 			printf("go up\n");
 		}
-		if (KEY == SDLK_DOWN)
+		else if (KEY == SDLK_DOWN)
 		{
 			rtv->dir = direction(0, 0, rtv->angle_x, rtv->angle_y);
 			rtv->camera = add(rtv->camera, multiply(-0.25, rtv->dir));
 			printf("go down\n");
 		}
-		if (KEY == SDLK_w)
+		else if (KEY == SDLK_w)
 			rtv->angle_x -= 5;
-		if (KEY == SDLK_s)
+		else if (KEY == SDLK_s)
 			rtv->angle_x += 5;
-		if (KEY == SDLK_a)
+		else if (KEY == SDLK_a)
 			rtv->angle_y -= 5;
-		if (KEY == SDLK_d)
+		else if (KEY == SDLK_d)
 			rtv->angle_y += 5;
-		if (e.type == SDL_KEYDOWN)
-		{
-			threads(rtv);
-		}
+		else
+			continue ;
+		threads(rtv);
 	}
 
-	garbage(rtv);
+	//garbage(rtv);
 	// system("leaks rtv");
 	return (0);
 }

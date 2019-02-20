@@ -150,12 +150,14 @@ typedef struct	s_rtv
 
 	int start;
 	int end;
+
+	int depth;
 }				t_rtv;
 
 /*
 **	main.c
 */
-double lighting(t_rtv *rtv, t_vec *point, t_vec *normal, t_vec *view);
+double lighting(t_rtv* rtv, t_vec* point, t_vec* normal, t_vec* view, int specular);
 SDL_Color trace(t_rtv *rtv, t_fov *fov, double min, double max, int depth);
 t_vec rot_y(t_vec v, int angle);
 t_vec rot_x(t_vec v, int angle);

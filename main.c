@@ -6,11 +6,22 @@
 /*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/11 15:42:36 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/02/19 23:31:58 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/02/20 16:44:42 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "rtv1.h"
+
+SDL_Color do_color(SDL_Color local, SDL_Color reflected, double reflective)
+{
+	SDL_Color result;
+
+	result.r = (Uint8)((1.0 - reflective) * local.r + reflective * reflected.r);
+	result.g = (Uint8)((1.0 - reflective) * local.g + reflective * reflected.g);
+	result.b = (Uint8)((1.0 - reflective) * local.b + reflective * reflected.b);
+	result.a = 0;
+	return (result);
+}
 
 double lighting(t_rtv *rtv, t_vec *point, t_vec *normal, t_vec *view, int specular)
 {
@@ -71,11 +82,12 @@ void pr_v(char *s, t_vec v)
 	printf("%s: x: %f | y: %f | z: %f\n", s, v.x, v.y, v.z);
 }
 
-SDL_Color trace(t_rtv *rtv, t_fov *fov, double min, double max, int depth)
+SDL_Color trace(t_rtv *rtv, t_fov *fov, double min, double max)
 {
 	double close;
 	t_object *close_o;
 	t_fov	pr;
+	SDL_Color local_color;
 
 	close_inters(rtv, *fov,  min, max);
 
@@ -85,7 +97,6 @@ SDL_Color trace(t_rtv *rtv, t_fov *fov, double min, double max, int depth)
 	if (close_o == NULL)
 		return ((SDL_Color) { 0, 0, 0, 0});
 
-	// pr = *fov;
 	pr.c = add(fov->c, multiply(close, fov->d)); //point
 
 	t_vec normal = close_o->get_normal(rtv, fov->c, fov->d, pr.c);
@@ -93,102 +104,18 @@ SDL_Color trace(t_rtv *rtv, t_fov *fov, double min, double max, int depth)
 	t_vec view = multiply(-1.0, fov->d);
 	pr.d = multiply(-1.0, fov->d);
 	close = lighting(rtv, &pr.c, &normal, &view, close_o->specular);
-	SDL_Color local_color = { (Uint8)(close * close_o->color.r),
-								(Uint8)(close * close_o->color.g),
-								(Uint8)(close * close_o->color.b), 0 };
 
-	if (close_o->reflective <= 0.0 || depth <= 0)
+	local_color = do_color((SDL_Color){0, 0, 0, 0}, close_o->color, close);
+	if (close_o->reflective <= 0.0 || rtv->depth <= 0)
 		return (local_color);
 
 	pr.d = reflect(view, normal);
-	SDL_Color ref_c = trace(rtv, &pr, 0.000000001, max, depth - 1);
-	return ((SDL_Color) { (Uint8)((1.0 - close_o->reflective) * local_color.r + close_o->reflective * ref_c.r),
-							(Uint8)((1.0 - close_o->reflective) * local_color.g + close_o->reflective * ref_c.g),
-							(Uint8)((1.0 - close_o->reflective) * local_color.b + close_o->reflective * ref_c.b), 0 });
-}
+	fov->c = pr.c;
+	fov->d = pr.d;
+	rtv->depth -= 1;
+	SDL_Color ref_c = trace(rtv, &rtv->fov, 0.000000001, max);
 
-t_vec rot_y(t_vec v, int angle)
-{
-	double x = v.x;
-	double z = v.z;
-
-	v.x = x * cos(RAD(angle)) + z * sin(RAD(angle));
-	v.z = -x * sin(RAD(angle)) + z * cos(RAD(angle));
-	return (v);
-}
-
-t_vec rot_x(t_vec v, int angle)
-{
-	double y = v.y;
-	double z = v.z;
-	
-	v.y = y * cos(RAD(angle)) + z * sin(RAD(angle));
-	v.z = -y * sin(RAD(angle)) + z * cos(RAD(angle));
-	return (v);
-}
-
-t_vec direction(int x, int y, int angle_x, int angle_y)
-{
-	t_vec direction = { (double)x / (double)SCREEN_WIDTH,
-							(double)y / (double)SCREEN_HEIGHT, 1.0 };
-	direction = rot_x(direction, angle_x);
-	direction = rot_y(direction, angle_y);
-	direction = normalize(direction);
-	return (direction);
-}
-
-void optimisation(t_vec *camera, t_object *obj)
-{
-	while (obj != NULL)
-	{
-		if(obj->type == PLANE)
-			((t_plane*)obj->data)->dot1 = -dot(substruct(*camera,
-												obj->center), obj->normal);
-		else if (obj->type == SPHERE)
-		{
-			((t_sphere*)obj->data)->oc = substruct(*camera, obj->center);
-			((t_sphere*)obj->data)->k3 = dot(((t_sphere*)obj->data)->oc,
-			((t_sphere*)obj->data)->oc) - ((t_sphere*)obj->data)->radius_square;
-		}
-		// else if ()
-
-		obj = obj->next;
-	}
-}
-
-void go(t_rtv *rtv)
-{
-	for (int y = rtv->start; y < rtv->end; y++)
-	{
-		for (int x = -(SCREEN_WIDTH / 2); x < SCREEN_WIDTH / 2; x++)
-		{
-			rtv->dir = direction(x, y, rtv->angle_x, rtv->angle_y);
-			rtv->fov.c = rtv->camera;
-			rtv->fov.d = rtv->dir;
-			rtv->color = trace(rtv, &rtv->fov, 1.0, INFINITY, 3);
-			put_pixel(rtv, x, y);
-		}
-	}
-}
-
-void threads(t_rtv *rtv)
-{
-	SDL_Thread *thread[THREADS];
-	t_rtv ttt[THREADS];
-
-	// optimisation(&rtv->camera, rtv->obj);
-	for (int i = 0; i < THREADS; i++)
-	{
-		ttt[i] = *rtv;
-		ttt[i].start = i * SCREEN_HEIGHT / THREADS - SCREEN_HEIGHT / 2;
-		ttt[i].end = (i + 1) * SCREEN_HEIGHT / THREADS - SCREEN_HEIGHT / 2;
-		thread[i] = SDL_CreateThread((int(*)())go, "go", &ttt[i]);
-		printf("[%d] start: %d | end: %d\n", i, ttt[i].start, ttt[i].end);
-	}
-	for (int i = 0; i < THREADS; i++)
-		SDL_WaitThread(thread[i], NULL);
-	screen_upd(rtv);
-	printf("DONE\n");
+	return (do_color(local_color, ref_c, close_o->reflective));
 }
 
 int main()
@@ -199,7 +126,6 @@ int main()
 	init(rtv);
 	rtv->angle_x = 0;
 	rtv->angle_y = 0;
-	rtv->depth = 3;
 
 	rtv->obj = new_obj(rtv->obj, CONE, (t_vec) { -1.0, 3.5, -2.0 }, (t_vec) { 0.0, -1.0, 0.0 },
 											(SDL_Color) {204, 102, 255, 0}, 500, 0.6, 5.0, 2.0, 15.0);
@@ -277,4 +203,41 @@ int main()
 	//garbage(rtv);
 	// system("leaks rtv");
 	return (0);
+}
+
+void go(t_rtv *rtv)
+{
+	for (int y = rtv->start; y < rtv->end; y++)
+	{
+		for (int x = -(SCREEN_WIDTH / 2); x < SCREEN_WIDTH / 2; x++)
+		{
+			rtv->depth = DEPTH;
+			rtv->dir = direction(x, y, rtv->angle_x, rtv->angle_y);
+			rtv->fov.c = rtv->camera;
+			rtv->fov.d = rtv->dir;
+			rtv->color = trace(rtv, &rtv->fov, 1.0, INFINITY);
+			put_pixel(rtv, x, y);
+		}
+	}
+}
+
+void threads(t_rtv *rtv)
+{
+	int i;
+	SDL_Thread *thread[THREADS];
+	t_rtv ttt[THREADS];
+
+	i = -1;
+	while (++i < THREADS)
+	{
+		ttt[i] = *rtv;
+		ttt[i].start = i * SCREEN_HEIGHT / THREADS - SCREEN_HEIGHT / 2;
+		ttt[i].end = (i + 1) * SCREEN_HEIGHT / THREADS - SCREEN_HEIGHT / 2;
+		thread[i] = SDL_CreateThread((int(*)())go, "go", &ttt[i]);
+		printf("[%d] start: %d | end: %d\n", i, ttt[i].start, ttt[i].end);
+	}
+	while (--i >= 0)
+		SDL_WaitThread(thread[i], NULL);
+	screen_upd(rtv);
+	printf("DONE\n");
 }

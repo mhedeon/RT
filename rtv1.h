@@ -6,7 +6,7 @@
 /*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/11 16:08:48 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/02/19 23:15:02 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/02/20 16:44:19 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@
 # define SCREEN_HEIGHT 600
 
 # define THREADS 8
+# define DEPTH 3
 
 /*
 **	from radians to degrees
@@ -158,10 +159,9 @@ typedef struct	s_rtv
 **	main.c
 */
 double lighting(t_rtv* rtv, t_vec* point, t_vec* normal, t_vec* view, int specular);
-SDL_Color trace(t_rtv *rtv, t_fov *fov, double min, double max, int depth);
-t_vec rot_y(t_vec v, int angle);
-t_vec rot_x(t_vec v, int angle);
-t_vec direction(int x, int y, int angle_x, int angle_y);
+SDL_Color trace(t_rtv *rtv, t_fov *fov, double min, double max);
+void go(t_rtv *rtv);
+void threads(t_rtv *rtv);
 
 /*
 **	intersect.c
@@ -192,6 +192,10 @@ t_vec multiply(double k, t_vec v1);
 t_vec add(t_vec v1, t_vec v2);
 t_vec reflect(t_vec v1, t_vec v2);
 t_vec normalize(t_vec v);
+/////////////////////////////////////////////////
+t_vec rot_y(t_vec v, int angle);
+t_vec rot_x(t_vec v, int angle);
+t_vec direction(int x, int y, int angle_x, int angle_y);
 
 /*
 **	objects.c

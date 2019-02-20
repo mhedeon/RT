@@ -6,7 +6,7 @@
 /*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/11 15:42:36 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/02/20 16:44:42 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/02/20 18:35:52 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,19 +77,14 @@ double lighting(t_rtv *rtv, t_vec *point, t_vec *normal, t_vec *view, int specul
 	return (in);
 }
 
-void pr_v(char *s, t_vec v)
-{
-	printf("%s: x: %f | y: %f | z: %f\n", s, v.x, v.y, v.z);
-}
-
-SDL_Color trace(t_rtv *rtv, t_fov *fov, double min, double max)
+SDL_Color trace(t_rtv *rtv, t_fov fov)
 {
 	double close;
 	t_object *close_o;
 	t_fov	pr;
 	SDL_Color local_color;
 
-	close_inters(rtv, *fov,  min, max);
+	close_inters(rtv, fov, EPSILON, INFINITY);
 
 	close = rtv->close;
 	close_o = rtv->close_o;
@@ -97,25 +92,25 @@ SDL_Color trace(t_rtv *rtv, t_fov *fov, double min, double max)
 	if (close_o == NULL)
 		return ((SDL_Color) { 0, 0, 0, 0});
 
-	pr.c = add(fov->c, multiply(close, fov->d)); //point
+	pr.cam = add(fov.cam, multiply(close, fov.dir)); //point
+	rtv->fov.cam = add(fov.cam, multiply(close, fov.dir));;
 
-	t_vec normal = close_o->get_normal(rtv, fov->c, fov->d, pr.c);
+	t_vec normal = close_o->get_normal(rtv, fov.cam, fov.dir, rtv->fov.cam);
 
-	t_vec view = multiply(-1.0, fov->d);
-	pr.d = multiply(-1.0, fov->d);
-	close = lighting(rtv, &pr.c, &normal, &view, close_o->specular);
+	t_vec view = multiply(-1.0, fov.dir);
+	pr.dir = multiply(-1.0, fov.dir);
+	close = lighting(rtv, &pr.cam, &normal, &view, close_o->specular);
 
 	local_color = do_color((SDL_Color){0, 0, 0, 0}, close_o->color, close);
 	if (close_o->reflective <= 0.0 || rtv->depth <= 0)
 		return (local_color);
 
-	pr.d = reflect(view, normal);
-	fov->c = pr.c;
-	fov->d = pr.d;
+	pr.dir = reflect(view, normal);
+	fov.cam = pr.cam;
+	fov.dir = pr.dir;
 	rtv->depth -= 1;
-	SDL_Color ref_c = trace(rtv, &rtv->fov, 0.000000001, max);
 
-	return (do_color(local_color, ref_c, close_o->reflective));
+	return (do_color(local_color, trace(rtv, fov), close_o->reflective));
 }
 
 int main()
@@ -129,8 +124,8 @@ int main()
 
 	rtv->obj = new_obj(rtv->obj, CONE, (t_vec) { -1.0, 3.5, -2.0 }, (t_vec) { 0.0, -1.0, 0.0 },
 											(SDL_Color) {204, 102, 255, 0}, 500, 0.6, 5.0, 2.0, 15.0);
-	rtv->obj = new_obj(rtv->obj, CYLINDER, (t_vec) { 3.0, 1.0, 4.0 }, (t_vec) { 0.0, 1.0, 0.0 },
-											(SDL_Color) {0, 255, 255, 0}, 500, 0.5, 1.5, 4.0, -1);
+	rtv->obj = new_obj(rtv->obj, CYLINDER, (t_vec) { 0.0, 2.5, 3.5 }, (t_vec) { 0.0, 1.0, 0.0 },
+											(SDL_Color) {0, 255, 255, 0}, 500, 0.5, 1.5, 0.2, -1);
 	rtv->obj = new_obj(rtv->obj, SPHERE, (t_vec) { 0.0, -0.25, 3.0 }, (t_vec) { 0.0, 0.0, 0.0 },
 											(SDL_Color) {255, 0, 0, 0}, 1000, 0.2, 1.0, -1, -1);
 	rtv->obj = new_obj(rtv->obj, PLANE, (t_vec) { 0.0, 0.0, 0.0}, (t_vec) { 0.0, 1.0, 0.0 },
@@ -139,8 +134,10 @@ int main()
 											(SDL_Color) {0, 0, 255, 0}, 500, 0.3, 1.0, -1, -1);
 	rtv->obj = new_obj(rtv->obj, SPHERE, (t_vec) { -2.0, 0.5, 4.0 }, (t_vec) { 0.0, 0.0, 0.0 },
 											(SDL_Color) {0, 255, 0, 0}, 3000, 0.4, 1.0, -1, -1);
-	rtv->obj = new_obj(rtv->obj, SPHERE, (t_vec) { 0.0, 1.5, 3.5 }, (t_vec) { 0.0, 0.0, 0.0 },
+	rtv->obj = new_obj(rtv->obj, SPHERE, (t_vec) { 0.0, 2.5, 3.5 }, (t_vec) { 0.0, 0.0, 0.0 },
 											(SDL_Color) {123, 123, 123, 0}, 150, 0.3, 1.0, -1, -1);
+	rtv->obj = new_obj(rtv->obj, CYLINDER, (t_vec) { 0.0, 2.5, 3.5 }, (t_vec) { 0.0, 1.0, 0.0 },
+											(SDL_Color) {213, 156, 40, 0}, 500, 0.5, 1.5, 0.2, -1);
 
 	((t_cone*)(rtv->obj->data))->angle = tan(RAD(((t_cone*)(rtv->obj->data))->angle));
 	double xx = rtv->obj->next->normal.x;
@@ -213,9 +210,9 @@ void go(t_rtv *rtv)
 		{
 			rtv->depth = DEPTH;
 			rtv->dir = direction(x, y, rtv->angle_x, rtv->angle_y);
-			rtv->fov.c = rtv->camera;
-			rtv->fov.d = rtv->dir;
-			rtv->color = trace(rtv, &rtv->fov, 1.0, INFINITY);
+			rtv->fov.cam = rtv->camera;
+			rtv->fov.dir = rtv->dir;
+			rtv->color = trace(rtv, rtv->fov);
 			put_pixel(rtv, x, y);
 		}
 	}

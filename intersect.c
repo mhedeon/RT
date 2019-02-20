@@ -6,7 +6,7 @@
 /*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/11 17:27:52 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/02/19 22:39:45 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/02/20 18:03:33 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void			close_inters(t_rtv *rtv, t_fov fov, double min, double max)
 
 	while (tmp != NULL)
 	{
-		tmp->intersect(&fov.c, &fov.d, tmp, ts);
+		tmp->intersect(&fov.cam, &fov.dir, tmp, ts);
 		if (ts[0] < rtv->close && min < ts[0] && ts[0] < max)
 		{
 			rtv->close = ts[0];

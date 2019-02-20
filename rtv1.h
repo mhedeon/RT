@@ -6,7 +6,7 @@
 /*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/11 16:08:48 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/02/20 16:44:19 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/02/20 18:02:09 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@
 
 # define THREADS 8
 # define DEPTH 3
+# define EPSILON ((double)0.000000001)
 
 /*
 **	from radians to degrees
@@ -123,8 +124,8 @@ typedef struct	s_object
 
 typedef struct	s_fov
 {
-	t_vec		c;
-	t_vec		d;
+	t_vec		cam;
+	t_vec		dir;
 }				t_fov;
 
 
@@ -159,7 +160,7 @@ typedef struct	s_rtv
 **	main.c
 */
 double lighting(t_rtv* rtv, t_vec* point, t_vec* normal, t_vec* view, int specular);
-SDL_Color trace(t_rtv *rtv, t_fov *fov, double min, double max);
+SDL_Color trace(t_rtv *rtv, t_fov fov);
 void go(t_rtv *rtv);
 void threads(t_rtv *rtv);
 

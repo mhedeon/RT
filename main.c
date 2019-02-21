@@ -6,7 +6,7 @@
 /*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/11 15:42:36 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/02/20 18:58:16 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/02/21 19:05:17 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,57 +23,44 @@ SDL_Color do_color(SDL_Color local, SDL_Color reflected, double reflective)
 	return (result);
 }
 
-double lighting(t_rtv *rtv, t_vec *point, t_vec *normal, t_vec *view, int specular)
+double		point(t_rtv *rtv, t_fov pv, t_vec normal, int specular)
+{
+	double	in;
+	t_vec	vec_l;
+	t_vec	vec_r;
+
+	in = 0.0;
+	vec_l = substruct(rtv->light->pos, pv.cam);
+	close_inters(rtv, (t_fov){pv.cam, vec_l}, 0.000000001, 1.0);
+	if (rtv->close_o != NULL)
+		return (0.0);
+	rtv->close = dot(normal, vec_l);
+	in += rtv->close > 0.0 ? rtv->light->intens * rtv->close /
+			(length(normal) * length(vec_l)) : 0.0;
+	vec_r = multiply(2.0 * dot(normal, vec_l), normal);
+	vec_r = substruct(vec_r, vec_l);
+	rtv->close = dot(vec_r, pv.dir);
+	in += rtv->close > 0.0 ? rtv->light->intens * pow(rtv->close /
+			(length(vec_r) * length(pv.dir)), specular) : 0.0;
+	return (in);
+}
+
+double lighting(t_rtv *rtv, t_fov pv, t_vec normal, int specular)
 {
 	double in = 0.0;
-	double len = length(*normal);
-	double len_v = length(*view);
-	t_light *tmp = rtv->light;
+	t_light *tmp;
 
-	while (tmp != NULL)
+	tmp = rtv->light;
+	while (rtv->light != NULL)
 	{
-		if (tmp->type == AMBIENT)
-			in += tmp->intens;
-		else
-		{
-			t_vec vec_l;
-			if (tmp->type == POINT)
-			{
-				vec_l = substruct(tmp->pos, *point);
-				close_inters(rtv, (t_fov){*point, vec_l}, 0.000000001, 1.0);
-			}
-			else
-			{
-				vec_l = tmp->pos;
-				close_inters(rtv, (t_fov){*point, vec_l}, 0.000000001, INFINITY);
-			}
-
-			if (rtv->close_o != NULL)
-			{
-				tmp = tmp->next;
-				continue ;
-			}
-
-			 // difuse
-			double n_dot = dot(*normal, vec_l);
-			if (n_dot > 0.0)
-				in += tmp->intens * n_dot /
-						(len * length(vec_l));
-
-			// specular
-			if (specular != -1)
-			{
-				t_vec vec_r = multiply(2.0 * dot(*normal, vec_l), *normal);
-				vec_r = substruct(vec_r, vec_l);
-				double r_dot = dot(vec_r, *view);
-				if (r_dot > 0.0)
-					in += tmp->intens * pow(r_dot / (length(vec_r) * len_v), specular);
-			}
-		}
-		tmp = tmp->next;
+		in += rtv->light->type == AMBIENT ? rtv->light->intens : 0.0;
+		in += rtv->light->type == POINT ?
+				point(rtv, pv, normal, specular) : 0.0;
+		rtv->light = rtv->light->next;
 	}
-	if (in > 1.0)
-		in = 1.0;
+	rtv->light = tmp;
+	in = in > 1.0 ? 1.0 : in;
+	in = in < 0.0 ? 0.0 : in;
 	return (in);
 }
 
@@ -87,11 +74,11 @@ SDL_Color trace(t_rtv *rtv, t_fov tmp)
 	close = rtv->close;
 	close_o = rtv->close_o;
 	if (close_o == NULL)
-		return ((SDL_Color) { 0, 0, 0, 0});
+		return ((SDL_Color) { 0, 0, 0, 0 });
 	rtv->fov.cam = add(rtv->fov.cam, multiply(close, rtv->fov.dir));
 	tmp.dir = close_o->get_normal(rtv, tmp.cam, rtv->fov.dir, rtv->fov.cam);
 	rtv->fov.dir = multiply(-1.0, rtv->fov.dir);
-	close = lighting(rtv, &rtv->fov.cam, &tmp.dir, &rtv->fov.dir, close_o->specular);
+	close = lighting(rtv, rtv->fov, tmp.dir, close_o->specular);
 	local_color = do_color((SDL_Color){0, 0, 0, 0}, close_o->color, close);
 	if (close_o->reflective <= 0.0 || rtv->depth <= 0)
 		return (local_color);
@@ -114,15 +101,15 @@ int main()
 	rtv->obj = new_obj(rtv->obj, CYLINDER, (t_vec) { 0.0, 2.5, 3.5 }, (t_vec) { 0.0, 1.0, 0.0 },
 											(SDL_Color) {0, 255, 255, 0}, 500, 0.5, 1.5, 0.2, -1);
 	rtv->obj = new_obj(rtv->obj, SPHERE, (t_vec) { 0.0, -0.25, 3.0 }, (t_vec) { 0.0, 0.0, 0.0 },
-											(SDL_Color) {255, 0, 0, 0}, 1000, 0.2, 1.0, -1, -1);
+											(SDL_Color) {255, 0, 0, 0}, 40, 0.3, 1.0, -1, -1);
 	rtv->obj = new_obj(rtv->obj, PLANE, (t_vec) { 0.0, 0.0, 0.0}, (t_vec) { 0.0, 1.0, 0.0 },
-											(SDL_Color) {255, 255, 0, 0}, 5000, 0.1, -1, -1, -1);
+											(SDL_Color) {255, 255, 0, 0}, 1000, 0.0, -1, -1, -1);
 	rtv->obj = new_obj(rtv->obj, SPHERE, (t_vec) { 2.0, 0.5, 4.0 }, (t_vec) { 0.0, 0.0, 0.0 },
 											(SDL_Color) {0, 0, 255, 0}, 500, 0.3, 1.0, -1, -1);
 	rtv->obj = new_obj(rtv->obj, SPHERE, (t_vec) { -2.0, 0.5, 4.0 }, (t_vec) { 0.0, 0.0, 0.0 },
 											(SDL_Color) {0, 255, 0, 0}, 3000, 0.4, 1.0, -1, -1);
 	rtv->obj = new_obj(rtv->obj, SPHERE, (t_vec) { 0.0, 2.5, 3.5 }, (t_vec) { 0.0, 0.0, 0.0 },
-											(SDL_Color) {123, 123, 123, 0}, 150, 0.3, 1.0, -1, -1);
+											(SDL_Color) {123, 123, 123, 0}, 5000, 0.5, 1.0, -1, -1);
 	rtv->obj = new_obj(rtv->obj, CYLINDER, (t_vec) { 0.0, 2.5, 3.5 }, (t_vec) { 0.0, 1.0, 0.0 },
 											(SDL_Color) {213, 156, 40, 0}, 500, 0.5, 1.5, 0.2, -1);
 
@@ -133,8 +120,8 @@ int main()
 	rtv->obj->next->normal.y = -xx * sin(RAD(-45)) + yy * cos(RAD(-45));
 
 	rtv->light = new_light(rtv->light, AMBIENT, 0.2, (t_vec) { 0.0, 0.0, 0.0 });
-	rtv->light = new_light(rtv->light, POINT, 0.8, (t_vec) { 0.0, 4.0, -4.0 });
-	rtv->light = new_light(rtv->light, DIRECTIONAL, 0.0, (t_vec) { 1.0, 4.0, 4.0 });
+	rtv->light = new_light(rtv->light, POINT, 0.5, (t_vec) { 0.0, 5.0, -3.0 });
+	rtv->light = new_light(rtv->light, DIRECTIONAL, 0.3, (t_vec) { 0.0, 3.0, 0.0 });
 
 	t_vec camera = { 0.0, 0.5, -5.0 };
 	rtv->camera = camera;

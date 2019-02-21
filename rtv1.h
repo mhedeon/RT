@@ -6,7 +6,7 @@
 /*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/11 16:08:48 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/02/20 18:02:09 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/02/21 18:34:58 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,11 +18,11 @@
 # include "SDL_mixer.h"
 # include "SDL_ttf.h"
 # include <stdio.h>
+# include <stdlib.h>
 # include <fcntl.h>
 # include <math.h>
 # include <limits.h>
 # include <float.h>
-# include "limits.h"
 
 # define SCREEN_WIDTH 600
 # define SCREEN_HEIGHT 600
@@ -133,7 +133,7 @@ typedef struct	s_rtv
 {
 	SDL_Window	*win;
 	SDL_Renderer	*ren;
-	SDL_Texture	*tex;
+	
 	Uint32	*buff;
 	SDL_Color	color;
 
@@ -141,15 +141,16 @@ typedef struct	s_rtv
 	t_vec	dir;
 	t_fov	fov;
 
-	double close;
+	
 	t_object *close_o;
 
 	t_object *obj;
 	t_light *light;
 
 	int angle_y;
+	double close;
 	int angle_x;
-
+SDL_Texture	*tex;
 	int start;
 	int end;
 
@@ -159,7 +160,8 @@ typedef struct	s_rtv
 /*
 **	main.c
 */
-double lighting(t_rtv* rtv, t_vec* point, t_vec* normal, t_vec* view, int specular);
+// double lighting(t_rtv *rtv, t_vec point, t_vec normal, t_vec view, int specular);
+double lighting(t_rtv *rtv, t_fov pv, t_vec normal, int specular);
 SDL_Color trace(t_rtv *rtv, t_fov fov);
 void go(t_rtv *rtv);
 void threads(t_rtv *rtv);

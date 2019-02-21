@@ -6,7 +6,7 @@
 /*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/11 20:45:03 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/02/21 19:11:01 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/02/21 22:39:58 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ t_object *new_obj(t_object *obj, int type, t_vec center, t_vec normal, SDL_Color
 		((t_sphere*)(new->data))->radius_square = pow(radius, 2.0);
 		new->intersect = intersect_sphere;
 		new->get_normal = normal_sphere;
+		new->optimise = opti_sphere;
 	}
 	else if (type == PLANE)
 	{
@@ -45,6 +46,7 @@ t_object *new_obj(t_object *obj, int type, t_vec center, t_vec normal, SDL_Color
 		((t_plane*)(new->data))->radius = radius;
 		new->intersect = intersect_plane;
 		new->get_normal = normal_plane;
+		new->optimise = opti_plane;
 	}
 	else if (type == CYLINDER)
 	{
@@ -53,14 +55,16 @@ t_object *new_obj(t_object *obj, int type, t_vec center, t_vec normal, SDL_Color
 		((t_cylinder*)(new->data))->height = height;
 		new->intersect = intersect_cylinder;
 		new->get_normal = normal_cylinder;
+		new->optimise = opti_cylinder;
 	}
 	else if (type == CONE)
 	{
 		new->data = (t_cone *)malloc(sizeof(t_cone));
-		((t_cone*)(new->data))->height = height;
+		((t_cone*)(new->data))->height1 = height;
 		((t_cone*)(new->data))->angle = angle;
 		new->intersect = intersect_cone;
 		new->get_normal = normal_cone;
+		new->optimise = opti_cone;
 	}
 	new->next = NULL;
 	if (obj == NULL)

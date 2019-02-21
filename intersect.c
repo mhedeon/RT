@@ -6,7 +6,7 @@
 /*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/11 17:27:52 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/02/21 19:15:20 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/02/21 22:37:20 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,10 +20,9 @@ void			close_inters(t_rtv *rtv, t_fov fov, double min, double max)
 	tmp = rtv->obj;
 	rtv->close = INFINITY;
 	rtv->close_o = NULL;
-
 	while (tmp != NULL)
 	{
-		tmp->intersect(&fov.cam, &fov.dir, tmp, ts);
+		tmp->intersect(fov.cam, fov.dir, tmp, ts);
 		if (ts[0] < rtv->close && min < ts[0] && ts[0] < max)
 		{
 			rtv->close = ts[0];
@@ -38,15 +37,16 @@ void			close_inters(t_rtv *rtv, t_fov fov, double min, double max)
 	}
 }
 
-void			intersect_plane(t_vec *camera, t_vec *dir, t_object *plane, double *ts)
+void			intersect_plane(t_vec camera, t_vec dir,
+								t_object *plane, double *ts)
 {
-	ts[0] = -dot(substruct(*camera, plane->center), plane->normal);
-	ts[1] = dot(*dir, plane->normal);
+	ts[0] = -dot(substruct(camera, plane->center), plane->normal);
+	ts[1] = dot(dir, plane->normal);
 	if (ts[1] != 0.0)
 	{
 		ts[0] = ts[0] / ts[1];
 		ts[1] = INFINITY;
-		if (length(add(multiply(ts[0], *dir), *camera)) > PLANE_D->radius)
+		if (length(add(multiply(ts[0], dir), camera)) > PLANE_D->radius)
 			ts[0] = INFINITY;
 		return ;
 	}
@@ -54,68 +54,97 @@ void			intersect_plane(t_vec *camera, t_vec *dir, t_object *plane, double *ts)
 	ts[1] = INFINITY;
 }
 
-void			intersect_sphere(t_vec *camera, t_vec *dir, t_object *sphere, double *ts)
+void			intersect_sphere(t_vec camera, t_vec dir,
+								t_object *sphere, double *ts)
 {
-	t_vec oc = substruct(*camera, sphere->center);
-	double k1 = dot(*dir, *dir);
-	double k2 = 2.0 * dot(oc, *dir);
-	double k3 = dot(oc, oc) - SPHERE_D->radius_square;
+	t_vec		oc;
+	double		k[3];
+	double		d;
 
-	double dis = k2 * k2 - 4.0 * k1 * k3;
-	if (dis < 0.0)
+	oc = substruct(camera, sphere->center);
+	k[0] = dot(dir, dir);
+	k[1] = 2.0 * dot(oc, dir);
+	k[2] = dot(oc, oc) - SPHERE_D->radius_square;
+	d = sqrt(k[1] * k[1] - 4.0 * k[0] * k[2]);
+	if (d < 0.0)
 	{
 		ts[0] = INFINITY;
 		ts[1] = INFINITY;
 		return ;
 	}
-	ts[0] = (-k2 + sqrt(dis)) / (2.0 * k1);
-	ts[1] = (-k2 - sqrt(dis)) / (2.0 * k1);
+	ts[0] = (-k[1] + d) / (2.0 * k[0]);
+	ts[1] = (-k[1] - d) / (2.0 * k[0]);
 }
 
-void			intersect_cylinder(t_vec *camera, t_vec *dir, t_object *cylinder, double *ts)
+double			limit_cylinder(t_object *cylinder, t_vec cam,
+								double tmp, double t)
 {
-	t_vec oc = substruct(*camera, cylinder->center);
-	double k1 = dot(*dir, *dir) - dot(*dir, cylinder->normal) * dot(*dir, cylinder->normal);
-	double k2 = 2.0 * ( dot(*dir, oc) - dot(*dir, cylinder->normal) * dot(oc, cylinder->normal) );
-	double k3 = dot(oc, oc) - pow(dot(oc, cylinder->normal), 2.0) - pow(CYLINDER_D->radius, 2.0);
+	double		m;
 
-	double dis = k2 * k2 - 4.0 * k1 * k3;
-	if (dis < 0.0)
-	{
-		ts[0] = INFINITY;
-		ts[1] = INFINITY;
-		return ;
-	}
-	ts[0] = (-k2 + sqrt(dis)) / (2.0 * k1);
-	ts[1] = (-k2 - sqrt(dis)) / (2.0 * k1);
-	double m = dot(*dir, cylinder->normal) * ts[0] + dot(substruct(*camera, cylinder->center), cylinder->normal);
-	if (m < 0 || m > CYLINDER_D->height)
-		ts[0] = INFINITY;
-	m = dot(*dir, cylinder->normal) * ts[1] + dot(substruct(*camera, cylinder->center), cylinder->normal);
-	if (m < 0 || m > CYLINDER_D->height)
-		ts[1] = INFINITY;
+	m = tmp * t + dot(substruct(cam, cylinder->center), cylinder->normal);
+	return ((m < 0.0 || m > CYLINDER_D->height) ? INFINITY : t);
 }
 
-void			intersect_cone(t_vec *camera, t_vec *dir, t_object *cone, double *ts)
+void			intersect_cylinder(t_vec camera, t_vec dir,
+									t_object *cylinder, double *ts)
 {
-	t_vec oc = substruct(*camera, cone->center);
-	double k1 = dot(*dir, *dir) - (1.0 + pow(CONE_D->angle, 2.0)) * pow(dot(*dir, cone->normal), 2.0);
-	double k2 = 2.0 * ( dot(*dir, oc) - (1.0 + pow(CONE_D->angle, 2.0)) * dot(*dir, cone->normal) * dot(oc, cone->normal) );
-	double k3 = dot(oc, oc) - (1.0 + pow(CONE_D->angle, 2.0)) * pow(dot(oc, cone->normal), 2.0);
+	t_vec		oc;
+	double		k[3];
+	double		d;
+	double		tmp;
 
-	double dis = k2 * k2 - 4.0 * k1 * k3;
-	if (dis < 0.0)
+	tmp = dot(dir, cylinder->normal);
+	oc = substruct(camera, cylinder->center);
+	k[0] = dot(dir, dir) - tmp * tmp;
+	k[1] = 2.0 * (dot(dir, oc) - tmp * dot(oc, cylinder->normal));
+	k[2] = dot(oc, oc) - pow(dot(oc, cylinder->normal), 2.0) -
+						pow(CYLINDER_D->radius, 2.0);
+	d = sqrt(k[1] * k[1] - 4.0 * k[0] * k[2]);
+	if (d < 0.0)
 	{
 		ts[0] = INFINITY;
 		ts[1] = INFINITY;
 		return ;
 	}
-	ts[0] = (-k2 + sqrt(dis)) / (2.0 * k1);
-	ts[1] = (-k2 - sqrt(dis)) / (2.0 * k1);
-	double m = dot(*dir, cone->normal) * ts[0] + dot(substruct(*camera, cone->center), cone->normal);
-	if (m < -1 || m > CONE_D->height)
+	ts[0] = (-k[1] + d) / (2.0 * k[0]);
+	ts[1] = (-k[1] - d) / (2.0 * k[0]);
+	ts[0] = limit_cylinder(cylinder, camera, tmp, ts[0]);
+	ts[1] = limit_cylinder(cylinder, camera, tmp, ts[1]);
+}
+
+double			limit_cone(t_object *cone, t_vec cam,
+							double tmp, double t)
+{
+	double		m;
+
+	m = tmp * t + dot(substruct(cam, cone->center), cone->normal);
+	// return ((m < -CONE_D->height2 || m > CONE_D->height1) ? INFINITY : t);
+	return ((m < -1 || m > CONE_D->height1) ? INFINITY : t);
+}
+
+void			intersect_cone(t_vec camera, t_vec dir,
+								t_object *cone, double *ts)
+{
+	t_vec		oc;
+	double		k[3];
+	double		d;
+	double		tmp[2];
+
+	tmp[0] = dot(dir, cone->normal);
+	tmp[1] = 1.0 + CONE_D->angle * CONE_D->angle;
+	oc = substruct(camera, cone->center);
+	k[0] = dot(dir, dir) - tmp[1] * tmp[0] * tmp[0];
+	k[1] = 2.0 * (dot(dir, oc) - tmp[1] * tmp[0] * dot(oc, cone->normal));
+	k[2] = dot(oc, oc) - tmp[1] * pow(dot(oc, cone->normal), 2.0);
+	d = sqrt(k[1] * k[1] - 4.0 * k[0] * k[2]);
+	if (d < 0.0)
+	{
 		ts[0] = INFINITY;
-	m = dot(*dir, cone->normal) * ts[1] + dot(substruct(*camera, cone->center), cone->normal);
-	if (m < -1 || m > CONE_D->height)
 		ts[1] = INFINITY;
+		return ;
+	}
+	ts[0] = (-k[1] + d) / (2.0 * k[0]);
+	ts[1] = (-k[1] - d) / (2.0 * k[0]);
+	ts[0] = limit_cone(cone, camera, tmp[0], ts[0]);
+	ts[1] = limit_cone(cone, camera, tmp[0], ts[1]);
 }

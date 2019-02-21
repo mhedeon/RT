@@ -6,7 +6,7 @@
 /*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/11 15:42:36 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/02/21 20:24:36 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/02/21 22:43:41 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -173,6 +173,40 @@ int main()
 	//garbage(rtv);
 	// system("leaks rtv");
 	return (0);
+}
+
+void opti_plane(t_object *plane, t_vec dir)
+{
+	plane->buff.plane_dot = dot(dir, plane->normal);
+}
+
+void opti_sphere(t_object *sphere, t_vec dir)
+{
+	sphere->buff.dd = dot(dir, dir);
+}
+
+void opti_cylinder(t_object *cylinder, t_vec dir)
+{
+	cylinder->buff.dd = dot(dir, dir);
+	cylinder->buff.dot_dn = dot(dir, cylinder->normal);
+	cylinder->buff.pow_dot_dn = pow(cylinder->buff.dot_dn, 2.0);
+}
+
+void opti_cone(t_object *cone, t_vec dir)
+{
+	cone->buff.dd = dot(dir, dir);
+	cone->buff.dot_dn = dot(dir, cone->normal);
+	cone->buff.pow_dot_dn = pow(cone->buff.dot_dn, 2.0);
+	cone->buff.pow_k = (1.0 + pow(CONE_D->angle, 2.0));
+}
+
+void opti(t_object *obj, t_vec dir)
+{
+	while (obj != NULL)
+	{
+		obj->optimise(obj, dir);
+		obj = obj->next;
+	}
 }
 
 void go(t_rtv *rtv)

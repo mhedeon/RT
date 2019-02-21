@@ -6,7 +6,7 @@
 /*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/11 16:08:48 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/02/21 19:12:08 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/02/21 23:00:12 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,14 +78,11 @@ typedef struct	s_light
 typedef struct	s_plane
 {
 	double		radius;
-	double		dot1;
 }				t_plane;
 
 typedef struct	s_sphere
 {
 	double		radius_square;
-	t_vec		oc;
-	double		k3;
 }				t_sphere;
 
 typedef struct	s_cylinder
@@ -96,14 +93,18 @@ typedef struct	s_cylinder
 
 typedef struct	s_cone
 {
-	double		height;
+	double		height1;
 	double		angle;
+	double		height2;
 }				t_cone;
 
 typedef struct	s_buffer
 {
-	double		plane_dot1;
-	double		plane_dot2;
+	double		plane_dot;
+	double		dd;
+	double		dot_dn;
+	double		pow_dot_dn;
+	double		pow_k;
 }				t_buffer;
 
 typedef struct	s_object
@@ -117,6 +118,7 @@ typedef struct	s_object
 	void		*data;
 	void		(*intersect)();
 	t_vec		(*get_normal)();
+	void		(*optimise)();
 	t_buffer	buff;
 	struct s_object *next;
 }				t_object;
@@ -132,7 +134,7 @@ typedef struct	s_rtv
 {
 	SDL_Window	*win;
 	SDL_Renderer	*ren;
-	
+	SDL_Texture	*tex;
 	Uint32	*buff;
 	SDL_Color	color;
 
@@ -149,7 +151,7 @@ typedef struct	s_rtv
 	int angle_y;
 	double close;
 	int angle_x;
-SDL_Texture	*tex;
+
 	int start;
 	int end;
 
@@ -159,9 +161,13 @@ SDL_Texture	*tex;
 /*
 **	main.c
 */
-// double lighting(t_rtv *rtv, t_vec point, t_vec normal, t_vec view, int specular);
 double lighting(t_rtv *rtv, t_fov pv, t_vec normal, int specular);
 SDL_Color trace(t_rtv *rtv, t_fov fov);
+void opti_plane(t_object *sphere, t_vec dir);
+void opti_sphere(t_object *sphere, t_vec dir);
+void opti_cylinder(t_object *cylinder, t_vec dir);
+void opti_cone(t_object *cone, t_vec dir);
+void opti(t_object *obj, t_vec dir);
 void go(t_rtv *rtv);
 void threads(t_rtv *rtv);
 
@@ -169,10 +175,12 @@ void threads(t_rtv *rtv);
 **	intersect.c
 */
 void			close_inters(t_rtv *rtv, t_fov fov, double min, double max);
-void intersect_sphere(t_vec *camera, t_vec *dir, t_object *sphere, double *ts);
-void intersect_plane(t_vec *camera, t_vec *dir, t_object *plane, double *ts);
-void intersect_cylinder(t_vec *camera, t_vec *dir, t_object *cylinder, double *ts);
-void intersect_cone(t_vec *camera, t_vec *dir, t_object *cone, double *ts);
+void intersect_sphere(t_vec camera, t_vec dir, t_object *sphere, double *ts);
+void intersect_plane(t_vec camera, t_vec dir, t_object *plane, double *ts);
+void intersect_cylinder(t_vec camera, t_vec dir, t_object *cylinder, double *ts);
+void intersect_cone(t_vec camera, t_vec dir, t_object *cone, double *ts);
+double			limit_cylinder(t_object *cylinder, t_vec cam, double tmp, double t);
+double			limit_cone(t_object *cone, t_vec cam, double tmp, double t);
 
 /*
 **	window,c

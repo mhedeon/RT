@@ -6,13 +6,13 @@
 #    By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/02/11 15:37:02 by mhedeon           #+#    #+#              #
-#    Updated: 2019/02/17 22:05:18 by mhedeon          ###   ########.fr        #
+#    Updated: 2019/02/21 19:12:15 by mhedeon          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = rtv1
 
-SRC = main.c vector.c window.c intersect.c objects.c
+SRC = main.c vector.c window.c intersect.c objects.c normal.c
 
 OBJ = $(SRC:.c=.o)
 

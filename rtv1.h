@@ -6,7 +6,7 @@
 /*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/11 16:08:48 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/02/21 18:34:58 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/02/21 19:12:08 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,6 @@
 */
 # define AMBIENT 1
 # define POINT 2
-# define DIRECTIONAL 3
 
 /*
 **	types of objects
@@ -194,7 +193,6 @@ double length(t_vec v1);
 t_vec multiply(double k, t_vec v1);
 t_vec add(t_vec v1, t_vec v2);
 t_vec reflect(t_vec v1, t_vec v2);
-t_vec normalize(t_vec v);
 /////////////////////////////////////////////////
 t_vec rot_y(t_vec v, int angle);
 t_vec rot_x(t_vec v, int angle);
@@ -205,6 +203,11 @@ t_vec direction(int x, int y, int angle_x, int angle_y);
 */
 t_object *new_obj(t_object *obj, int type, t_vec center, t_vec normal, SDL_Color color, int specular, double reflect,  double radius,  double height,  double angle);
 t_light *new_light(t_light *l, int type, double intens, t_vec pos);
+
+/*
+**	normal.c
+*/
+t_vec normalize(t_vec v);
 t_vec normal_plane(t_rtv *rtv, t_vec camera, t_vec dir, t_vec point);
 t_vec normal_sphere(t_rtv *rtv, t_vec camera, t_vec dir, t_vec point);
 t_vec normal_cylinder(t_rtv *rtv, t_vec camera, t_vec dir, t_vec point);

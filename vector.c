@@ -6,7 +6,7 @@
 /*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/11 15:42:43 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/02/20 16:43:20 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/02/21 19:11:28 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,11 +40,6 @@ t_vec multiply(double k, t_vec v1)
 t_vec reflect(t_vec v1, t_vec v2)
 {
 	return (substruct(multiply(2.0 * dot(v1, v2), v2), v1));
-}
-
-t_vec normalize(t_vec v)
-{
-	return (multiply(1.0 / length(v), v));
 }
 
 ////////////////////////////////////////////////////////////////

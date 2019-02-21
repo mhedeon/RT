@@ -6,7 +6,7 @@
 /*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/11 20:45:03 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/02/20 17:20:19 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/02/21 19:11:01 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,48 +90,3 @@ t_light *new_light(t_light *l, int type, double intens, t_vec pos)
 	return (start == NULL ? l : start);
 }
 
-t_vec normal_plane(t_rtv *rtv, t_vec camera, t_vec dir, t_vec point)
-{
-	t_vec normal;
-
-	camera.x = camera.x;
-	point.x = point.x;
-	normal = dot(dir, rtv->close_o->normal) < 0.0 ?
-					rtv->close_o->normal : multiply(-1.0, rtv->close_o->normal);
-	return (normal);
-}
-
-t_vec normal_sphere(t_rtv *rtv, t_vec camera, t_vec dir, t_vec point)
-{
-	t_vec normal;
-
-	camera.x = camera.x;
-	dir.x = dir.x;
-	normal = substruct(point, rtv->close_o->center);
-	return (normalize(normal));
-}
-
-t_vec normal_cylinder(t_rtv *rtv, t_vec camera, t_vec dir, t_vec point)
-{
-	t_vec normal;
-	double m;
-
-	m = dot(dir, rtv->close_o->normal) * rtv->close +
-			dot(substruct(camera, rtv->close_o->center), rtv->close_o->normal);
-	normal = substruct(substruct(point, rtv->close_o->center),
-									multiply(m, rtv->close_o->normal));
-	return (normalize(normal));
-}
-
-t_vec normal_cone(t_rtv *rtv, t_vec camera, t_vec dir, t_vec point)
-{
-	t_vec normal;
-	double m;
-
-	m = dot(dir, rtv->close_o->normal) * rtv->close +
-			dot(substruct(camera, rtv->close_o->center), rtv->close_o->normal);
-	normal = substruct(substruct(point, rtv->close_o->center),
-			multiply(1.0 + pow(((t_cone*)(rtv->close_o->data))->angle, 2.0),
-			multiply(m, rtv->close_o->normal)));
-	return (normalize(normal));
-}

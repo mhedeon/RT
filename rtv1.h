@@ -6,7 +6,7 @@
 /*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/11 16:08:48 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/02/22 17:11:17 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/02/22 19:38:44 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 # include "SDL_mixer.h"
 # include "SDL_ttf.h"
 # include "libft.h"
+# include "get_next_line.h"
 # include <stdio.h>
 # include <stdlib.h>
 # include <fcntl.h>
@@ -94,19 +95,10 @@ typedef struct	s_cylinder
 
 typedef struct	s_cone
 {
-	double		height1;
 	double		angle;
+	double		height1;
 	double		height2;
 }				t_cone;
-
-typedef struct	s_buffer
-{
-	double		plane_dot;
-	double		dd;
-	double		dot_dn;
-	double		pow_dot_dn;
-	double		pow_k;
-}				t_buffer;
 
 typedef struct	s_object
 {
@@ -119,8 +111,6 @@ typedef struct	s_object
 	void		*data;
 	void		(*intersect)();
 	t_vec		(*get_normal)();
-	void		(*optimise)();
-	t_buffer	buff;
 	struct s_object *next;
 }				t_object;
 
@@ -171,7 +161,7 @@ void opti_cone(t_object *cone, t_vec dir);
 void opti(t_object *obj, t_vec dir);
 void go(t_rtv *rtv);
 void threads(t_rtv *rtv);
-int rand_color();
+int rnd();
 
 /*
 **	intersect.c
@@ -223,5 +213,10 @@ t_vec normal_plane(t_rtv *rtv, t_vec camera, t_vec dir, t_vec point);
 t_vec normal_sphere(t_rtv *rtv, t_vec camera, t_vec dir, t_vec point);
 t_vec normal_cylinder(t_rtv *rtv, t_vec camera, t_vec dir, t_vec point);
 t_vec normal_cone(t_rtv *rtv, t_vec camera, t_vec dir, t_vec point);
+
+/*
+**	scene.c
+*/
+void	get_data(t_rtv *rtv, char *name);
 
 #endif

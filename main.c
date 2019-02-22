@@ -6,7 +6,7 @@
 /*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/11 15:42:36 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/02/22 17:11:08 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/02/22 21:28:47 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,28 +96,28 @@ int main()
 	rtv->angle_x = 0;
 	rtv->angle_y = 0;
 
-	// rtv->obj = new_obj(rtv->obj, CYLINDER, (t_vec) { 4.0, 0.5, 3.5 }, (t_vec) { 1.0, 0.0, 0.0 },
-	// 										(SDL_Color) {0, 255, 255, 0}, 500, 0.0, 0.5, 4.0, -1);
-	// rtv->obj = new_obj(rtv->obj, CONE, (t_vec) { -1.0, 3.5, -2.0 }, (t_vec) { 0.0, -1.0, 0.0 },
-	// 										(SDL_Color) {204, 102, 255, 0}, 500, 0.6, 5.0, 2.0, 15.0);
-	// rtv->obj = new_obj(rtv->obj, SPHERE, (t_vec) { 0.0, -0.25, 3.0 }, (t_vec) { 0.0, 0.0, 0.0 },
-	// 										(SDL_Color) {255, 0, 0, 0}, 40, 0.3, 1.0, -1, -1);
-	// rtv->obj = new_obj(rtv->obj, PLANE, (t_vec) { 0.0, 0.0, 0.0}, (t_vec) { 0.0, 1.0, 0.0 },
-	// 										(SDL_Color) {255, 255, 0, 0}, 1000, 0.0, INFINITY, -1, -1);
-	// rtv->obj = new_obj(rtv->obj, SPHERE, (t_vec) { 2.0, 0.5, 4.0 }, (t_vec) { 0.0, 0.0, 0.0 },
-	// 										(SDL_Color) {0, 0, 255, 0}, 500, 0.3, 1.0, -1, -1);
-	// rtv->obj = new_obj(rtv->obj, SPHERE, (t_vec) { -2.0, 0.5, 4.0 }, (t_vec) { 0.0, 0.0, 0.0 },
-	// 										(SDL_Color) {0, 255, 0, 0}, 3000, 0.4, 1.0, -1, -1);
-	// rtv->obj = new_obj(rtv->obj, SPHERE, (t_vec) { 0.0, 2.5, 3.5 }, (t_vec) { 0.0, 0.0, 0.0 },
-	// 										(SDL_Color) {123, 123, 123, 0}, 5000, 0.5, 1.0, -1, -1);
-	// rtv->obj = new_obj(rtv->obj, CYLINDER, (t_vec) { 0.0, 2.5, 3.5 }, (t_vec) { 0.0, 1.0, 0.0 },
-	// 										(SDL_Color) {213, 156, 40, 0}, 500, 0.5, 1.5, 0.2, -1);
 
+	rtv->obj = new_obj(rtv->obj, CYLINDER, (t_vec) { 4.0, 1.5, 3.5 }, (t_vec) { 0.0, 1.0, 0.0 },
+											(SDL_Color) {0, 255, 255, 0}, 500, 0.0, 0.5, 1000, -1);
+	rtv->obj = new_obj(rtv->obj, CONE, (t_vec) { 0.0, 3.5, -2.0 }, (t_vec) { 0.0, -1.0, 0.0 },
+											(SDL_Color) {204, 102, 255, 0}, 500, 0.6, 5.0, 2.0, 15.0);
+	rtv->obj = new_obj(rtv->obj, SPHERE, (t_vec) { 0.0, -0.25, 3.0 }, (t_vec) { 0.0, 0.0, 0.0 },
+											(SDL_Color) {255, 0, 0, 0}, 40, 0.3, 1.0, -1, -1);
+	rtv->obj = new_obj(rtv->obj, PLANE, (t_vec) { 0.0, 0.0, 0.0}, (t_vec) { 0.0, 1.0, 0.0 },
+											(SDL_Color) {255, 255, 0, 0}, 1000, 0.0, INFINITY, -1, -1);
+	rtv->obj = new_obj(rtv->obj, SPHERE, (t_vec) { 2.0, 0.5, 4.0 }, (t_vec) { 0.0, 0.0, 0.0 },
+											(SDL_Color) {0, 0, 255, 0}, 500, 0.3, 1.0, -1, -1);
+	rtv->obj = new_obj(rtv->obj, SPHERE, (t_vec) { -2.0, 0.5, 4.0 }, (t_vec) { 0.0, 0.0, 0.0 },
+											(SDL_Color) {0, 255, 0, 0}, 3000, 0.4, 1.0, -1, -1);
+	rtv->obj = new_obj(rtv->obj, SPHERE, (t_vec) { 0.0, 2.5, 3.5 }, (t_vec) { 0.0, 0.0, 0.0 },
+											(SDL_Color) {123, 123, 123, 0}, 5000, 0.5, 1.0, -1, -1);
+	rtv->obj = new_obj(rtv->obj, CYLINDER, (t_vec) { 0.0, 2.5, 3.5 }, (t_vec) { 0.0, 1.0, 0.0 },
+											(SDL_Color) {213, 156, 40, 0}, 500, 0.5, 1.5, 0.2, -1);
+	rtv->obj = new_obj(rtv->obj, CONE, (t_vec) { 4.0, 3.5, -2.0 }, (t_vec) { 0.0, -1.0, 0.0 },
+											(SDL_Color) {204, 102, 255, 0}, 500, 0.6, 5.0, 4.0, 15.0);
 
-	// rtv->obj->normal = normalize(rtv->obj->normal);
-
-	// rtv->light = new_light(rtv->light, AMBIENT, 0.2, (t_vec) { 0.0, 0.0, 0.0 });
-	// rtv->light = new_light(rtv->light, POINT, 0.5, (t_vec) { 0.0, 5.0, -3.0 });
+	rtv->light = new_light(rtv->light, AMBIENT, 0.2, (t_vec) { 0.0, 0.0, 0.0 });
+	rtv->light = new_light(rtv->light, POINT, 0.5, (t_vec) { -1.0, 5.0, -3.5 });
 
 	t_vec camera = { 0.0, 0.5, -5.0 };
 	rtv->camera = camera;
@@ -172,40 +172,6 @@ int main()
 	return (0);
 }
 
-void opti_plane(t_object *plane, t_vec dir)
-{
-	plane->buff.plane_dot = dot(dir, plane->normal);
-}
-
-void opti_sphere(t_object *sphere, t_vec dir)
-{
-	sphere->buff.dd = dot(dir, dir);
-}
-
-void opti_cylinder(t_object *cylinder, t_vec dir)
-{
-	cylinder->buff.dd = dot(dir, dir);
-	cylinder->buff.dot_dn = dot(dir, cylinder->normal);
-	cylinder->buff.pow_dot_dn = pow(cylinder->buff.dot_dn, 2.0);
-}
-
-void opti_cone(t_object *cone, t_vec dir)
-{
-	cone->buff.dd = dot(dir, dir);
-	cone->buff.dot_dn = dot(dir, cone->normal);
-	cone->buff.pow_dot_dn = pow(cone->buff.dot_dn, 2.0);
-	cone->buff.pow_k = (1.0 + pow(CONE_D->angle, 2.0));
-}
-
-void opti(t_object *obj, t_vec dir)
-{
-	while (obj != NULL)
-	{
-		obj->optimise(obj, dir);
-		obj = obj->next;
-	}
-}
-
 void go(t_rtv *rtv)
 {
 	for (int y = rtv->start; y < rtv->end; y++)
@@ -243,11 +209,11 @@ void threads(t_rtv *rtv)
 	printf("DONE\n");
 }
 
-int rand_color()
+int rnd()
 {
 	static int seed = 0;
 
 	seed = seed == 0 ? SDL_GetTicks() : seed;
-	seed = (Uint8)(1664525 * seed + 1013904223) % 256;
+	seed = (Uint8)(1664525 * seed + 1013904223);
 	return (seed);
 }

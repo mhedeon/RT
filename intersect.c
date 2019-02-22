@@ -6,7 +6,7 @@
 /*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/11 17:27:52 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/02/21 22:37:20 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/02/22 20:54:49 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,8 +108,11 @@ void			intersect_cylinder(t_vec camera, t_vec dir,
 	}
 	ts[0] = (-k[1] + d) / (2.0 * k[0]);
 	ts[1] = (-k[1] - d) / (2.0 * k[0]);
-	ts[0] = limit_cylinder(cylinder, camera, tmp, ts[0]);
-	ts[1] = limit_cylinder(cylinder, camera, tmp, ts[1]);
+	if (CYLINDER_D->height != INFINITY)
+	{
+		ts[0] = limit_cylinder(cylinder, camera, tmp, ts[0]);
+		ts[1] = limit_cylinder(cylinder, camera, tmp, ts[1]);
+	}
 }
 
 double			limit_cone(t_object *cone, t_vec cam,

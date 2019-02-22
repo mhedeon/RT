@@ -6,7 +6,7 @@
 /*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/11 16:08:48 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/02/22 14:59:43 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/02/22 17:11:17 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 # include "SDL_image.h"
 # include "SDL_mixer.h"
 # include "SDL_ttf.h"
+# include "libft.h"
 # include <stdio.h>
 # include <stdlib.h>
 # include <fcntl.h>
@@ -170,6 +171,7 @@ void opti_cone(t_object *cone, t_vec dir);
 void opti(t_object *obj, t_vec dir);
 void go(t_rtv *rtv);
 void threads(t_rtv *rtv);
+int rand_color();
 
 /*
 **	intersect.c

@@ -6,7 +6,7 @@
 /*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/11 15:42:43 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/02/21 23:00:00 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/02/22 15:37:28 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,16 @@ t_vec rot_x(t_vec v, int angle)
 	
 	v.y = y * cos(RAD(angle)) + z * sin(RAD(angle));
 	v.z = -y * sin(RAD(angle)) + z * cos(RAD(angle));
+	return (v);
+}
+
+t_vec rot_z(t_vec v, int angle)
+{
+	double y = v.y;
+	double x = v.x;
+	
+	v.x = x * cos(RAD(angle)) + y * sin(RAD(angle));
+	v.y = -x * sin(RAD(angle)) + y * cos(RAD(angle));
 	return (v);
 }
 

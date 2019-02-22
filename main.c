@@ -6,7 +6,7 @@
 /*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/11 15:42:36 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/02/21 22:43:41 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/02/22 15:39:09 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,10 +96,13 @@ int main()
 	rtv->angle_x = 0;
 	rtv->angle_y = 0;
 
+	t_vec test = {cos(RAD(30)), 0, 0};
+	printf("%f\n", length(test));
+
+	rtv->obj = new_obj(rtv->obj, CYLINDER, (t_vec) { 4.0, 0.5, 3.5 }, (t_vec) { 1.0, 0.0, 0.0 },
+											(SDL_Color) {0, 255, 255, 0}, 500, 0.0, 0.5, 4.0, -1);
 	rtv->obj = new_obj(rtv->obj, CONE, (t_vec) { -1.0, 3.5, -2.0 }, (t_vec) { 0.0, -1.0, 0.0 },
 											(SDL_Color) {204, 102, 255, 0}, 500, 0.6, 5.0, 2.0, 15.0);
-	rtv->obj = new_obj(rtv->obj, CYLINDER, (t_vec) { 0.0, 2.5, 3.5 }, (t_vec) { 0.0, 1.0, 0.0 },
-											(SDL_Color) {0, 255, 255, 0}, 500, 0.5, 1.5, 0.2, -1);
 	rtv->obj = new_obj(rtv->obj, SPHERE, (t_vec) { 0.0, -0.25, 3.0 }, (t_vec) { 0.0, 0.0, 0.0 },
 											(SDL_Color) {255, 0, 0, 0}, 40, 0.3, 1.0, -1, -1);
 	rtv->obj = new_obj(rtv->obj, PLANE, (t_vec) { 0.0, 0.0, 0.0}, (t_vec) { 0.0, 1.0, 0.0 },
@@ -113,11 +116,8 @@ int main()
 	rtv->obj = new_obj(rtv->obj, CYLINDER, (t_vec) { 0.0, 2.5, 3.5 }, (t_vec) { 0.0, 1.0, 0.0 },
 											(SDL_Color) {213, 156, 40, 0}, 500, 0.5, 1.5, 0.2, -1);
 
-	((t_cone*)(rtv->obj->data))->angle = tan(RAD(((t_cone*)(rtv->obj->data))->angle));
-	double xx = rtv->obj->next->normal.x;
-	double yy = rtv->obj->next->normal.y;
-	rtv->obj->next->normal.x = xx * cos(RAD(-45)) - yy * sin(RAD(-45));
-	rtv->obj->next->normal.y = -xx * sin(RAD(-45)) + yy * cos(RAD(-45));
+
+	rtv->obj->normal = normalize(rtv->obj->normal);
 
 	rtv->light = new_light(rtv->light, AMBIENT, 0.2, (t_vec) { 0.0, 0.0, 0.0 });
 	rtv->light = new_light(rtv->light, POINT, 0.5, (t_vec) { 0.0, 5.0, -3.0 });

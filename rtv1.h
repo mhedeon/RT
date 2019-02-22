@@ -6,7 +6,7 @@
 /*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/11 16:08:48 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/02/21 23:00:12 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/02/22 14:59:43 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -204,6 +204,7 @@ t_vec reflect(t_vec v1, t_vec v2);
 /////////////////////////////////////////////////
 t_vec rot_y(t_vec v, int angle);
 t_vec rot_x(t_vec v, int angle);
+t_vec rot_z(t_vec v, int angle);
 t_vec direction(int x, int y, int angle_x, int angle_y);
 
 /*

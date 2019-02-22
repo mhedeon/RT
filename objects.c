@@ -6,7 +6,7 @@
 /*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/11 20:45:03 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/02/21 22:39:58 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/02/22 14:25:41 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,8 @@ t_object *new_obj(t_object *obj, int type, t_vec center, t_vec normal, SDL_Color
 	{
 		new->data = (t_cone *)malloc(sizeof(t_cone));
 		((t_cone*)(new->data))->height1 = height;
-		((t_cone*)(new->data))->angle = angle;
+		((t_cone*)(new->data))->angle = tan(RAD(angle));
+		
 		new->intersect = intersect_cone;
 		new->get_normal = normal_cone;
 		new->optimise = opti_cone;

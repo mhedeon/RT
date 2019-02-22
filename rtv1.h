@@ -6,7 +6,7 @@
 /*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/11 16:08:48 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/02/22 19:38:44 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/02/22 21:59:34 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,7 +106,7 @@ typedef struct	s_object
 	t_vec	center;
 	t_vec	normal;
 	SDL_Color	color;
-	int		specular;
+	double		specular;
 	double		reflective;
 	void		*data;
 	void		(*intersect)();
@@ -152,7 +152,7 @@ typedef struct	s_rtv
 /*
 **	main.c
 */
-double lighting(t_rtv *rtv, t_fov pv, t_vec normal, int specular);
+double lighting(t_rtv *rtv, t_fov pv, t_vec normal, double specular);
 SDL_Color trace(t_rtv *rtv, t_fov fov);
 void opti_plane(t_object *sphere, t_vec dir);
 void opti_sphere(t_object *sphere, t_vec dir);

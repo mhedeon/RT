@@ -6,7 +6,7 @@
 /*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/22 15:59:02 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/02/26 20:56:49 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/02/26 21:49:51 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,10 @@ int check_struct(t_rtv *rtv, char *line)
 	else if (!ft_strcmp(line, "CAMERA:"))
 		;
 	else
+	{
+		free(line);
 		return (0);
+	}
 	return (1);
 }
 
@@ -126,7 +129,9 @@ void	get_data(t_rtv *rtv, char *name)
 	rtv->close = rtv->close;
 	if ((fd = open(name, O_RDONLY)) < 0)
 	{
-		write(1, "Wrong file\n", 12);
+		write(1, "Could not open <", 17);
+		write(1, name, ft_strlen(name) + 1);
+		write(1, "> file\n", 8);
 		return ;
 	}
 	while (get_next_line(fd, &line))
@@ -139,7 +144,7 @@ void	get_data(t_rtv *rtv, char *name)
 			start_light(rtv, &fd);
 		else
 			start_object(rtv, &fd);
-
 		free(line);
 	}
+	close(fd);
 }

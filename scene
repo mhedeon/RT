@@ -4,7 +4,7 @@ PLANE:
 	specular: 100
 #
 AMBIENT:
-	intensivity: 0.1
+	intensivity: 0.2
 #
 SPHERE:
 	center: 0 0 0
@@ -18,4 +18,10 @@ CAMERA:
 POINT:
 	position: 3 2 -4
 	intensivity: 0.6
+#
+CYLINDER:
+	center: -2 3 0
+#
+CONE:
+	center: 3 3 3
 #

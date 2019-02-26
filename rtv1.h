@@ -6,7 +6,7 @@
 /*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/11 16:08:48 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/02/26 21:17:19 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/02/26 22:07:58 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,39 +125,23 @@ typedef struct	s_rtv
 	SDL_Texture	*tex;
 	Uint32	*buff;
 	SDL_Color	color;
-
 	t_vec	camera;
-	t_vec	dir;
 	t_fov	fov;
-
-	
-	t_object *close_o;
-
 	t_object *obj;
 	t_light *light;
-
-	int angle_y;
+	t_object *close_o;
 	double close;
+	int angle_y;
 	int angle_x;
-
 	int start;
 	int end;
-
 	int depth;
 }				t_rtv;
 
 /*
 **	main.c
 */
-double lighting(t_rtv *rtv, t_fov pv, t_vec normal, double specular);
-SDL_Color trace(t_rtv *rtv, t_fov fov);
-void opti_plane(t_object *sphere, t_vec dir);
-void opti_sphere(t_object *sphere, t_vec dir);
-void opti_cylinder(t_object *cylinder, t_vec dir);
-void opti_cone(t_object *cone, t_vec dir);
-void opti(t_object *obj, t_vec dir);
-void go(t_rtv *rtv);
-void threads(t_rtv *rtv);
+SDL_Color do_color(SDL_Color local, SDL_Color reflected, double reflective);
 int rnd();
 
 /*
@@ -261,5 +245,12 @@ double lighting(t_rtv *rtv, t_fov pv, t_vec normal, double specular);
 int init(t_rtv *test);
 int error_log(char *message);
 void garbage(t_rtv *test);
+
+/*
+**	trace.c
+*/
+SDL_Color trace(t_rtv *rtv, t_fov fov);
+void go(t_rtv *rtv);
+void threads(t_rtv *rtv);
 
 #endif

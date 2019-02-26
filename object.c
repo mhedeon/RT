@@ -6,13 +6,13 @@
 /*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/26 18:55:32 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/02/26 18:55:55 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/02/26 22:42:58 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "rtv1.h"
 
-t_object *add_plane(t_object *obj)
+t_object		*add_plane(t_object *obj)
 {
 	t_object	*start;
 	t_object	*new;
@@ -39,7 +39,7 @@ t_object *add_plane(t_object *obj)
 	return (start == NULL ? obj : start);
 }
 
-t_object *add_sphere(t_object *obj)
+t_object		*add_sphere(t_object *obj)
 {
 	t_object	*start;
 	t_object	*new;
@@ -66,7 +66,7 @@ t_object *add_sphere(t_object *obj)
 	return (start == NULL ? obj : start);
 }
 
-t_object *add_cylinder(t_object *obj)
+t_object		*add_cylinder(t_object *obj)
 {
 	t_object	*start;
 	t_object	*new;
@@ -94,7 +94,7 @@ t_object *add_cylinder(t_object *obj)
 	return (start == NULL ? obj : start);
 }
 
-t_object *add_cone(t_object *obj)
+t_object		*add_cone(t_object *obj)
 {
 	t_object	*start;
 	t_object	*new;

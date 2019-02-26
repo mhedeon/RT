@@ -6,7 +6,7 @@
 /*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/11 16:08:48 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/02/26 19:08:39 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/02/26 21:17:19 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,6 @@
 # define RTV1_H
 
 # include "SDL.h"
-# include "SDL_image.h"
-# include "SDL_mixer.h"
-# include "SDL_ttf.h"
 # include "libft.h"
 # include "get_next_line.h"
 # include <stdio.h>
@@ -177,8 +174,6 @@ double			limit_cone(t_object *cone, t_vec cam, double tmp, double t);
 /*
 **	window,c
 */
-void init(t_rtv *test);
-void garbage(t_rtv *test);
 void put_pixel(t_rtv *rtv, int x, int y);
 void	set_pixel(t_rtv *test, SDL_Color *color, int x, int y);
 void	clear_buffer(t_rtv *test);
@@ -256,9 +251,15 @@ t_vec read_rot(char *line);
 */
 t_light *add_ambient(t_light *l);
 t_light *add_point(t_light *l);
-int check_light(t_light *tmp, char *line);
 void start_light(t_rtv *rtv, int *fd);
+double		point(t_rtv *rtv, t_fov pv, t_vec normal, double specular);
+double lighting(t_rtv *rtv, t_fov pv, t_vec normal, double specular);
 
-
+/*
+**	init.c
+*/
+int init(t_rtv *test);
+int error_log(char *message);
+void garbage(t_rtv *test);
 
 #endif

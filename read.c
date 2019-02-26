@@ -6,16 +6,16 @@
 /*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/26 18:57:02 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/02/26 18:57:36 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/02/26 20:52:26 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "rtv1.h"
 
-SDL_Color read_color(char *line)
+SDL_Color		read_color(char *line)
 {
-	char **m;
-	SDL_Color res;
+	char		**m;
+	SDL_Color	res;
 
 	m = ft_strsplit(line, ' ');
 	if (matrix_height(m) != 4)
@@ -30,11 +30,11 @@ SDL_Color read_color(char *line)
 	return (res);
 }
 
-t_vec read_vec(char *line)
+t_vec			read_vec(char *line)
 {
-	char **m;
-	t_vec res;
-	char *s;
+	char		**m;
+	t_vec		res;
+	char		*s;
 
 	m = ft_strsplit(line, ' ');
 	if (matrix_height(m) != 4)
@@ -55,11 +55,11 @@ t_vec read_vec(char *line)
 	return (res);
 }
 
-double read_number(char *line)
+double			read_number(char *line)
 {
-	char **m;
-	double res;
-	char *s;
+	char		**m;
+	double		res;
+	char		*s;
 
 	m = ft_strsplit(line, ' ');
 	if (matrix_height(m) != 2)
@@ -74,10 +74,10 @@ double read_number(char *line)
 	return (res);
 }
 
-t_vec read_rot(char *line)
+t_vec			read_rot(char *line)
 {
-	t_vec angles;
-	t_vec normal;
+	t_vec		angles;
+	t_vec		normal;
 
 	angles = read_vec(line);
 	normal = rot_x((t_vec){ 0.0, 1.0, 0.0 }, angles.x);

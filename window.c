@@ -6,46 +6,13 @@
 /*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/11 15:42:47 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/02/20 18:33:03 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/02/26 21:18:42 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "rtv1.h"
 
-void init(t_rtv *rtv)
-{
-	SDL_Init(SDL_INIT_EVERYTHING);
-	IMG_Init(IMG_INIT_JPG);
-	rtv->win = SDL_CreateWindow("rtv", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
-	rtv->ren = SDL_CreateRenderer(rtv->win, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
-	rtv->tex = SDL_CreateTexture(rtv->ren, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, SCREEN_WIDTH, SCREEN_HEIGHT);
-	rtv->buff = (Uint32 *)malloc(sizeof(Uint32) * (SCREEN_HEIGHT * SCREEN_WIDTH));
-	rtv->obj = NULL;
-	rtv->light = NULL;
-	clear_buffer(rtv);
-}
-
-void garbage(t_rtv *rtv)
-{
-	SDL_DestroyTexture(rtv->tex);
-	SDL_DestroyRenderer(rtv->ren);
-	SDL_DestroyWindow(rtv->win);
-	while (rtv->obj != NULL)
-	{
-		free(rtv->obj->data);
-		free(rtv->obj);
-		rtv->obj = rtv->obj->next;
-	}
-	while (rtv->light != NULL)
-	{
-		free(rtv->light);
-		rtv->light = rtv->light->next;
-	}
-	free(rtv->buff);
-	free(rtv);
-}
-
-void put_pixel(t_rtv *rtv, int x, int y)
+void	put_pixel(t_rtv *rtv, int x, int y)
 {
 	x = SCREEN_WIDTH / 2 + x;
 	y = SCREEN_HEIGHT / 2 - y - 1;
@@ -55,7 +22,7 @@ void put_pixel(t_rtv *rtv, int x, int y)
 
 void	set_pixel(t_rtv *rtv, SDL_Color *color, int x, int y)
 {
-	rtv->buff[y * SCREEN_WIDTH + x] = 
+	rtv->buff[y * SCREEN_WIDTH + x] =
 		color->r << 24 |
 		color->g << 16 |
 		color->b << 8 |

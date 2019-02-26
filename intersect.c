@@ -6,7 +6,7 @@
 /*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/11 17:27:52 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/02/22 20:54:49 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/02/26 19:54:50 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,8 +121,7 @@ double			limit_cone(t_object *cone, t_vec cam,
 	double		m;
 
 	m = tmp * t + dot(substruct(cam, cone->center), cone->normal);
-	// return ((m < -CONE_D->height2 || m > CONE_D->height1) ? INFINITY : t);
-	return ((m < -1 || m > CONE_D->height1) ? INFINITY : t);
+	return ((m < -CONE_D->height2 || m > CONE_D->height1) ? INFINITY : t);
 }
 
 void			intersect_cone(t_vec camera, t_vec dir,

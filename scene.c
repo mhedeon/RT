@@ -6,7 +6,7 @@
 /*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/22 15:59:02 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/02/26 19:16:32 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/02/26 20:56:49 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,7 +108,6 @@ void start_object(t_rtv *rtv, int *fd)
 		tmp = tmp->next;
 	while (get_next_line(*fd, &line))
 	{
-		printf("|%s|\n", line);
 		if (!check_option_o(tmp, line))
 			if (!ft_strcmp(line, "#"))
 			{

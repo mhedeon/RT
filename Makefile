@@ -6,29 +6,23 @@
 #    By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/02/11 15:37:02 by mhedeon           #+#    #+#              #
-#    Updated: 2019/02/26 18:59:21 by mhedeon          ###   ########.fr        #
+#    Updated: 2019/02/26 21:18:16 by mhedeon          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = rtv1
 
 SRC = main.c vector.c window.c intersect.c objects.c normal.c scene.c camera.c \
-	object.c read.c light.c
+	object.c read.c light.c init.c
 
 OBJ = $(SRC:.c=.o)
 
 FLAGS = -Wall -Werror -Wextra
 
 INCLUDES = -I./frameworks/SDL2.framework/Headers/ \
-			-I./frameworks/SDL2_image.framework/Headers/ \
-			-I./frameworks/SDL2_mixer.framework/Headers/ \
-			-I./frameworks/SDL2_ttf.framework/Headers/ \
 			-F./frameworks -I./libft
 
-FRAMEWORKS = -F./frameworks -rpath ./frameworks -framework SDL2 \
-												-framework SDL2_image \
-												-framework SDL2_mixer \
-												-framework SDL2_ttf
+FRAMEWORKS = -F./frameworks -rpath ./frameworks -framework SDL2 
 
 start: all clean
 	./$(NAME)

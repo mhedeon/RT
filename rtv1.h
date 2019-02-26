@@ -6,7 +6,7 @@
 /*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/11 16:08:48 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/02/22 21:59:34 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/02/26 19:08:39 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -217,6 +217,48 @@ t_vec normal_cone(t_rtv *rtv, t_vec camera, t_vec dir, t_vec point);
 /*
 **	scene.c
 */
+int check_struct(t_rtv *rtv, char *line);
+int				matrix_height(char **m);
+void			matrix_del(char **m);
+int check_option_o2(t_object *tmp, char *line);
+int check_option_o(t_object *tmp, char *line);
+void start_object(t_rtv *rtv, int *fd);
+//////////
 void	get_data(t_rtv *rtv, char *name);
+
+/*
+**	camera.c
+*/
+int check_camera(t_rtv *rtv, char *line);
+void start_camera(t_rtv *rtv, int *fd);
+t_vec rot_x(t_vec v, int angle);
+t_vec rot_y(t_vec v, int angle);
+t_vec rot_z(t_vec v, int angle);
+
+/*
+**	object.c
+*/
+t_object *add_plane(t_object *obj);
+t_object *add_sphere(t_object *obj);
+t_object *add_cylinder(t_object *obj);
+t_object *add_cone(t_object *obj);
+
+/*
+**	read.c
+*/
+SDL_Color read_color(char *line);
+t_vec read_vec(char *line);
+double read_number(char *line);
+t_vec read_rot(char *line);
+
+/*
+**	light.c
+*/
+t_light *add_ambient(t_light *l);
+t_light *add_point(t_light *l);
+int check_light(t_light *tmp, char *line);
+void start_light(t_rtv *rtv, int *fd);
+
+
 
 #endif

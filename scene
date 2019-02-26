@@ -1,8 +1,21 @@
+PLANE:
+	center: 0 0 0
+	rotation 0 0 0
+	specular: 100
+#
+AMBIENT:
+	intensivity: 0.1
+#
 SPHERE:
 	center: 0 0 0
 	rotation: 0 20
+	color: 255 0 0
+	reflective: 0.5
 #
-PLANE:
-	center: 0 0 0
-	rotation 0 0
+CAMERA:
+	center: 1 2 -5
+#
+POINT:
+	position: 3 2 -4
+	intensivity: 0.6
 #

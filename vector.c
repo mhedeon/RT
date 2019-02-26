@@ -6,7 +6,7 @@
 /*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/11 15:42:43 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/02/22 15:37:28 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/02/26 18:50:14 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,36 +43,6 @@ t_vec reflect(t_vec v1, t_vec v2)
 }
 
 ////////////////////////////////////////////////////////////////
-
-t_vec rot_y(t_vec v, int angle)
-{
-	double x = v.x;
-	double z = v.z;
-
-	v.x = x * cos(RAD(angle)) + z * sin(RAD(angle));
-	v.z = -x * sin(RAD(angle)) + z * cos(RAD(angle));
-	return (v);
-}
-
-t_vec rot_x(t_vec v, int angle)
-{
-	double y = v.y;
-	double z = v.z;
-	
-	v.y = y * cos(RAD(angle)) + z * sin(RAD(angle));
-	v.z = -y * sin(RAD(angle)) + z * cos(RAD(angle));
-	return (v);
-}
-
-t_vec rot_z(t_vec v, int angle)
-{
-	double y = v.y;
-	double x = v.x;
-	
-	v.x = x * cos(RAD(angle)) + y * sin(RAD(angle));
-	v.y = -x * sin(RAD(angle)) + y * cos(RAD(angle));
-	return (v);
-}
 
 t_vec direction(int x, int y, int angle_x, int angle_y)
 {

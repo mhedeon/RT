@@ -6,7 +6,7 @@
 /*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/26 18:59:28 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/02/26 21:49:47 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/02/28 16:42:39 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ void		start_light(t_rtv *rtv, int *fd)
 		if (!ft_strncmp(line + 1, "position:", 9))
 			tmp->pos = read_vec(line);
 		else if (!ft_strncmp(line + 1, "intensivity:", 12))
-			tmp->intens = read_number(line);
+			tmp->intens = read_number(line) >= 1.0 ? 1.0 : read_number(line);
 		else if (!ft_strcmp(line, "#"))
 		{
 			free(line);

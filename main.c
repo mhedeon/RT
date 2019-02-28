@@ -6,11 +6,20 @@
 /*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/11 15:42:36 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/02/26 23:03:59 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/02/28 18:44:14 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "rtv1.h"
+
+int				rnd(void)
+{
+	static int	seed = 0;
+
+	seed = seed == 0 ? SDL_GetTicks() : seed;
+	seed = (Uint8)(1664525 * seed + 1013904223);
+	return (seed);
+}
 
 SDL_Color		do_color(SDL_Color local, SDL_Color reflected, double reflect)
 {
@@ -23,7 +32,7 @@ SDL_Color		do_color(SDL_Color local, SDL_Color reflected, double reflect)
 	return (result);
 }
 
-int				translate(t_rtv *rtv, SDL_Event e)
+static int		translate(t_rtv *rtv, SDL_Event e)
 {
 	if (KEY == SDLK_LEFT)
 		rtv->camera = add(rtv->camera, multiply(0.25,
@@ -42,7 +51,7 @@ int				translate(t_rtv *rtv, SDL_Event e)
 	return (1);
 }
 
-int				rotate(t_rtv *rtv, SDL_Event e)
+static int		rotate(t_rtv *rtv, SDL_Event e)
 {
 	if (KEY == SDLK_w)
 		rtv->angle_x -= 5;
@@ -71,7 +80,7 @@ int				main(int ac, char **av)
 	if (rtv == NULL)
 		return (error_log("Could not allocate memory for rtv"));
 	if (!init(rtv))
-		return (0);
+		return (garbage(rtv));
 	rtv->angle_x = 0;
 	rtv->angle_y = 0;
 	rtv->camera = (t_vec) { 0.0, 0.5, -5.0 };
@@ -83,15 +92,5 @@ int				main(int ac, char **av)
 		else if (rotate(rtv, e) || translate(rtv, e))
 			threads(rtv);
 	garbage(rtv);
-	system("leaks rtv1");
 	return (0);
-}
-
-int				rnd(void)
-{
-	static int	seed = 0;
-
-	seed = seed == 0 ? SDL_GetTicks() : seed;
-	seed = (Uint8)(1664525 * seed + 1013904223);
-	return (seed);
 }

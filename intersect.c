@@ -6,7 +6,7 @@
 /*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/11 17:27:52 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/02/26 21:49:46 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/02/28 18:16:01 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,8 @@ void			intersect_plane(t_vec camera, t_vec dir,
 	{
 		ts[0] = ts[0] / ts[1];
 		ts[1] = INFINITY;
-		if (length(add(multiply(ts[0], dir), camera)) > PLANE_D->radius)
+		if (length(substruct(add(multiply(ts[0], dir), camera), plane->center))
+					> PLANE_D->radius)
 			ts[0] = INFINITY;
 		return ;
 	}
@@ -74,15 +75,6 @@ void			intersect_sphere(t_vec camera, t_vec dir,
 	}
 	ts[0] = (-k[1] + d) / (2.0 * k[0]);
 	ts[1] = (-k[1] - d) / (2.0 * k[0]);
-}
-
-double			limit_cylinder(t_object *cylinder, t_vec cam,
-								double tmp, double t)
-{
-	double		m;
-
-	m = tmp * t + dot(substruct(cam, cylinder->center), cylinder->normal);
-	return ((m < 0.0 || m > CYLINDER_D->height) ? INFINITY : t);
 }
 
 void			intersect_cylinder(t_vec camera, t_vec dir,
@@ -113,15 +105,6 @@ void			intersect_cylinder(t_vec camera, t_vec dir,
 		ts[0] = limit_cylinder(cylinder, camera, tmp, ts[0]);
 		ts[1] = limit_cylinder(cylinder, camera, tmp, ts[1]);
 	}
-}
-
-double			limit_cone(t_object *cone, t_vec cam,
-							double tmp, double t)
-{
-	double		m;
-
-	m = tmp * t + dot(substruct(cam, cone->center), cone->normal);
-	return ((m < -CONE_D->height2 || m > CONE_D->height1) ? INFINITY : t);
 }
 
 void			intersect_cone(t_vec camera, t_vec dir,

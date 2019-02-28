@@ -6,7 +6,7 @@
 /*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/26 21:16:25 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/02/26 22:36:51 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/02/28 18:41:57 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ int				init(t_rtv *rtv)
 	return (1);
 }
 
-void			garbage(t_rtv *rtv)
+int				garbage(t_rtv *rtv)
 {
 	t_object	*o_tmp;
 	t_light		*l_tmp;
@@ -63,10 +63,33 @@ void			garbage(t_rtv *rtv)
 	if (rtv->buff != NULL)
 		free(rtv->buff);
 	free(rtv);
+	SDL_Quit();
+	return (0);
 }
 
 int				error_log(char *message)
 {
-	SDL_Log("%s %s\n", message, SDL_GetError());
+	SDL_Log("\x1b[31m%s %s\x1b[0m\n", message, SDL_GetError());
 	return (0);
+}
+
+int				matrix_height(char **m)
+{
+	int	i;
+
+	i = 0;
+	while (m[i])
+		i++;
+	return (i);
+}
+
+void			matrix_del(char **m)
+{
+	int	i;
+
+	i = -1;
+	while (m[++i])
+		free(m[i]);
+	free(m[i]);
+	free(m);
 }

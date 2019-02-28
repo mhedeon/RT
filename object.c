@@ -6,7 +6,7 @@
 /*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/26 18:55:32 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/02/26 22:42:58 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/02/27 19:42:20 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,4 +121,24 @@ t_object		*add_cone(t_object *obj)
 	else
 		obj->next = new;
 	return (start == NULL ? obj : start);
+}
+
+void			start_object(t_rtv *rtv, int *fd)
+{
+	char		*line;
+	t_object	*tmp;
+
+	tmp = rtv->obj;
+	while (tmp->next != NULL)
+		tmp = tmp->next;
+	while (get_next_line(*fd, &line))
+	{
+		if (!check_option_o(tmp, line))
+			if (!ft_strcmp(line, "#"))
+			{
+				free(line);
+				return ;
+			}
+		free(line);
+	}
 }

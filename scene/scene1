@@ -1,0 +1,35 @@
+AMBIENT:
+	intensivity: 0.2
+#
+PLANE:
+	color: 82 82 82
+#
+PLANE:
+	center: 0 0 6
+	rotation: 90 0 0
+	color: 50 50 200
+#
+POINT:
+	intensivity: 0.5
+	position: 3 6 -6
+#
+SPHERE:
+	color: 180 20 20
+	center: 0 0.5 0
+	radius: 0.5
+	specular: -2
+#
+CYLINDER:
+	color: 65 230 75
+	center: -1 0 0
+	radius: 0.5
+	rotation: -20 0 40
+#
+CONE:
+	color: 255 255 0
+	center: 0.75 0.5 0
+	angle: 35
+	rotation: -10 0 -30
+#
+CAMERA:
+	position: 0 1 -4

@@ -6,13 +6,13 @@
 /*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/22 15:59:02 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/02/26 21:49:51 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/02/27 22:11:05 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "rtv1.h"
 
-int check_struct(t_rtv *rtv, char *line)
+int			check_struct(t_rtv *rtv, char *line)
 {
 	if (!ft_strcmp(line, "SPHERE:"))
 		rtv->obj = add_sphere(rtv->obj);
@@ -36,28 +36,7 @@ int check_struct(t_rtv *rtv, char *line)
 	return (1);
 }
 
-int				matrix_height(char **m)
-{
-	int	i;
-
-	i = 0;
-	while (m[i])
-		i++;
-	return (i);
-}
-
-void			matrix_del(char **m)
-{
-	int	i;
-
-	i = -1;
-	while (m[++i])
-		free(m[i]);
-	free(m[i]);
-	free(m);
-}
-
-int check_option_o2(t_object *tmp, char *line)
+int			check_option_o2(t_object *tmp, char *line)
 {
 	if (!ft_strncmp(line + 1, "angle:", 6) && tmp->type == CONE)
 		((t_cone*)tmp->data)->angle = tan(RAD(read_number(line)));
@@ -75,11 +54,10 @@ int check_option_o2(t_object *tmp, char *line)
 	return (1);
 }
 
-int check_option_o(t_object *tmp, char *line)
+int			check_option_o(t_object *tmp, char *line)
 {
 	if (ft_strlen(line) < 2)
 		return (0);
-	
 	if (!ft_strncmp(line + 1, "center:", 7))
 		tmp->center = read_vec(line);
 	else if (!ft_strncmp(line + 1, "rotation:", 9))
@@ -87,9 +65,9 @@ int check_option_o(t_object *tmp, char *line)
 	else if (!ft_strncmp(line + 1, "color:", 6))
 		tmp->color = read_color(line);
 	else if (!ft_strncmp(line + 1, "specular:", 9))
-		tmp->specular = read_number(line);
+		tmp->specular = read_number(line) < 2 ? 2 : read_number(line);
 	else if (!ft_strncmp(line + 1, "reflective:", 11))
-		tmp->reflective = read_number(line);
+		tmp->reflective = read_number(line) > 1.0 ? 1.0 : read_number(line);
 	else if (!ft_strncmp(line + 1, "radius:", 7) && tmp->type == SPHERE)
 		((t_sphere*)tmp->data)->radius_square = pow(read_number(line), 2.0);
 	else if (!ft_strncmp(line + 1, "radius:", 7) && tmp->type == PLANE)
@@ -101,30 +79,10 @@ int check_option_o(t_object *tmp, char *line)
 	return (1);
 }
 
-void start_object(t_rtv *rtv, int *fd)
+void		get_data(t_rtv *rtv, char *name)
 {
-	char *line;
-	t_object *tmp;
-
-	tmp = rtv->obj;
-	while (tmp->next != NULL)
-		tmp = tmp->next;
-	while (get_next_line(*fd, &line))
-	{
-		if (!check_option_o(tmp, line))
-			if (!ft_strcmp(line, "#"))
-			{
-				free(line);
-				return ;
-			}
-		free(line);
-	}
-}
-
-void	get_data(t_rtv *rtv, char *name)
-{
-	int fd;
-	char *line;
+	int		fd;
+	char	*line;
 
 	rtv->close = rtv->close;
 	if ((fd = open(name, O_RDONLY)) < 0)

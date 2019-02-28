@@ -6,7 +6,7 @@
 /*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/26 18:49:04 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/02/26 21:33:47 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/02/27 20:28:49 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int			check_camera(t_rtv *rtv, char *line)
 {
-	if (!ft_strncmp(line + 1, "center:", 7))
+	if (!ft_strncmp(line + 1, "position:", 9))
 		rtv->camera = read_vec(line);
 	else if (!ft_strncmp(line + 1, "angle_x:", 8))
 		rtv->angle_x = read_number(line);

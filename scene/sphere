@@ -1,8 +1,0 @@
-SPHERE:
-	specular: 100
-	color: 155 32 32
-#
-POINT:
-	intensivity: 0.4
-	position: 0 3 -6
-#

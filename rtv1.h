@@ -3,17 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   rtv1.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ikoloshy <ikoloshy@unit.student.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/11 16:08:48 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/02/28 19:04:01 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/03/20 20:31:05 by ikoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef RTV1_H
 # define RTV1_H
 
-# include "SDL.h"
+# include "frameworks/SDL2.framework/Headers//SDL.h"
 # include "libft.h"
 # include "get_next_line.h"
 # include <stdlib.h>

@@ -1,46 +1,70 @@
-# **************************************************************************** #
+#******************************************************************************#
+#                ___                                                           #
+#               /  /\    ___                        authors:                   #
+#              /  /::\  /__/\                 ┌┬┐┬ ┬┌─┐┌┬┐┌─┐┌─┐┌┐┌            #
+#             /  /:/\:\ \  \:\                │││├─┤├┤  ││├┤ │ ││││            #
+#            /  /::\ \:\ \__\:\               ┴ ┴┴ ┴└─┘─┴┘└─┘└─┘┘└┘            #
+#           /__/:/\:\_\:\/  /::\              ┬┬┌─┌─┐┬  ┌─┐┌─┐┬ ┬┬ ┬           #
+#           \__\/~|::\/:/  /:/\:\             │├┴┐│ ││  │ │└─┐├─┤└┬┘           #
+#              |  |:|::/  /:/__\/             ┴┴ ┴└─┘┴─┘└─┘└─┘┴ ┴ ┴            #
+#              |  |:|\/__/:/                  ┌─┐┌─┐┌┐ ┌┬┐┬ ┬┬  ┬  ┌─┐         #
+#              |__|:|~\__\/                   ├─┤├─┤├┴┐ │││ ││  │  ├─┤         #
+#               \__\|                         ┴ ┴┴ ┴└─┘─┴┘└─┘┴─┘┴─┘┴ ┴         #
 #                                                                              #
-#                                                         :::      ::::::::    #
-#    Makefile                                           :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2019/02/11 15:37:02 by mhedeon           #+#    #+#              #
-#    Updated: 2019/02/28 19:06:05 by mhedeon          ###   ########.fr        #
-#                                                                              #
-# **************************************************************************** #
+#******************************************************************************#
 
-NAME = RTv1
+#http://patorjk.com/software/taag/#p=testall&f=Bigfig&t=authors%0Amhedeon%0Aikoloshy%0Aaabdulla
+#http://patorjk.com/software/taag/#p=display&f=Straight&t=mhedeon%0Aikoloshy%0Aaabdulla
+#http://patorjk.com/software/taag/#p=display&f=Cybermedium&t=mhedeon%0Aikoloshy%0Aaabdulla
 
-SRC = main.c vector.c window.c intersect.c normal.c scene.c camera.c \
-	object.c read.c light.c init.c trace.c trash.c
+NAME	=	RT
+OBJDIR	=	./obj/
+SRCDIR	=	./src/
+INCDIR	=	./includes/
+LIBFT	=	-lft -L./libft/
 
-OBJ = $(SRC:.c=.o)
+SRC =	main.c \
+		vector.c \
+		window.c \
+		intersect.c \
+		normal.c \
+		scene.c \
+		camera.c \
+		object.c \
+		read.c \
+		light.c \
+		init.c \
+		trace.c \
+		trash.c \
+
+OBJ = $(addprefix $(OBJDIR),$(SRC:.c=.o))
 
 FLAGS = -Wall -Werror -Wextra
 
-INCLUDES = -I./frameworks/SDL2.framework/Headers/ \
-			-F./frameworks -I./libft
+INCLUDES =	-I./frameworks/SDL2.framework/Headers/ 
 
 FRAMEWORKS = -F./frameworks -rpath ./frameworks -framework SDL2 
 
-all: $(NAME)
+all: obj $(NAME)
+
+obj:
+	@ mkdir -p $(OBJDIR)
 
 $(NAME): $(OBJ)
-	@make -C libft
-	@gcc -g -o $(NAME) $(OBJ) $(FRAMEWORKS) -L./libft -lft
+	@ make -C libft
+	@ gcc $(FLAGS) -o $(NAME) $(OBJ) $(LIBFT) -I $(INCDIR) $(FRAMEWORKS)
 
-%.o: %.c
-	@gcc $(FLAGS) -c $< -o $@ $(INCLUDES)
+$(OBJDIR)%.o:$(SRCDIR)%.c
+	@ gcc $(FLAGS) -I $(INCDIR) -c -o $@ $<
 
 clean:
-	@make -C libft clean
-	@rm -f $(OBJ)
+	@ make clean -C libft 
+	@ /bin/rm -rf $(OBJDIR)
 
 fclean: clean
-	@make -C libft fclean
-	@rm -f $(NAME)
-	@rm -f $(OBJ)
+	@ make fclean -C libft
+	@ /bin/rm -f $(NAME)
 
 re: fclean all
-	@make -C libft re
+
+.PHONY: all clean fclean re

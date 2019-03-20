@@ -13,10 +13,6 @@
 #                                                                              #
 #******************************************************************************#
 
-#http://patorjk.com/software/taag/#p=testall&f=Bigfig&t=authors%0Amhedeon%0Aikoloshy%0Aaabdulla
-#http://patorjk.com/software/taag/#p=display&f=Straight&t=mhedeon%0Aikoloshy%0Aaabdulla
-#http://patorjk.com/software/taag/#p=display&f=Cybermedium&t=mhedeon%0Aikoloshy%0Aaabdulla
-
 NAME	=	RT
 OBJDIR	=	./obj/
 SRCDIR	=	./src/

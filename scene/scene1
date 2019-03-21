@@ -3,6 +3,7 @@ AMBIENT:
 #
 PLANE:
 	color: 82 82 82
+	center: 0 -15 0
 #
 PLANE:
 	center: 0 0 6
@@ -21,15 +22,15 @@ SPHERE:
 #
 CYLINDER:
 	color: 65 230 75
-	center: -1 0 0
-	radius: 0.5
-	rotation: -20 0 40
+	center: -2 0 0
+	radius: 1
+	rotation: 0 0 0
 #
 CONE:
 	color: 255 255 0
-	center: 0.75 0.5 0
-	angle: 35
-	rotation: -10 0 -30
+	center: 3 0 0
+	angle: 15
+	rotation: 0 0 0
 #
 CAMERA:
-	position: 0 1 -4
+	position: 0 1 -10

@@ -8,20 +8,20 @@ link_directories(libft frameworks)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
 
 add_executable(RT
-        main.c
-        vector.c
-        window.c
-        intersect.c
-        normal.c
-        scene.c
-        camera.c
-        object.c
-        read.c
-        light.c
-        init.c
-        trace.c
-        trash.c
-        )
+        src/main.c
+        src/vector.c
+        src/window.c
+        src/intersect.c
+        src/normal.c
+        src/scene.c
+        src/camera.c
+        src/object.c
+        src/read.c
+        src/light.c
+        src/init.c
+        src/trace.c
+        src/trash.c
+        src/slice.c)
 
 find_package(SDL2 REQUIRED)
 #find_package(SDL2_image REQUIRED)

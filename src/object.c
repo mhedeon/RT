@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   object.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ikoloshy <ikoloshy@unit.student.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/26 18:55:32 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/02/27 19:42:20 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/03/21 21:56:45 by ikoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "rtv1.h"
+#include "../rtv1.h"
 
 t_object		*add_plane(t_object *obj)
 {
@@ -32,6 +32,7 @@ t_object		*add_plane(t_object *obj)
 	new->intersect = intersect_plane;
 	new->get_normal = normal_plane;
 	new->next = NULL;
+	new->slice = NULL;
 	if (obj == NULL)
 		obj = new;
 	else
@@ -59,6 +60,7 @@ t_object		*add_sphere(t_object *obj)
 	new->intersect = intersect_sphere;
 	new->get_normal = normal_sphere;
 	new->next = NULL;
+	new->slice = add_slice(NULL, (t_vec){ 0.0, 0.5, 0.0 }, (t_vec){ 1.0, 0.0 , 0.0 }, 0);
 	if (obj == NULL)
 		obj = new;
 	else
@@ -87,6 +89,7 @@ t_object		*add_cylinder(t_object *obj)
 	new->intersect = intersect_cylinder;
 	new->get_normal = normal_cylinder;
 	new->next = NULL;
+	new->slice = add_slice(NULL, (t_vec){ 4.0, 0.0, 0.0 }, (t_vec){ 0.0, 1.0 , 0.0 }, 0);
 	if (obj == NULL)
 		obj = new;
 	else
@@ -116,6 +119,7 @@ t_object		*add_cone(t_object *obj)
 	new->intersect = intersect_cone;
 	new->get_normal = normal_cone;
 	new->next = NULL;
+	new->slice = add_slice(NULL, (t_vec){ 3.0, 0.0, 0.0 }, (t_vec){ 1.0, 0.0 , 0.0 }, 0);;
 	if (obj == NULL)
 		obj = new;
 	else

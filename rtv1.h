@@ -6,7 +6,7 @@
 /*   By: ikoloshy <ikoloshy@unit.student.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/11 16:08:48 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/03/20 20:31:05 by ikoloshy         ###   ########.fr       */
+/*   Updated: 2019/03/21 21:43:37 by ikoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 # include <fcntl.h>
 # include <math.h>
 # include <limits.h>
-# include <float.h>
+#include <stdio.h>
 
 # define SCREEN_WIDTH 600
 # define SCREEN_HEIGHT 600
@@ -58,12 +58,24 @@
 
 # define KEY e.type == SDL_KEYDOWN && e.key.keysym.sym
 
+
+
 typedef struct		s_vec
 {
 	double			x;
 	double			y;
 	double			z;
 }					t_vec;
+
+
+//add slice struct
+typedef struct		s_slice
+{
+	int				type;
+	t_vec			point;
+	t_vec			axis;
+	struct s_slice	*next;
+}					t_slice;
 
 typedef struct		s_light
 {
@@ -107,6 +119,7 @@ typedef struct		s_object
 	void			*data;
 	void			(*intersect)();
 	t_vec			(*get_normal)();
+	t_slice			*slice;
 	struct s_object	*next;
 }					t_object;
 
@@ -135,6 +148,20 @@ typedef struct		s_rtv
 	int				end;
 	int				depth;
 }					t_rtv;
+
+/*
+** Slice the object
+*/
+
+typedef enum		e_type
+{
+	NONE,
+	REAL,
+	OWN
+}					t_type;
+
+t_slice	*	add_slice(t_slice *start, t_vec point, t_vec axis, int type);
+int	check_slice(double t, t_slice *slc, t_vec start, t_vec direction);
 
 /*
 **	camera.c

@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "rtv1.h"
+#include "../rtv1.h"
 
 double		limit_cylinder(t_object *cylinder, t_vec cam,
 								double tmp, double t)

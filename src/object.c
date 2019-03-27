@@ -6,7 +6,7 @@
 /*   By: ikoloshy <ikoloshy@unit.student.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/26 18:55:32 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/03/21 21:56:45 by ikoloshy         ###   ########.fr       */
+/*   Updated: 2019/03/27 21:29:53 by ikoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,10 @@ t_object		*add_sphere(t_object *obj)
 	new->intersect = intersect_sphere;
 	new->get_normal = normal_sphere;
 	new->next = NULL;
-	new->slice = add_slice(NULL, (t_vec){ 0.0, 0.5, 0.0 }, (t_vec){ 1.0, 0.0 , 0.0 }, 0);
+	new->slice = NULL;
+	new->slice = add_slice(new->slice, (t_vec){ 0.0, 0.5, 0.0 }, (t_vec){ 0.0, 1.0 , 0.0 }, 0);
+	new->slice = add_slice(new->slice, (t_vec){ 0.0, 0.5, 0.0 }, (t_vec){ 1.0, 0.0 , 0.0 }, 0);
+	new->slice = add_slice(new->slice, (t_vec){ 0.0, 0.5, 0.0 }, (t_vec){ -1.0, 1.0 , 0.0 }, 0);
 	if (obj == NULL)
 		obj = new;
 	else
@@ -89,7 +92,7 @@ t_object		*add_cylinder(t_object *obj)
 	new->intersect = intersect_cylinder;
 	new->get_normal = normal_cylinder;
 	new->next = NULL;
-	new->slice = add_slice(NULL, (t_vec){ 4.0, 0.0, 0.0 }, (t_vec){ 0.0, 1.0 , 0.0 }, 0);
+	new->slice = add_slice(NULL, (t_vec){ -5.0, 0.0, 0.0 }, (t_vec){ -1.0, -1.0 , 0.0 }, 0);
 	if (obj == NULL)
 		obj = new;
 	else
@@ -119,7 +122,8 @@ t_object		*add_cone(t_object *obj)
 	new->intersect = intersect_cone;
 	new->get_normal = normal_cone;
 	new->next = NULL;
-	new->slice = add_slice(NULL, (t_vec){ 3.0, 0.0, 0.0 }, (t_vec){ 1.0, 0.0 , 0.0 }, 0);;
+	new->slice = NULL;
+	new->slice = add_slice(NULL, (t_vec){ 3.0, 4.0, 0.0 }, (t_vec){ 0.0, 1.0 , 0.0 }, 0);;
 	if (obj == NULL)
 		obj = new;
 	else

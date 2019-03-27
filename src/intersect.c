@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   intersect.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ikoloshy <ikoloshy@unit.student.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/11 17:27:52 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/02/28 18:16:01 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/03/27 20:24:13 by ikoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,13 +24,13 @@ void			close_inters(t_rtv *rtv, t_fov fov, double min, double max)
 	{
 		tmp->intersect(fov.cam, fov.dir, tmp, ts);
 		if (ts[0] < rtv->close && min < ts[0] && ts[0] < max &&
-		check_slice(ts[0], tmp->slice, fov.cam, fov.dir))
+		!check_slice(ts[0], tmp->slice, fov.cam, fov.dir))
 		{
 			rtv->close = ts[0];
 			rtv->close_o = tmp;
 		}
 		if (ts[1] < rtv->close && min < ts[1] && ts[1] < max &&
-			check_slice(ts[0], tmp->slice, fov.cam, fov.dir))
+			!check_slice(ts[1], tmp->slice, fov.cam, fov.dir))
 		{
 			rtv->close = ts[1];
 			rtv->close_o = tmp;

@@ -6,14 +6,15 @@
 #    By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/02/11 15:37:02 by mhedeon           #+#    #+#              #
-#    Updated: 2019/02/28 19:06:05 by mhedeon          ###   ########.fr        #
+#    Updated: 2019/03/27 16:36:33 by ikoloshy         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = RTv1
 
-SRC = main.c vector.c window.c intersect.c normal.c scene.c camera.c \
-	object.c read.c light.c init.c trace.c trash.c
+SRC = src/main.c src/vector.c src/window.c src/intersect.c src/normal.c \
+	  src/scene.c src/camera.c src/object.c src/read.c src/light.c src/init.c \
+	 src/trace.c src/trash.c src/slice.c
 
 OBJ = $(SRC:.c=.o)
 

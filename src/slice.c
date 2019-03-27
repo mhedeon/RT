@@ -6,7 +6,7 @@
 /*   By: ikoloshy <ikoloshy@unit.student.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/21 20:36:33 by ikoloshy          #+#    #+#             */
-/*   Updated: 2019/03/21 21:50:36 by ikoloshy         ###   ########.fr       */
+/*   Updated: 2019/03/27 21:27:18 by ikoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ t_slice	*add_slice(t_slice *start, t_vec point, t_vec axis, int type)
 	new = (t_slice*)malloc(sizeof(t_slice));
 	new->type = type;
 	new->point = point;
-	new->axis = axis;
+	new->axis = normalize(axis);
 	new->next = NULL;
 	while(tmp && tmp->next)
 		tmp = tmp->next;
@@ -35,13 +35,17 @@ t_slice	*add_slice(t_slice *start, t_vec point, t_vec axis, int type)
 int	check_slice(double t, t_slice *slc, t_vec start, t_vec direction)
 {
 	t_vec	vector;
-	double	angle_cos;
+	t_slice	*tmp;
 
+	tmp = slc;
 	if (!slc)
-		return (1);
-	vector = substruct(slc->point, add(start, multiply(t, direction)));
-	angle_cos = dot(vector, slc->axis) / (length(slc->axis) * length(vector));
-	if (angle_cos >= 0)
 		return (0);
-	return (1);
+	while (tmp)
+	{
+		vector = substruct(add(start, multiply(t, direction)), tmp->point);
+		if (dot(vector, tmp->axis) / (length(tmp->axis) * length(vector)) <= 0)
+			return (1);
+		tmp = tmp->next;
+	}
+	return (0);
 }

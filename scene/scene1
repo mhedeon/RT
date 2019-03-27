@@ -12,25 +12,26 @@ PLANE:
 #
 POINT:
 	intensivity: 0.5
-	position: 3 6 -6
+	position: 3 6 -16
 #
 SPHERE:
 	color: 180 20 20
 	center: 0 0.5 0
-	radius: 0.5
+	radius: 4
 	specular: -2
 #
 CYLINDER:
 	color: 65 230 75
-	center: -2 0 0
+	center: -5 0 0
 	radius: 1
-	rotation: 0 0 0
+	rotation: -45 0 0
 #
 CONE:
 	color: 255 255 0
-	center: 3 0 0
+	center: 7 0 -10
 	angle: 15
-	rotation: 0 0 0
+	rotation: -45 0 0
 #
 CAMERA:
-	position: 0 1 -10
+	position: 0 0 -30
+	angle_x: 0

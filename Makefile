@@ -1,46 +1,92 @@
-# **************************************************************************** #
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    Makefile                                           :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2019/02/11 15:37:02 by mhedeon           #+#    #+#              #
-#    Updated: 2019/02/28 19:06:05 by mhedeon          ###   ########.fr        #
-#                                                                              #
-# **************************************************************************** #
+NAME = RT
 
-NAME = RTv1
+#------------------------------- HEADERS ---------------------------------------
+H_DIR = ./inc
 
-SRC = main.c vector.c window.c intersect.c normal.c scene.c camera.c \
-	object.c read.c light.c init.c trace.c trash.c
+H_LIST = rt.h
 
-OBJ = $(SRC:.c=.o)
+HEADERS = $(addprefix $(H_DIR)/, $(H_LIST))
+#-------------------------------------------------------------------------------
 
-FLAGS = -Wall -Werror -Wextra
+#------------------------------- MAIN ------------------------------------------
+MAIN_DIR = ./src
 
-INCLUDES = -I./frameworks/SDL2.framework/Headers/ \
-			-F./frameworks -I./libft
+MAIN_SRC = main.c \
+			vector.c \
+			intersect.c \
+			normal.c \
+			scene.c \
+			camera.c \
+			object.c \
+			read.c \
+			light.c \
+			init.c \
+			trace.c \
+			trash.c
 
-FRAMEWORKS = -F./frameworks -rpath ./frameworks -framework SDL2 
+MAIN_SRC_LIST = $(addprefix $(MAIN_DIR)/, $(MAIN_SRC))
+#-------------------------------------------------------------------------------
 
-all: $(NAME)
+#------------------------------- OBJECTS ---------------------------------------
+OBJ_DIR = ./obj
 
-$(NAME): $(OBJ)
-	@make -C libft
-	@gcc -g -o $(NAME) $(OBJ) $(FRAMEWORKS) -L./libft -lft
+OBJ_LIST = $(addprefix $(OBJ_DIR)/, $(MAIN_SRC:.c=.o))
+#-------------------------------------------------------------------------------
 
-%.o: %.c
+#------------------------------- LIBRARIES -------------------------------------
+LIB_DIR = ./libraries
+
+LIB_LIST = libmgl/libmgl.a \
+			libft/libft.a
+
+LIBRARIES = $(addprefix $(LIB_DIR)/, $(LIB_LIST))
+#-------------------------------------------------------------------------------
+
+#------------------------------- INCLUDES --------------------------------------
+FLAGS = -Wall -Werror -Wextra -g
+
+INCLUDES = -I $(H_DIR) \
+ 			-I$(LIB_DIR)/libmgl/frameworks/SDL2.framework//Headers/ \
+			-I$(LIB_DIR)/libmgl/frameworks/SDL2_image.framework/Headers/ \
+			-I$(LIB_DIR)/libmgl/frameworks/SDL2_mixer.framework/Headers/ \
+			-I$(LIB_DIR)/libmgl/frameworks/SDL2_ttf.framework/Headers/ \
+			-F$(LIB_DIR)/libmgl/frameworks \
+			-I$(LIB_DIR)/libmgl/headers/ \
+			-I$(LIB_DIR)/libft/
+
+FRAMEWORKS = -F$(LIB_DIR)/libmgl/frameworks \
+			-rpath $(LIB_DIR)/libmgl/frameworks \
+			-framework SDL2 \
+			-framework SDL2_image \
+			-framework SDL2_mixer \
+			-framework SDL2_ttf
+#-------------------------------------------------------------------------------
+
+all: lib $(NAME)
+
+$(NAME): $(OBJ_DIR) $(OBJ_LIST) $(HEADERS) $(LIBRARIES)
+	@gcc -o $(NAME) $(OBJ_LIST) -L$(LIB_DIR)/libmgl -lmgl -L$(LIB_DIR)/libft -lft $(FRAMEWORKS)
+
+$(OBJ_DIR)/%.o : $(MAIN_DIR)/%.c $(HEADERS)
 	@gcc $(FLAGS) -c $< -o $@ $(INCLUDES)
 
+$(OBJ_DIR):
+	@mkdir $(OBJ_DIR)
+
+lib:
+	@make -C $(LIB_DIR)/libmgl
+	@make -C $(LIB_DIR)/libft
+
 clean:
-	@make -C libft clean
-	@rm -f $(OBJ)
+	@rm -rf $(OBJ_DIR)
 
 fclean: clean
-	@make -C libft fclean
 	@rm -f $(NAME)
-	@rm -f $(OBJ)
 
 re: fclean all
-	@make -C libft re
+
+#------------------------------- DEBUG -----------------------------------------
+pr: print-OBJ_LIST print-HEADERS
+
+print-%  : ; @echo $* = $($*)
+#-------------------------------------------------------------------------------

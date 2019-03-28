@@ -6,7 +6,7 @@
 /*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/26 21:16:25 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/03/28 19:28:17 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/03/28 22:31:12 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,25 @@ int				init(t_rt *rt)
 	rt->obj = NULL;
 	rt->light = NULL;
 	rt->close_o = NULL;
-	if ((rt->win = create_win("RT", SCENE_W, SCENE_H)) == NULL)
+	if ((rt->win = create_win("RT", WIN_W, WIN_H)) == NULL)
 		return (error_log("Initiation failed"));
+
+	rt->scene_r = (SDL_Rect) { (WIN_W - SCENE_W) / 2, WIN_H - SCENE_H, SCENE_W, SCENE_H };
 	clear_buffer(rt->win);
+	return (1);
+}
+
+int			init_face(t_face *face)
+{
+	
+	
+	face->top_r = (SDL_Rect) { 0, 0, WIN_W, WIN_H - SCENE_H };
+	face->left_r = (SDL_Rect) { 0, WIN_H - SCENE_H, (WIN_W - SCENE_W) / 2, SCENE_H };
+	face->right_r = (SDL_Rect) { SCENE_W + face->left_r.w, WIN_H - SCENE_H, (WIN_W - SCENE_W) / 2, SCENE_H };
+
+	face->picker = picker_create(200);
+	picker_set_pos(face->picker, face->right_r.x + 50, face->right_r.y + 50);
+
 	return (1);
 }
 

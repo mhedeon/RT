@@ -6,7 +6,7 @@
 /*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/11 15:42:36 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/03/28 19:50:14 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/03/28 22:35:20 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	put_pixel(t_rt *rt, SDL_Color color, int x, int y)
 	x = SCENE_W / 2 + x;
 	y = SCENE_H / 2 - y - 1;
 	if (x >= 0 && x < SCENE_W && y >= 0 && y < SCENE_W)
-		set_pixel(rt->win, &color, x, y);
+		set_pixel(rt->win, &color, x + rt->scene_r.x, y + rt->scene_r.y );
 }
 
 int				rnd(void)
@@ -78,6 +78,7 @@ static int		rotate(t_rt *rt, SDL_Event e)
 int main()
 {
 	t_rt		*rt;
+	t_face		*face;
 	SDL_Event	e;
 
 	// if (ac != 2)
@@ -89,17 +90,54 @@ int main()
 		return (error_log("Could not allocate memory for rt"));
 	if (!init(rt))
 		return (garbage(rt));
+	face = (t_face*)malloc(sizeof(t_face));
+	init_face(face);
+	
 	rt->angle_x = 0;
 	rt->angle_y = 0;
 	rt->camera = (t_vec) { 0.0, 0.5, -5.0 };
 	// get_data(rt, av[ac - 1]);
 	get_data(rt, "./scene/scene1");
 	threads(rt);
+
+	int click_pal = 0, click_hue = 0;
 	while (SDL_PollEvent(&e) || 1)
+	{
 		if (e.type == SDL_QUIT || (KEY == SDLK_ESCAPE))
 			break ;
 		else if (rotate(rt, e) || translate(rt, e))
 			threads(rt);
+
+		int x, y;
+		if (SDL_GetMouseState(&x, &y) & SDL_BUTTON(SDL_BUTTON_LEFT))
+		{
+			if (picker_within_hue(face->picker, x, y) && !click_pal)
+			{
+				picker_set_h_by_pos(face->picker, y);
+				click_hue = 1;
+			}
+			else if (picker_within_pal(face->picker, x, y) && !click_hue)
+			{
+				picker_set_sv_by_pos(face->picker, x, y);
+				click_pal = 1;
+			}
+			if (click_hue == 1)
+				picker_set_h_by_pos(face->picker, y);
+			else if (click_pal == 1)
+				picker_set_sv_by_pos(face->picker, x, y);
+			rt->obj->next->next->color = hsv2rgb(face->picker->hsv.h, face->picker->hsv.s, face->picker->hsv.v);
+			threads(rt);
+		}
+		else
+		{
+			click_hue = 0;
+			click_pal = 0;
+		}
+		
+		picker_draw(rt->win, face->picker);
+		
+		upd_win(rt->win);
+	}
 	garbage(rt);
 	return (0);
 }

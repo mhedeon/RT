@@ -6,7 +6,7 @@
 /*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/11 16:08:48 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/03/28 19:50:51 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/03/28 22:29:38 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,10 @@
 # include <limits.h>
 # include <float.h>
 
-# define SCENE_W 600
-# define SCENE_H 600
+# define WIN_W 1400
+# define WIN_H 1000
+# define SCENE_W 800
+# define SCENE_H 800
 
 # define THREADS 8
 # define DEPTH 3
@@ -130,7 +132,16 @@ typedef struct		s_rt
 	int				start;
 	int				end;
 	int				depth;
+	SDL_Rect		scene_r;
 }					t_rt;
+
+typedef struct		s_face
+{
+	t_picker		*picker;
+	SDL_Rect		left_r;
+	SDL_Rect		right_r;
+	SDL_Rect		top_r;
+}					t_face;
 
 /*
 **	camera.c
@@ -145,6 +156,7 @@ t_vec				rot_z(t_vec v, int angle);
 **	init.c
 */
 int					init(t_rt *test);
+int			init_face(t_face *face);
 int					garbage(t_rt *test);
 int					matrix_height(char **m);
 void				matrix_del(char **m);

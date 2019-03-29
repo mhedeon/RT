@@ -39,7 +39,7 @@ void picker_set_size(t_picker *picker, int height)
 	picker_set_slider_pal(picker);
 }
 
-void picker_set_hsv(t_picker *picker, double h, double s, double v)
+void picker_set_h_s_v(t_picker *picker, double h, double s, double v)
 {
 	if (picker == NULL ||
 		(h < 0.0 || h > 360.0) ||
@@ -47,6 +47,18 @@ void picker_set_hsv(t_picker *picker, double h, double s, double v)
 		(v < 0.0 || v > 1.0))
 		return ;
 	picker->hsv = (t_hsv) { h, s, v };
+	picker_set_slider_hue(picker);
+	picker_set_slider_pal(picker);
+}
+
+void picker_set_hsv(t_picker *picker, t_hsv *hsv)
+{
+	if (picker == NULL ||
+		(hsv->h < 0.0 || hsv->h > 360.0) ||
+		(hsv->s < 0.0 || hsv->s > 1.0) ||
+		(hsv->v < 0.0 || hsv->v > 1.0))
+		return ;
+	picker->hsv = (t_hsv) { hsv->h, hsv->s, hsv->v };
 	picker_set_slider_hue(picker);
 	picker_set_slider_pal(picker);
 }

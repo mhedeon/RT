@@ -40,3 +40,33 @@ SDL_Color hsv2rgb(double h, double s, double v)
 		return ((SDL_Color) { BOOST(v), BOOST(P), BOOST(Q), 0 });
 	return ((SDL_Color) { 0, 0, 0, 0 });
 }
+
+SDL_Color hsv_to_rgb(t_hsv *hsv)
+{
+	double pqt[3];
+	double f;
+	int i;
+
+	if (hsv->s == 0.0)
+		return ((SDL_Color) { BOOST(hsv->v), BOOST(hsv->v), BOOST(hsv->v), 0 });
+	hsv->h /= 60;
+	i = (int)floor(hsv->h);
+	f = hsv->h - (double)i;
+	i %= 6;
+	P = hsv->v * (1.0 - hsv->s);
+	Q = hsv->v * (1.0 - hsv->s * f);
+	T = hsv->v * (1.0 - hsv->s * (1.0 - f));
+	if (i == 0)
+		return ((SDL_Color) { BOOST(hsv->v), BOOST(T), BOOST(P), 0 });
+	else if (i == 1)
+		return ((SDL_Color) { BOOST(Q), BOOST(hsv->v), BOOST(P), 0 });
+	else if (i == 2)
+		return ((SDL_Color) { BOOST(P), BOOST(hsv->v), BOOST(T), 0 });
+	else if (i == 3)
+		return ((SDL_Color) { BOOST(P), BOOST(Q), BOOST(hsv->v), 0 });
+	else if (i == 4)
+		return ((SDL_Color) { BOOST(T), BOOST(P), BOOST(hsv->v), 0 });
+	else if (i == 5)
+		return ((SDL_Color) { BOOST(hsv->v), BOOST(P), BOOST(Q), 0 });
+	return ((SDL_Color) { 0, 0, 0, 0 });
+}

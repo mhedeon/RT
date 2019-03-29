@@ -6,7 +6,7 @@
 /*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/11 15:42:36 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/03/28 22:35:20 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/03/29 19:14:53 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ int main()
 	t_rt		*rt;
 	t_face		*face;
 	SDL_Event	e;
-
+printf("%d | %d | %d\n", 456 % 10, 456 / 10 % 10, 456 / 100 );
 	// if (ac != 2)
 	// {
 	// 	write(1, "Usage: ./rt ./scene/<scene file>\n", 36);
@@ -91,11 +91,9 @@ int main()
 	if (!init(rt))
 		return (garbage(rt));
 	face = (t_face*)malloc(sizeof(t_face));
-	init_face(face);
+	init_face(face, rt);
+	face->font = ttf_open_font("./libraries/libmgl/ttf/OSR.ttf", 150);
 	
-	rt->angle_x = 0;
-	rt->angle_y = 0;
-	rt->camera = (t_vec) { 0.0, 0.5, -5.0 };
 	// get_data(rt, av[ac - 1]);
 	get_data(rt, "./scene/scene1");
 	threads(rt);
@@ -103,6 +101,9 @@ int main()
 	int click_pal = 0, click_hue = 0;
 	while (SDL_PollEvent(&e) || 1)
 	{
+
+		
+
 		if (e.type == SDL_QUIT || (KEY == SDLK_ESCAPE))
 			break ;
 		else if (rotate(rt, e) || translate(rt, e))
@@ -111,6 +112,7 @@ int main()
 		int x, y;
 		if (SDL_GetMouseState(&x, &y) & SDL_BUTTON(SDL_BUTTON_LEFT))
 		{
+			printf("x: %d | y: %d\n", x, y);
 			if (picker_within_hue(face->picker, x, y) && !click_pal)
 			{
 				picker_set_h_by_pos(face->picker, y);
@@ -134,10 +136,18 @@ int main()
 			click_pal = 0;
 		}
 		
-		picker_draw(rt->win, face->picker);
 		
-		upd_win(rt->win);
+		interface_draw(face, rt);
+		SDL_UpdateTexture(rt->win->tex, NULL, rt->win->buff,
+							rt->win->w * sizeof(Uint32));
+							
+		// SDL_RenderClear(rt->win->ren);
+		SDL_RenderCopy(rt->win->ren, rt->win->tex, NULL, NULL);
+	text_draw(rt, face);
+		SDL_RenderPresent(rt->win->ren);
+		// upd_win(rt->win);
 	}
+	ttf_close_font(face->font);
 	garbage(rt);
 	return (0);
 }

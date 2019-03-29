@@ -6,7 +6,7 @@
 /*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/11 16:08:48 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/03/28 22:29:38 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/03/29 18:44:06 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 # include "libmgl.h"
 # include "libft.h"
+# include "text.h"
 # include "get_next_line.h"
 # include <stdlib.h>
 # include <fcntl.h>
@@ -141,6 +142,9 @@ typedef struct		s_face
 	SDL_Rect		left_r;
 	SDL_Rect		right_r;
 	SDL_Rect		top_r;
+	t_rt			*rt;
+	t_object		*o_focus;
+	TTF_Font		*font;
 }					t_face;
 
 /*
@@ -156,7 +160,6 @@ t_vec				rot_z(t_vec v, int angle);
 **	init.c
 */
 int					init(t_rt *test);
-int			init_face(t_face *face);
 int					garbage(t_rt *test);
 int					matrix_height(char **m);
 void				matrix_del(char **m);
@@ -254,5 +257,15 @@ t_vec				substruct(t_vec v1, t_vec v2);
 double				length(t_vec v1);
 t_vec				multiply(double k, t_vec v1);
 t_vec				add(t_vec v1, t_vec v2);
+
+
+
+////////////////////////
+int	init_face(t_face *face, t_rt *rt);
+void interface_set_obj(t_face *face, t_rt *rt);
+void interface_draw(t_face *face, t_rt *rt);
+
+
+void text_draw(t_rt *rt, t_face *face);
 
 #endif

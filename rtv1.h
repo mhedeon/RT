@@ -6,7 +6,7 @@
 /*   By: ikoloshy <ikoloshy@unit.student.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/11 16:08:48 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/03/21 21:43:37 by ikoloshy         ###   ########.fr       */
+/*   Updated: 2019/03/28 21:58:16 by ikoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -155,13 +155,18 @@ typedef struct		s_rtv
 
 typedef enum		e_type
 {
-	NONE,
 	REAL,
 	OWN
 }					t_type;
 
-t_slice	*	add_slice(t_slice *start, t_vec point, t_vec axis, int type);
-int	check_slice(double t, t_slice *slc, t_vec start, t_vec direction);
+t_slice	*			add_slice(t_slice *start, t_vec point,
+									t_vec axis, int type);
+int					check_slice(double t, t_slice *slc, t_vec start,
+									t_vec direction);
+void				slice_axis_change(t_slice *slc, int angle_x,
+									int angle_y, int angle_z);
+void				slice_point_change(t_slice *slc, double x,
+									double y, double z);
 
 /*
 **	camera.c

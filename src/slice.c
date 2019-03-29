@@ -6,7 +6,7 @@
 /*   By: ikoloshy <ikoloshy@unit.student.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/21 20:36:33 by ikoloshy          #+#    #+#             */
-/*   Updated: 2019/03/27 21:27:18 by ikoloshy         ###   ########.fr       */
+/*   Updated: 2019/03/28 21:55:18 by ikoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ t_slice	*add_slice(t_slice *start, t_vec point, t_vec axis, int type)
 	return (start);
 }
 
-int	check_slice(double t, t_slice *slc, t_vec start, t_vec direction)
+int		check_slice(double t, t_slice *slc, t_vec start, t_vec direction)
 {
 	t_vec	vector;
 	t_slice	*tmp;
@@ -48,4 +48,38 @@ int	check_slice(double t, t_slice *slc, t_vec start, t_vec direction)
 		tmp = tmp->next;
 	}
 	return (0);
+}
+
+void	slice_axis_change(t_slice *slc, int angle_x, int angle_y, int angle_z)
+{
+	t_slice	*tmp;
+
+	tmp = slc;
+	while(tmp)
+	{
+		if (tmp->type == OWN)
+		{
+			slc->axis = rot_x(slc->axis, angle_x);
+			slc->axis = rot_y(slc->axis, angle_y);
+			slc->axis = rot_z(slc->axis, angle_z);
+		}
+		tmp = tmp->next;
+	}
+}
+
+void	slice_point_change(t_slice *slc, double x, double y, double z)
+{
+	t_slice	*tmp;
+
+	tmp = slc;
+	while(tmp)
+	{
+		if (tmp->type == OWN)
+		{
+			slc->axis.x += x;
+			slc->axis.y += y;
+			slc->axis.z += z;
+		}
+		tmp = tmp->next;
+	}
 }

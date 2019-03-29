@@ -11,5 +11,12 @@
 # define T_S (SDL_Rect) { 1270, 505, 100, 30 }
 # define T_V (SDL_Rect) { 1270, 545, 100, 30 }
 
+# define T_X (SDL_Rect) { 100, 40, 100, 30 }
+# define T_Y (SDL_Rect) { 100, 80, 100, 30 }
+# define T_Z (SDL_Rect) { 100, 120, 100, 30 }
+
+# define T_XA (SDL_Rect) { 300, 40, 100, 30 }
+# define T_YA (SDL_Rect) { 300, 80, 100, 30 }
+# define T_ZA (SDL_Rect) { 300, 120, 100, 30 }
 
 #endif

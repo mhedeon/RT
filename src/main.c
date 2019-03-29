@@ -6,7 +6,7 @@
 /*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/11 15:42:36 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/03/29 19:14:53 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/03/29 23:25:15 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ int main()
 	t_rt		*rt;
 	t_face		*face;
 	SDL_Event	e;
-printf("%d | %d | %d\n", 456 % 10, 456 / 10 % 10, 456 / 100 );
+
 	// if (ac != 2)
 	// {
 	// 	write(1, "Usage: ./rt ./scene/<scene file>\n", 36);
@@ -92,11 +92,15 @@ printf("%d | %d | %d\n", 456 % 10, 456 / 10 % 10, 456 / 100 );
 		return (garbage(rt));
 	face = (t_face*)malloc(sizeof(t_face));
 	init_face(face, rt);
+	
 	face->font = ttf_open_font("./libraries/libmgl/ttf/OSR.ttf", 150);
 	
 	// get_data(rt, av[ac - 1]);
 	get_data(rt, "./scene/scene1");
 	threads(rt);
+
+
+	face->o_focus = rt->obj;
 
 	int click_pal = 0, click_hue = 0;
 	while (SDL_PollEvent(&e) || 1)

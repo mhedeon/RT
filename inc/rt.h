@@ -6,7 +6,7 @@
 /*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/11 16:08:48 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/03/29 18:44:06 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/03/29 23:07:01 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@
 **	from radians to degrees
 */
 # define RAD(a) ((double)a * M_PI / 180.0)
+# define DEG(a) ((double)a * 180.0 / M_PI)
 
 /*
 **	types of light
@@ -105,6 +106,7 @@ typedef struct		s_object
 	t_vec			center;
 	t_vec			normal;
 	SDL_Color		color;
+	t_vec			rot;
 	double			specular;
 	double			reflective;
 	void			*data;
@@ -144,6 +146,8 @@ typedef struct		s_face
 	SDL_Rect		top_r;
 	t_rt			*rt;
 	t_object		*o_focus;
+	int start;
+	int end;
 	TTF_Font		*font;
 }					t_face;
 
@@ -223,7 +227,7 @@ void				start_object(t_rt *rt, int *fd);
 SDL_Color			read_color(char *line);
 t_vec				read_vec(char *line);
 double				read_number(char *line);
-t_vec				read_rot(char *line);
+t_vec			read_rot(t_object *obj, char *line);
 
 /*
 **	scene.c

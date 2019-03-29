@@ -33,7 +33,7 @@ void ttf_render_text(SDL_Renderer *ren, TTF_Font *font, SDL_Rect *r, char *text)
 	SDL_Surface	*sur;
 	SDL_Texture *msg;
 
-	sur = TTF_RenderText_Solid(font, text, (SDL_Color) { 100, 150, 100, 0 });
+	sur = TTF_RenderText_Solid(font, text, (SDL_Color) { 255, 255, 255, 0 });
 	if (sur == NULL)
 	{
 		error_log("Text error");

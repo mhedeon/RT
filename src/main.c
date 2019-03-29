@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ikoloshy <ikoloshy@unit.student.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/11 15:42:36 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/02/28 18:44:14 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/03/29 22:47:57 by ikoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,6 +85,23 @@ int				main(int ac, char **av)
 	rtv->angle_y = 0;
 	rtv->camera = (t_vec) { 0.0, 0.5, -5.0 };
 	get_data(rtv, av[ac - 1]);
+
+	add_bocal(rtv->obj, (t_vec) {-25.0, -1.0, 0.0}, 10.0);
+	t_object *tmp;
+	tmp = rtv->obj;
+	while (tmp)
+	{
+		if (tmp->type == BOCAL_CYLINDER || tmp->type == BOCAL_CONE
+		|| tmp->type == BOCAL_PLANE)
+		{
+			break ;
+		}
+		tmp = tmp->next;
+	}
+
+	rotation_bocal(tmp, -45, -45, -45);
+	rotation_bocal(tmp, -45, -45, -45);
+
 	threads(rtv);
 	while (SDL_PollEvent(&e) || 1)
 		if (e.type == SDL_QUIT || (KEY == SDLK_ESCAPE))

@@ -6,7 +6,7 @@
 /*   By: ikoloshy <ikoloshy@unit.student.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/11 16:08:48 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/03/28 21:58:16 by ikoloshy         ###   ########.fr       */
+/*   Updated: 2019/03/29 21:22:09 by ikoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,9 @@
 # include <fcntl.h>
 # include <math.h>
 # include <limits.h>
+
+
+
 #include <stdio.h>
 
 # define SCREEN_WIDTH 600
@@ -43,10 +46,17 @@
 /*
 **	types of objects
 */
-# define PLANE 1
-# define SPHERE 2
-# define CYLINDER 3
-# define CONE 4
+typedef enum		e_type
+{
+	NINE,
+	PLANE,
+	SPHERE,
+	CYLINDER,
+	CONE,
+	BOCAL_PLANE,
+	BOCAL_CONE,
+	BOCAL_CYLINDER
+}					t_type;
 
 /*
 **	cast
@@ -117,6 +127,7 @@ typedef struct		s_object
 	double			specular;
 	double			reflective;
 	void			*data;
+	void			*cmp_start;
 	void			(*intersect)();
 	t_vec			(*get_normal)();
 	t_slice			*slice;
@@ -153,11 +164,11 @@ typedef struct		s_rtv
 ** Slice the object
 */
 
-typedef enum		e_type
+typedef enum		e_slice_type
 {
 	REAL,
 	OWN
-}					t_type;
+}					t_slice_type;
 
 t_slice	*			add_slice(t_slice *start, t_vec point,
 									t_vec axis, int type);
@@ -167,6 +178,20 @@ void				slice_axis_change(t_slice *slc, int angle_x,
 									int angle_y, int angle_z);
 void				slice_point_change(t_slice *slc, double x,
 									double y, double z);
+
+/*
+**	bocal.c
+*/
+t_object			*add_bocal(t_object *obj, t_vec center, double size);
+void				add_specular_bocal(t_object *bocal, double specular);
+void				add_reflective_bocal(t_object *bocal, double reflective);
+void				add_color_bocal(t_object *bocal, SDL_Color color);
+
+/*
+**	rot_composed.c
+*/
+void	rotation_bocal(t_object *bocal, int angle_x, int angle_y, int angle_z);
+void	translate_bocal(t_object *bocal, double x, double y, double z);
 
 /*
 **	camera.c

@@ -19,7 +19,8 @@ void picker_draw(t_window *win, t_picker *picker);
 
 void picker_set_pos(t_picker *picker, int x, int y);
 void picker_set_size(t_picker *picker, int height);
-void picker_set_hsv(t_picker *picker, double h, double s, double v);
+void picker_set_h_s_v(t_picker *picker, double h, double s, double v);
+void picker_set_hsv(t_picker *picker, t_hsv *hsv);
 void picker_set_slider_pal(t_picker *p);
 void picker_set_slider_hue(t_picker *p);
 

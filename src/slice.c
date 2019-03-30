@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   slice.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ikoloshy <ikoloshy@unit.student.ua>        +#+  +:+       +#+        */
+/*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/21 20:36:33 by ikoloshy          #+#    #+#             */
-/*   Updated: 2019/03/28 21:55:18 by ikoloshy         ###   ########.fr       */
+/*   Updated: 2019/03/30 15:46:04 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../rtv1.h"
+#include "rt.h"
 
 t_slice	*add_slice(t_slice *start, t_vec point, t_vec axis, int type)
 {

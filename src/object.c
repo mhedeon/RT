@@ -3,13 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   object.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ikoloshy <ikoloshy@unit.student.ua>        +#+  +:+       +#+        */
+/*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/26 18:55:32 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/03/29 18:42:13 by ikoloshy         ###   ########.fr       */
+/*   Updated: 2019/03/30 15:44:35 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "rt.h"
 
 t_object		*add_plane(t_object *obj)
 {
@@ -135,12 +136,12 @@ t_object		*add_cone(t_object *obj)
 	return (start == NULL ? obj : start);
 }
 
-void			start_object(t_rtv *rtv, int *fd)
+void			start_object(t_rt *rt, int *fd)
 {
 	char		*line;
 	t_object	*tmp;
 
-	tmp = rtv->obj;
+	tmp = rt->obj;
 	while (tmp->next != NULL)
 		tmp = tmp->next;
 	while (get_next_line(*fd, &line))
@@ -154,5 +155,3 @@ void			start_object(t_rtv *rtv, int *fd)
 		free(line);
 	}
 }
-
-#include "rt.h"

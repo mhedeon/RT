@@ -6,7 +6,7 @@
 /*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/11 16:08:48 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/03/29 23:07:01 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/03/30 15:41:47 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,10 +47,17 @@
 /*
 **	types of objects
 */
-# define PLANE 1
-# define SPHERE 2
-# define CYLINDER 3
-# define CONE 4
+typedef enum		e_type
+{
+	NINE,
+	PLANE,
+	SPHERE,
+	CYLINDER,
+	CONE,
+	BOCAL_PLANE,
+	BOCAL_CONE,
+	BOCAL_CYLINDER
+}					t_type;
 
 /*
 **	cast
@@ -68,6 +75,15 @@ typedef struct		s_vec
 	double			y;
 	double			z;
 }					t_vec;
+
+//add slice struct
+typedef struct		s_slice
+{
+	int				type;
+	t_vec			point;
+	t_vec			axis;
+	struct s_slice	*next;
+}					t_slice;
 
 typedef struct		s_light
 {
@@ -109,6 +125,8 @@ typedef struct		s_object
 	t_vec			rot;
 	double			specular;
 	double			reflective;
+	void			*cmp_start;
+	t_slice			*slice;
 	void			*data;
 	void			(*intersect)();
 	t_vec			(*get_normal)();
@@ -150,6 +168,48 @@ typedef struct		s_face
 	int end;
 	TTF_Font		*font;
 }					t_face;
+
+
+
+
+
+/*
+** Slice the object
+*/
+
+typedef enum		e_slice_type
+{
+	REAL,
+	OWN
+}					t_slice_type;
+
+t_slice	*			add_slice(t_slice *start, t_vec point,
+									t_vec axis, int type);
+int					check_slice(double t, t_slice *slc, t_vec start,
+									t_vec direction);
+void				slice_axis_change(t_slice *slc, int angle_x,
+									int angle_y, int angle_z);
+void				slice_point_change(t_slice *slc, double x,
+									double y, double z);
+
+/*
+**	bocal.c
+*/
+t_object			*add_bocal(t_object *obj, t_vec center, double size);
+void				add_specular_bocal(t_object *bocal, double specular);
+void				add_reflective_bocal(t_object *bocal, double reflective);
+void				add_color_bocal(t_object *bocal, SDL_Color color);
+
+/*
+**	rot_composed.c
+*/
+void	rotation_bocal(t_object *bocal, int angle_x, int angle_y, int angle_z);
+void	translate_bocal(t_object *bocal, double x, double y, double z);
+
+
+
+
+
 
 /*
 **	camera.c

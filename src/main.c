@@ -6,7 +6,7 @@
 /*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/11 15:42:36 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/03/30 14:45:18 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/03/30 15:47:47 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,8 +97,10 @@ int main()
 	
 	// get_data(rt, av[ac - 1]);
 	get_data(rt, "./scene/scene1");
-	threads(rt);
 
+add_bocal(rt->obj, (t_vec) {-25.0, -1.0, 0.0}, 10.0);
+
+	threads(rt);
 
 	face->o_focus = rt->obj;
 

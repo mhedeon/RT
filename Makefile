@@ -25,7 +25,10 @@ MAIN_SRC = main.c \
 			trace.c \
 			trash.c \
 			interface.c \
-			text.c
+			text.c \
+			bocal.c \
+			rot_composed.c \
+			slice.c
 
 MAIN_SRC_LIST = $(addprefix $(MAIN_DIR)/, $(MAIN_SRC))
 #-------------------------------------------------------------------------------

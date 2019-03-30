@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   bocal.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ikoloshy <ikoloshy@unit.student.ua>        +#+  +:+       +#+        */
+/*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/29 15:16:25 by ikoloshy          #+#    #+#             */
-/*   Updated: 2019/03/29 21:18:16 by ikoloshy         ###   ########.fr       */
+/*   Updated: 2019/03/30 15:45:46 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../rtv1.h"
+#include "rt.h"
 
 t_object	*add_bocal(t_object *obj, t_vec center, double size)
 {

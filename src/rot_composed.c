@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   rot_composed.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ikoloshy <ikoloshy@unit.student.ua>        +#+  +:+       +#+        */
+/*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/29 20:38:49 by ikoloshy          #+#    #+#             */
-/*   Updated: 2019/03/29 22:45:01 by ikoloshy         ###   ########.fr       */
+/*   Updated: 2019/03/30 15:45:52 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../rtv1.h"
+#include "rt.h"
 
 void	rotation_bocal(t_object *bocal, int angle_x, int angle_y, int angle_z)
 {

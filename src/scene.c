@@ -26,6 +26,10 @@ int			check_struct(t_rtv *rtv, char *line)
 		rtv->light = add_ambient(rtv->light);
 	else if (!ft_strcmp(line, "POINT:"))
 		rtv->light = add_point(rtv->light);
+	else if (!ft_strcmp(line, "DIRECT:"))
+		rtv->light = add_direct(rtv->light);
+	else if (!ft_strcmp(line, "PARALLEL:"))
+		rtv->light = add_parallel(rtv->light);
 	else if (!ft_strcmp(line, "CAMERA:"))
 		;
 	else
@@ -98,7 +102,8 @@ void		get_data(t_rtv *rtv, char *name)
 			break ;
 		if (!ft_strcmp(line, "CAMERA:"))
 			start_camera(rtv, &fd);
-		else if (!ft_strcmp(line, "AMBIENT:") || !ft_strcmp(line, "POINT:"))
+		else if (!ft_strcmp(line, "AMBIENT:") || !ft_strcmp(line, "POINT:") ||
+				!ft_strcmp(line, "DIRECT:") || !ft_strcmp(line, "PARALLEL:"))
 			start_light(rtv, &fd);
 		else
 			start_object(rtv, &fd);

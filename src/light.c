@@ -6,18 +6,18 @@
 /*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/26 18:59:28 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/02/28 16:42:39 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/03/30 16:01:20 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "rtv1.h"
+#include "rt.h"
 
-void		start_light(t_rtv *rtv, int *fd)
+void		start_light(t_rt *rt, int *fd)
 {
 	char	*line;
 	t_light	*tmp;
 
-	tmp = rtv->light;
+	tmp = rt->light;
 	while (tmp != NULL && tmp->next != NULL)
 		tmp = tmp->next;
 	while (get_next_line(*fd, &line))
@@ -39,32 +39,32 @@ void		start_light(t_rtv *rtv, int *fd)
 	}
 }
 
-double specular_lightning(t_rtv *rtv, t_fov pv, double len_v, t_vec vec_r, double specular)
+double specular_lightning(t_rt *rt, t_fov pv, double len_v, t_vec vec_r, double specular)
 {
 	double	reflect_v;
 
 	reflect_v = dot(vec_r, pv.dir);
-	return (rtv->light->intens * pow(reflect_v / (length(vec_r) * len_v/*length(pv.dir)*/), specular));
+	return (rt->light->intens * pow(reflect_v / (length(vec_r) * len_v/*length(pv.dir)*/), specular));
 }
 
-double		point(t_rtv *rtv, t_fov pv, t_vec normal, double specular, t_vec vec_l)
+double		point(t_rt *rt, t_fov pv, t_vec normal, double specular, t_vec vec_l)
 {
 	double	in;
 	t_vec	vec_r;
 	double	reflect_v;
 
 	in = 0.0;
-	close_inters(rtv, (t_fov){pv.cam, vec_l}, EPSILON, 1.0);
-	if (rtv->close_o == NULL)
+	close_inters(rt, (t_fov){pv.cam, vec_l}, EPSILON, 1.0);
+	if (rt->close_o == NULL)
 	{
-        rtv->close = dot(normal, vec_l);
-        if (rtv->close > 0.0)
-            in += rtv->light->intens * rtv->close / (length(normal) * length(vec_l));
+        rt->close = dot(normal, vec_l);
+        if (rt->close > 0.0)
+            in += rt->light->intens * rt->close / (length(normal) * length(vec_l));
         vec_r = reflect(vec_l, normal);
 		reflect_v = dot(vec_r, pv.dir);
         if (reflect_v > 0.0)
-//        	in += specular_lightning(rtv, pv, length(pv.dir), vec_r, specular);
-            in += rtv->light->intens * pow(reflect_v / (length(vec_r) * length(pv.dir)), specular);
+//        	in += specular_lightning(rt, pv, length(pv.dir), vec_r, specular);
+            in += rt->light->intens * pow(reflect_v / (length(vec_r) * length(pv.dir)), specular);
     }
 	return (in);
 }
@@ -94,7 +94,7 @@ double      dual_cone_spotlight(t_vec p, t_light *light, double cos_angle)
     return (smoothstep(cos_outer_cone, cos_inner_cone, cos_direction));
 }
 
-SDL_Color		lighting(t_rtv *rtv, t_fov pv, t_vec normal, t_object *obj)
+SDL_Color		lighting(t_rt *rt, t_fov pv, t_vec normal, t_object *obj)
 {
 	double	in;
 	t_light	*tmp;
@@ -102,20 +102,20 @@ SDL_Color		lighting(t_rtv *rtv, t_fov pv, t_vec normal, t_object *obj)
 	double	t;
 
 	in = 0.0;
-	tmp = rtv->light;
-	while (rtv->light != NULL)
+	tmp = rt->light;
+	while (rt->light != NULL)
 	{
-		in += rtv->light->type == AMBIENT ? rtv->light->intens : 0.0;
-		in += rtv->light->type == POINT ? point(rtv, pv, normal, obj->specular, substruct(rtv->light->pos, pv.cam)) : 0.0;
-		in += rtv->light->type == PARALLEL ? point(rtv, pv, normal, obj->specular, multiply(-1, rtv->light->normal)) : 0.0;
-		if (rtv->light->type == DIRECT && (spot_effect = dual_cone_spotlight(pv.cam, rtv->light, rtv->light->cos_angle/*tmp->cos_angle*/)) != 0)
+		in += rt->light->type == AMBIENT ? rt->light->intens : 0.0;
+		in += rt->light->type == POINT ? point(rt, pv, normal, obj->specular, substruct(rt->light->pos, pv.cam)) : 0.0;
+		in += rt->light->type == PARALLEL ? point(rt, pv, normal, obj->specular, multiply(-1, rt->light->normal)) : 0.0;
+		if (rt->light->type == DIRECT && (spot_effect = dual_cone_spotlight(pv.cam, rt->light, rt->light->cos_angle/*tmp->cos_angle*/)) != 0)
 		{
-			t = rtv->light->type == DIRECT ? point(rtv, pv, normal, obj->specular, multiply(-1, rtv->light->normal)) : 0.0;
+			t = rt->light->type == DIRECT ? point(rt, pv, normal, obj->specular, multiply(-1, rt->light->normal)) : 0.0;
 			in += (spot_effect * t);
 		}
-		rtv->light = rtv->light->next;
+		rt->light = rt->light->next;
 	}
-	rtv->light = tmp;
+	rt->light = tmp;
 	in = in > 1.0 ? 1.0 : in;
 	in = in < 0.0 ? 0.0 : in;
 	return (do_color((SDL_Color){0, 0, 0, 0}, obj->color, in));

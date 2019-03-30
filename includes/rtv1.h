@@ -6,7 +6,7 @@
 /*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/11 16:08:48 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/02/28 19:04:01 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/03/30 16:03:52 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ typedef enum        e_ltype
     DIRECT,
     PARALLEL
 }                   t_ltype;
+
 /*
 **	types of objects
 */

@@ -6,11 +6,11 @@
 /*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/11 15:42:43 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/02/27 19:41:56 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/03/30 16:00:57 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "rtv1.h"
+#include "rt.h"
 
 double	dot(t_vec v1, t_vec v2)
 {

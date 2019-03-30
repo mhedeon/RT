@@ -1,4 +1,4 @@
-#include "rtv1.h"
+#include "rt.h"
 
 t_light		*add_ambient(t_light *l)
 {

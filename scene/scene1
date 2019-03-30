@@ -1,6 +1,3 @@
-AMBIENT:
-	intensivity: 0.2
-#
 PLANE:
 	color: 82 82 82
 	center: 0 -15 0
@@ -9,10 +6,6 @@ PLANE:
 	center: 0 0 6
 	rotation: 90 0 0
 	color: 50 50 200
-#
-POINT:
-	intensivity: 0.5
-	position: 3 6 -16
 #
 SPHERE:
 	color: 180 20 20
@@ -35,3 +28,17 @@ CONE:
 CAMERA:
 	position: 0 0 -30
 	angle_x: 0
+#
+DIRECT:
+	position: 10 10 10
+	rotation: 0 0 1
+	angle: 1
+	intensivity; 0.2
+#
+AMBIENT:
+	intensivity: 0.2
+#
+POINT:
+	intensivity: 0.5
+	position: 3 6 -16
+#

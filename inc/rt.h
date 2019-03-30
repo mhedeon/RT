@@ -6,7 +6,7 @@
 /*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/11 16:08:48 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/03/30 15:41:47 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/03/30 16:09:13 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,13 @@
 /*
 **	types of light
 */
-# define AMBIENT 1
-# define POINT 2
+typedef enum        e_ltype
+{
+    AMBIENT = 1,
+    POINT,
+    DIRECT,
+    PARALLEL
+}                   t_ltype;
 
 /*
 **	types of objects
@@ -89,7 +94,9 @@ typedef struct		s_light
 {
 	int				type;
 	double			intens;
+	double 			cos_angle;
 	t_vec			pos;
+	t_vec			normal;
 	struct s_light	*next;
 }					t_light;
 
@@ -242,14 +249,20 @@ void				intersect_cone(t_vec camera, t_vec dir, t_object *cone,
 										double *ts);
 
 /*
-**	light.c
+**	light_objects.c
 */
 t_light				*add_ambient(t_light *l);
 t_light				*add_point(t_light *l);
+t_light				*add_parallel(t_light *l);
+t_light				*add_direct(t_light *l);
+
+/*
+**	light.c
+*/
 void				start_light(t_rt *rt, int *fd);
-double				point(t_rt *rt, t_fov pv, t_vec normal, double specular);
-double				lighting(t_rt *rt, t_fov pv, t_vec normal,
-								double specular);
+double		point(t_rt *rt, t_fov pv, t_vec normal, double specular, t_vec vec_l);
+SDL_Color				lighting(t_rt *rt, t_fov pv, t_vec normal,
+								  t_object *obj);
 
 /*
 **	main.c
@@ -321,8 +334,9 @@ t_vec				substruct(t_vec v1, t_vec v2);
 double				length(t_vec v1);
 t_vec				multiply(double k, t_vec v1);
 t_vec				add(t_vec v1, t_vec v2);
+double				ft_vangle(t_vec a, t_vec b);
 
-
+double      dual_cone_spotlight(t_vec p, t_light *light, double cos_angle);
 
 ////////////////////////
 int	init_face(t_face *face, t_rt *rt);

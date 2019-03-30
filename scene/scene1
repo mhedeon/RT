@@ -17,7 +17,7 @@ SPHERE:
 	color: 180 20 20
 	center: 0 0.5 0
 	radius: 0.5
-	specular: -2
+	specular: 10000
 #
 CYLINDER:
 	color: 65 230 75

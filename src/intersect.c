@@ -3,35 +3,36 @@
 /*                                                        :::      ::::::::   */
 /*   intersect.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ikoloshy <ikoloshy@unit.student.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/11 17:27:52 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/03/28 18:17:30 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/03/27 20:24:13 by ikoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "rt.h"
 
-void			close_inters(t_rt *rt, t_fov fov, double min, double max)
+void			close_inters(t_rtv *rtv, t_fov fov, double min, double max)
 {
 	double		ts[2];
 	t_object	*tmp;
 
-	tmp = rt->obj;
-	rt->close = INFINITY;
-	rt->close_o = NULL;
+	tmp = rtv->obj;
+	rtv->close = INFINITY;
+	rtv->close_o = NULL;
 	while (tmp != NULL)
 	{
 		tmp->intersect(fov.cam, fov.dir, tmp, ts);
-		if (ts[0] < rt->close && min < ts[0] && ts[0] < max)
+		if (ts[0] < rtv->close && min < ts[0] && ts[0] < max &&
+		!check_slice(ts[0], tmp->slice, fov.cam, fov.dir))
 		{
-			rt->close = ts[0];
-			rt->close_o = tmp;
+			rtv->close = ts[0];
+			rtv->close_o = tmp;
 		}
-		if (ts[1] < rt->close && min < ts[1] && ts[1] < max)
+		if (ts[1] < rtv->close && min < ts[1] && ts[1] < max &&
+			!check_slice(ts[1], tmp->slice, fov.cam, fov.dir))
 		{
-			rt->close = ts[1];
-			rt->close_o = tmp;
+			rtv->close = ts[1];
+			rtv->close_o = tmp;
 		}
 		tmp = tmp->next;
 	}
@@ -133,3 +134,5 @@ void			intersect_cone(t_vec camera, t_vec dir,
 	ts[0] = limit_cone(cone, camera, tmp[0], ts[0]);
 	ts[1] = limit_cone(cone, camera, tmp[0], ts[1]);
 }
+
+#include "rt.h"

@@ -3,14 +3,13 @@
 /*                                                        :::      ::::::::   */
 /*   object.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ikoloshy <ikoloshy@unit.student.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/26 18:55:32 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/03/28 18:17:41 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/03/29 18:42:13 by ikoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "rt.h"
 
 t_object		*add_plane(t_object *obj)
 {
@@ -32,6 +31,7 @@ t_object		*add_plane(t_object *obj)
 	new->intersect = intersect_plane;
 	new->get_normal = normal_plane;
 	new->next = NULL;
+	new->slice = NULL;
 	if (obj == NULL)
 		obj = new;
 	else
@@ -59,6 +59,10 @@ t_object		*add_sphere(t_object *obj)
 	new->intersect = intersect_sphere;
 	new->get_normal = normal_sphere;
 	new->next = NULL;
+	new->slice = NULL;
+	new->slice = add_slice(new->slice, (t_vec){ 0.0, 0.5, 0.0 }, (t_vec){ 0.0, 1.0 , 0.0 }, OWN);
+	new->slice = add_slice(new->slice, (t_vec){ 0.0, 0.5, 0.0 }, (t_vec){ 1.0, 0.0 , 0.0 }, OWN);
+	new->slice = add_slice(new->slice, (t_vec){ 0.0, 0.5, 0.0 }, (t_vec){ -1.0, 1.0 , 0.0 }, OWN);
 	if (obj == NULL)
 		obj = new;
 	else
@@ -87,6 +91,8 @@ t_object		*add_cylinder(t_object *obj)
 	new->intersect = intersect_cylinder;
 	new->get_normal = normal_cylinder;
 	new->next = NULL;
+	new->slice = NULL;
+	//new->slice = add_slice(NULL, (t_vec){ -5.0, 0.0, 0.0 }, (t_vec){ -1.0, -1.0 , 0.0 }, OWN);
 	if (obj == NULL)
 		obj = new;
 	else
@@ -116,6 +122,8 @@ t_object		*add_cone(t_object *obj)
 	new->intersect = intersect_cone;
 	new->get_normal = normal_cone;
 	new->next = NULL;
+	new->slice = NULL;
+	//new->slice = add_slice(NULL, (t_vec){ 0.0, 4.0, 0.0 }, (t_vec){ 0.0, 1.0 , 0.0 }, OWN);
 	if (obj == NULL)
 		obj = new;
 	else
@@ -123,12 +131,12 @@ t_object		*add_cone(t_object *obj)
 	return (start == NULL ? obj : start);
 }
 
-void			start_object(t_rt *rt, int *fd)
+void			start_object(t_rtv *rtv, int *fd)
 {
 	char		*line;
 	t_object	*tmp;
 
-	tmp = rt->obj;
+	tmp = rtv->obj;
 	while (tmp->next != NULL)
 		tmp = tmp->next;
 	while (get_next_line(*fd, &line))
@@ -142,3 +150,5 @@ void			start_object(t_rt *rt, int *fd)
 		free(line);
 	}
 }
+
+#include "rt.h"

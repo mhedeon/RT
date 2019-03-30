@@ -33,7 +33,7 @@ void picker_set_h_by_pos(t_picker *picker, int y)
 	h = h < 0.0 ? 0.0 : h;
 	s = picker_get_hsv_s(picker);
 	v = picker_get_hsv_v(picker);
-	picker_set_hsv(picker, h, s, v);
+	picker_set_h_s_v(picker, h, s, v);
 }
 
 void picker_set_sv_by_pos(t_picker *picker, int x, int y)
@@ -51,5 +51,5 @@ void picker_set_sv_by_pos(t_picker *picker, int x, int y)
 	v = 1.0 - (y - picker->pos.y) / (double)picker->pos.h;
 	v = v > 1.0 ? 1.0 : v;
 	v = v < 0.0 ? 0.0 : v;
-	picker_set_hsv(picker, h, s, v);
+	picker_set_h_s_v(picker, h, s, v);
 }

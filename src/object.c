@@ -6,7 +6,7 @@
 /*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/26 18:55:32 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/03/28 18:17:41 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/03/30 15:44:35 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ t_object		*add_plane(t_object *obj)
 	new->type = PLANE;
 	new->center = (t_vec) { 0.0, 0.0, 0.0 };
 	new->normal = (t_vec) { 0.0, 1.0, 0.0 };
+	new->rot = (t_vec) { 0, 0, 0 };
 	new->color = (SDL_Color) { rnd(), rnd(), rnd(), 0 };
 	new->specular = 5.0;
 	new->reflective = 0.0;
@@ -32,6 +33,7 @@ t_object		*add_plane(t_object *obj)
 	new->intersect = intersect_plane;
 	new->get_normal = normal_plane;
 	new->next = NULL;
+	new->slice = NULL;
 	if (obj == NULL)
 		obj = new;
 	else
@@ -51,6 +53,7 @@ t_object		*add_sphere(t_object *obj)
 	new->type = SPHERE;
 	new->center = (t_vec) { 0.0, 0.0, 0.0 };
 	new->normal = (t_vec) { 0.0, 1.0, 0.0 };
+	new->rot = (t_vec) { 0, 0, 0 };
 	new->color = (SDL_Color) { rnd(), rnd(), rnd(), 0 };
 	new->specular = 5.0;
 	new->reflective = 0.0;
@@ -59,6 +62,10 @@ t_object		*add_sphere(t_object *obj)
 	new->intersect = intersect_sphere;
 	new->get_normal = normal_sphere;
 	new->next = NULL;
+	new->slice = NULL;
+	new->slice = add_slice(new->slice, (t_vec){ 0.0, 0.5, 0.0 }, (t_vec){ 0.0, 1.0 , 0.0 }, OWN);
+	new->slice = add_slice(new->slice, (t_vec){ 0.0, 0.5, 0.0 }, (t_vec){ 1.0, 0.0 , 0.0 }, OWN);
+	new->slice = add_slice(new->slice, (t_vec){ 0.0, 0.5, 0.0 }, (t_vec){ -1.0, 1.0 , 0.0 }, OWN);
 	if (obj == NULL)
 		obj = new;
 	else
@@ -78,6 +85,7 @@ t_object		*add_cylinder(t_object *obj)
 	new->type = CYLINDER;
 	new->center = (t_vec) { 0.0, 0.0, 0.0 };
 	new->normal = (t_vec) { 0.0, 1.0, 0.0 };
+	new->rot = (t_vec) { 0, 0, 0 };
 	new->color = (SDL_Color) { rnd(), rnd(), rnd(), 0 };
 	new->specular = 5.0;
 	new->reflective = 0.0;
@@ -87,6 +95,8 @@ t_object		*add_cylinder(t_object *obj)
 	new->intersect = intersect_cylinder;
 	new->get_normal = normal_cylinder;
 	new->next = NULL;
+	new->slice = NULL;
+	//new->slice = add_slice(NULL, (t_vec){ -5.0, 0.0, 0.0 }, (t_vec){ -1.0, -1.0 , 0.0 }, OWN);
 	if (obj == NULL)
 		obj = new;
 	else
@@ -106,6 +116,7 @@ t_object		*add_cone(t_object *obj)
 	new->type = CONE;
 	new->center = (t_vec) { 0.0, 0.0, 0.0 };
 	new->normal = (t_vec) { 0.0, -1.0, 0.0 };
+	new->rot = (t_vec) { 0, 0, 0 };
 	new->color = (SDL_Color) { rnd(), rnd(), rnd(), 0 };
 	new->specular = 5.0;
 	new->reflective = 0.0;
@@ -116,6 +127,8 @@ t_object		*add_cone(t_object *obj)
 	new->intersect = intersect_cone;
 	new->get_normal = normal_cone;
 	new->next = NULL;
+	new->slice = NULL;
+	//new->slice = add_slice(NULL, (t_vec){ 0.0, 4.0, 0.0 }, (t_vec){ 0.0, 1.0 , 0.0 }, OWN);
 	if (obj == NULL)
 		obj = new;
 	else

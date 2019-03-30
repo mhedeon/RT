@@ -6,7 +6,7 @@
 /*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/22 15:59:02 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/03/28 18:16:51 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/03/30 16:31:29 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,10 @@ int			check_struct(t_rt *rt, char *line)
 		rt->light = add_ambient(rt->light);
 	else if (!ft_strcmp(line, "POINT:"))
 		rt->light = add_point(rt->light);
+	else if (!ft_strcmp(line, "DIRECT:"))
+		rt->light = add_direct(rt->light);
+	else if (!ft_strcmp(line, "PARALLEL:"))
+		rt->light = add_parallel(rt->light);
 	else if (!ft_strcmp(line, "CAMERA:"))
 		;
 	else
@@ -61,7 +65,7 @@ int			check_option_o(t_object *tmp, char *line)
 	if (!ft_strncmp(line + 1, "center:", 7))
 		tmp->center = read_vec(line);
 	else if (!ft_strncmp(line + 1, "rotation:", 9))
-		tmp->normal = read_rot(line);
+		tmp->normal = read_rot(tmp, line);
 	else if (!ft_strncmp(line + 1, "color:", 6))
 		tmp->color = read_color(line);
 	else if (!ft_strncmp(line + 1, "specular:", 9))
@@ -98,7 +102,8 @@ void		get_data(t_rt *rt, char *name)
 			break ;
 		if (!ft_strcmp(line, "CAMERA:"))
 			start_camera(rt, &fd);
-		else if (!ft_strcmp(line, "AMBIENT:") || !ft_strcmp(line, "POINT:"))
+		else if (!ft_strcmp(line, "AMBIENT:") || !ft_strcmp(line, "POINT:") ||
+				!ft_strcmp(line, "DIRECT:") || !ft_strcmp(line, "PARALLEL:"))
 			start_light(rt, &fd);
 		else
 			start_object(rt, &fd);

@@ -6,7 +6,7 @@
 /*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/29 15:16:25 by ikoloshy          #+#    #+#             */
-/*   Updated: 2019/03/30 15:45:46 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/03/31 00:57:06 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,8 +48,10 @@ void		add_specular_bocal(t_object *bocal, double specular)
 	t_object	*tmp;
 	int			amount;
 
+	if (bocal == NULL)
+		return ;
+	tmp = bocal->cmp_start;
 	amount = 0;
-	tmp = bocal;
 	while (amount < 3)
 	{
 		tmp->specular = specular;
@@ -63,8 +65,10 @@ void		add_reflective_bocal(t_object *bocal, double reflective)
 	t_object	*tmp;
 	int			amount;
 
+	if (bocal == NULL)
+		return ;
+	tmp = bocal->cmp_start;
 	amount = 0;
-	tmp = bocal;
 	while (amount < 3)
 	{
 		tmp->reflective = reflective;
@@ -78,8 +82,10 @@ void		add_color_bocal(t_object *bocal, SDL_Color color)
 	t_object	*tmp;
 	int			amount;
 
+	if (bocal == NULL)
+		return ;
+	tmp = bocal->cmp_start;
 	amount = 0;
-	tmp = bocal;
 	while (amount < 3)
 	{
 		tmp->color = color;

@@ -37,11 +37,16 @@ int			init_face(t_face *face, t_rt *rt)
 	face->o_focus = face->o_start;
 	face->font = NULL;
 	face->picker = NULL;
+	face->sepia = NULL;
 	if ((face->picker = picker_create(200)) == NULL)
 		return (error_log("Interface initiation failed"));
 	if ((face->font = ttf_open_font("./libraries/libmgl/ttf/OSR.ttf", 150)) ==
 																		NULL)
 		return (error_log("Interface initiation failed"));
+	if ((face->sepia = checkbox_create(CHECK_OFF, CHECK_AVAILABLE, 1140,
+			620)) == NULL)
+		return (error_log("Interface initiation failed"));
+	face->rt->sepia = 0;
 	return (1);
 }
 
@@ -52,6 +57,9 @@ int face_close(t_face *face, t_rt *rt)
 		picker_delete(&face->picker);
 	if (face->font != NULL)
 		ttf_close_font(face->font);
+	if (face->sepia != NULL)
+		checkbox_delete(&face->sepia);
+	free(face);
 	return (0);
 }
 
@@ -69,6 +77,8 @@ static void interface_draw_bg(t_face *face, t_rt *rt)
 												WIN_W, 2 }, &rt->win->color);
 	color_area(rt->win, &(SDL_Rect) { face->right_r.x - 1, face->right_r.y, 2,
 													SCENE_H }, &rt->win->color);
+	color_area(rt->win, &(T_RENDER), &rt->win->color);
+	color_area(rt->win, &(T_SHOT), &rt->win->color);
 }
 
 void interface_set_obj(t_face *face, t_rt *rt)
@@ -85,6 +95,7 @@ void interface_draw(t_face *face, t_rt *rt)
 	interface_draw_bg(face, rt);
 	interface_set_obj(face, rt);
 	picker_draw(rt->win, face->picker);
+	draw_checkbox(rt->win, face->sepia);
 	i = face->start;
 	r = T_LIST;
 	while ((face->end - i++) > 0)

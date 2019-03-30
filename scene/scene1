@@ -36,3 +36,9 @@ POINT:
 AMBIENT:
 	intensivity: 0.2
 #
+SPHERE:
+	color: 180 20 20
+	center: 10 10 10
+	radius: 4
+	specular: 123
+#

@@ -37,6 +37,9 @@
 # define C_YA (SDL_Rect) { 1250, 100, 100, 30 }
 # define C_ZA (SDL_Rect) { 1250, 140, 100, 30 }
 
+# define T_SEPIA (SDL_Rect) { 1170, 615, 50, 20 }
 
+# define T_RENDER (SDL_Rect) { 1200, 950, 100, 30 }
+# define T_SHOT (SDL_Rect) { 1175, 900, 150, 30 }
 
 #endif

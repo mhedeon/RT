@@ -6,7 +6,7 @@
 /*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/11 16:08:48 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/03/30 21:34:22 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/03/31 00:50:27 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -161,6 +161,7 @@ typedef struct		s_rt
 	int				end;
 	int				depth;
 	SDL_Rect		scene_r;
+	int sepia;
 }					t_rt;
 
 typedef struct		s_face
@@ -175,6 +176,7 @@ typedef struct		s_face
 	int start;
 	int end;
 	TTF_Font		*font;
+	t_checkbox		*sepia;
 }					t_face;
 
 
@@ -353,6 +355,7 @@ void interface_set_obj(t_face *face, t_rt *rt);
 void interface_draw(t_face *face, t_rt *rt);
 t_object *in_list(t_rt *rt, t_face *face, int x, int y);
 
+void event_mouse(t_rt *rt, t_face *face);
 
 void text_draw(t_rt *rt, t_face *face);
 

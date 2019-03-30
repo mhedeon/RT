@@ -101,7 +101,11 @@ void draw_xyz(t_rt *rt, t_face *face)
 	
 	if (face->o_focus == NULL)
 		return ;
-	data = face->o_focus->center;
+	if (face->o_focus->type >= 5 && face->o_focus->type <= 7)
+		data = get_bocal_center(face->o_focus);
+	else
+		data = face->o_focus->center;
+	// data = face->o_focus->center;
 	s = get_str_from_double(data.x, "x: ");
 	ttf_render_text(rt->win->ren, face->font, &(T_X), s);
 	free(s);
@@ -167,10 +171,6 @@ void draw_cam_xyz(t_rt *rt, t_face *face)
 	
 	if (face->o_focus == NULL)
 		return ;
-	if (face->o_focus->type >= 5 && face->o_focus->type <= 7)
-		data = get_bocal_center(face->o_focus);
-	else
-		data = face->o_focus->center;
 	s = get_str_from_double(data.x, "x: ");
 	ttf_render_text(rt->win->ren, face->font, &(C_X), s);
 	free(s);
@@ -205,10 +205,14 @@ void text_draw(t_rt *rt, t_face *face)
 	draw_hsv(rt, face);
 	ttf_render_text(rt->win->ren,face->font, &(T_OBJ), "Object:");
 	ttf_render_text(rt->win->ren,face->font, &(T_CAM), "Camera:");
+	ttf_render_text(rt->win->ren,face->font, &(T_SEPIA), "Sepia");
+	ttf_render_text(rt->win->ren,face->font, &(T_RENDER), "Render");
+	ttf_render_text(rt->win->ren,face->font, &(T_SHOT), "Screenshot");
 	draw_xyz(rt, face);
 	draw_xyz_angles(rt, face);
 	draw_o_list(rt, face);
 	draw_cam_xyz(rt, face);
 	draw_cam_angles(rt, face);
 	draw_sr(rt, face);
+	
 }

@@ -6,7 +6,7 @@
 /*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/11 15:42:36 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/03/30 16:50:37 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/03/30 16:55:25 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,7 @@ int main()
 	face->font = ttf_open_font("./libraries/libmgl/ttf/OSR.ttf", 150);
 	
 	// get_data(rt, av[ac - 1]);
-	get_data(rt, "./scene/p");
+	get_data(rt, "./scene/scene1");
 
 add_bocal(rt->obj, (t_vec) {-25.0, -1.0, 0.0}, 10.0);
 

@@ -6,7 +6,7 @@
 /*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/26 18:59:28 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/03/30 16:01:20 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/03/30 16:39:19 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,13 +39,13 @@ void		start_light(t_rt *rt, int *fd)
 	}
 }
 
-double specular_lightning(t_rt *rt, t_fov pv, double len_v, t_vec vec_r, double specular)
-{
-	double	reflect_v;
+// double specular_lightning(t_rt *rt, t_fov pv, double len_v, t_vec vec_r, double specular)
+// {
+// 	double	reflect_v;
 
-	reflect_v = dot(vec_r, pv.dir);
-	return (rt->light->intens * pow(reflect_v / (length(vec_r) * len_v/*length(pv.dir)*/), specular));
-}
+// 	reflect_v = dot(vec_r, pv.dir);
+// 	return (rt->light->intens * pow(reflect_v / (length(vec_r) * len_v), specular));
+// }
 
 double		point(t_rt *rt, t_fov pv, t_vec normal, double specular, t_vec vec_l)
 {
@@ -63,7 +63,6 @@ double		point(t_rt *rt, t_fov pv, t_vec normal, double specular, t_vec vec_l)
         vec_r = reflect(vec_l, normal);
 		reflect_v = dot(vec_r, pv.dir);
         if (reflect_v > 0.0)
-//        	in += specular_lightning(rt, pv, length(pv.dir), vec_r, specular);
             in += rt->light->intens * pow(reflect_v / (length(vec_r) * length(pv.dir)), specular);
     }
 	return (in);
@@ -88,7 +87,7 @@ double      dual_cone_spotlight(t_vec p, t_light *light, double cos_angle)
 
     v = substruct(p, light->pos);
     v = normalize(v);
-    cos_outer_cone = fabs(cos(cos_angle)) - 0.07;
+	cos_outer_cone = fabs(cos(cos_angle)) - 0.07;
     cos_inner_cone = fabs(cos(cos_angle));
     cos_direction = dot(v, light->normal);
     return (smoothstep(cos_outer_cone, cos_inner_cone, cos_direction));
@@ -108,7 +107,7 @@ SDL_Color		lighting(t_rt *rt, t_fov pv, t_vec normal, t_object *obj)
 		in += rt->light->type == AMBIENT ? rt->light->intens : 0.0;
 		in += rt->light->type == POINT ? point(rt, pv, normal, obj->specular, substruct(rt->light->pos, pv.cam)) : 0.0;
 		in += rt->light->type == PARALLEL ? point(rt, pv, normal, obj->specular, multiply(-1, rt->light->normal)) : 0.0;
-		if (rt->light->type == DIRECT && (spot_effect = dual_cone_spotlight(pv.cam, rt->light, rt->light->cos_angle/*tmp->cos_angle*/)) != 0)
+		if (rt->light->type == DIRECT && (spot_effect = dual_cone_spotlight(pv.cam, rt->light, rt->light->cos_angle)) != 0.0)
 		{
 			t = rt->light->type == DIRECT ? point(rt, pv, normal, obj->specular, multiply(-1, rt->light->normal)) : 0.0;
 			in += (spot_effect * t);

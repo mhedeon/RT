@@ -6,7 +6,7 @@
 /*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/22 15:59:02 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/03/29 22:44:53 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/03/30 16:31:29 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,11 +25,11 @@ int			check_struct(t_rt *rt, char *line)
 	else if (!ft_strcmp(line, "AMBIENT:"))
 		rt->light = add_ambient(rt->light);
 	else if (!ft_strcmp(line, "POINT:"))
-		rtv->light = add_point(rtv->light);
+		rt->light = add_point(rt->light);
 	else if (!ft_strcmp(line, "DIRECT:"))
-		rtv->light = add_direct(rtv->light);
+		rt->light = add_direct(rt->light);
 	else if (!ft_strcmp(line, "PARALLEL:"))
-		rtv->light = add_parallel(rtv->light);
+		rt->light = add_parallel(rt->light);
 	else if (!ft_strcmp(line, "CAMERA:"))
 		;
 	else
@@ -101,10 +101,10 @@ void		get_data(t_rt *rt, char *name)
 		if (!check_struct(rt, line))
 			break ;
 		if (!ft_strcmp(line, "CAMERA:"))
-			start_camera(rtv, &fd);
+			start_camera(rt, &fd);
 		else if (!ft_strcmp(line, "AMBIENT:") || !ft_strcmp(line, "POINT:") ||
 				!ft_strcmp(line, "DIRECT:") || !ft_strcmp(line, "PARALLEL:"))
-			start_light(rtv, &fd);
+			start_light(rt, &fd);
 		else
 			start_object(rt, &fd);
 		free(line);

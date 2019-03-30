@@ -1,11 +1,9 @@
 {
   "camera" : [
     {
-      "origin" : [0,0,0],
-	    "position" : [-4, 7, -15],
-	    "angle_y" : 20,
-	    "angle_x" : -10
-	    
+	"position" : [-4, 7, -15],
+	"angle_y" : 20,
+	"angle_x" : -10
     }
   ],
   "objects" : [

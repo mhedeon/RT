@@ -34,28 +34,27 @@
       "texture" : "perlin"
     }
   ],
-  "light" : [
-    {
-      "type" : "point",
-      "intensity" : 0.8,
-      "position" : [0, 5, 20]
-    },
-    {
-      "type" : "point",
-      "intensity" : 0.8,
-      "position" : [-2, 5, 20]
-    },
-    {
-      "type" : "point",
-      "intensity" : 0.8,
-      "position" : [-2, -5, 20]
-    },
-    {
-      "type" : "direct",
-      "intensity" : 0.8,
-      "position" : [-2, 0, -20],
-	    "rotation" : [0, 0, 1],
-	    "angle" : 0.1
-    }
+	"light" : [
+	{
+		"type" : "ambient",
+		"intensity" : 0.8
+	},
+	{
+		"type" : "point",
+		"intensity" : 0.8,
+		"position" : [-2, 5, 20]
+	},
+	{
+		"type" : "parallel",
+		"intensity" : 0.8,
+		"rotation" : [0, 0, 1],  
+	},
+	{
+		"type" : "direct",
+		"intensity" : 0.8,
+		"position" : [-2, 0, -20],
+		"rotation" : [0, 0, 1],
+		"angle" : 0.1
+	}
   ]
 }

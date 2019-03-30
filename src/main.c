@@ -6,7 +6,7 @@
 /*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/11 15:42:36 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/03/30 16:55:25 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/03/30 18:46:57 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,18 +102,18 @@ add_bocal(rt->obj, (t_vec) {-25.0, -1.0, 0.0}, 10.0);
 
 	threads(rt);
 
-	face->o_focus = rt->obj;
+	face->o_start = rt->obj;
+	face->o_focus = face->o_start;
 
 	int click_pal = 0, click_hue = 0;
 	while (SDL_PollEvent(&e) || 1)
 	{
-
 		
-
 		if (e.type == SDL_QUIT || (KEY == SDLK_ESCAPE))
 			break ;
 		else if (rotate(rt, e) || translate(rt, e))
 			threads(rt);
+
 
 		int x, y;
 		if (SDL_GetMouseState(&x, &y) & SDL_BUTTON(SDL_BUTTON_LEFT))
@@ -133,8 +133,13 @@ add_bocal(rt->obj, (t_vec) {-25.0, -1.0, 0.0}, 10.0);
 				picker_set_h_by_pos(face->picker, y);
 			else if (click_pal == 1)
 				picker_set_sv_by_pos(face->picker, x, y);
-			rt->obj->next->next->color = hsv2rgb(face->picker->hsv.h, face->picker->hsv.s, face->picker->hsv.v);
+			
+			if (face->o_focus != NULL)
+				face->o_focus->color = hsv2rgb(face->picker->hsv.h,
+									face->picker->hsv.s, face->picker->hsv.v);
 			threads(rt);
+
+			face->o_focus = in_list(rt, face, x, y);
 		}
 		else
 		{

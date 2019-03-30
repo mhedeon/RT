@@ -115,11 +115,12 @@ void draw_o_list(t_rt *rt, t_face *face)
 {
 	t_object *tmp;
 	static int i;
-	SDL_Rect r = { 25, 250, 250, 50 };
+	SDL_Rect r;
 
+	r = LIST_O;
 	i = face->start;
-	tmp = face->o_focus;
-	while (tmp != NULL && (face->end - ++i) >= 0)
+	tmp = face->o_start;
+	while (tmp != NULL && (face->end - i++) > 0)
 	{
 		if (tmp->type == PLANE)
 			ttf_render_text(rt->win->ren, face->font, &r, "PLANE");
@@ -127,8 +128,10 @@ void draw_o_list(t_rt *rt, t_face *face)
 			ttf_render_text(rt->win->ren, face->font, &r, "SPHERE");
 		else if (tmp->type == CONE)
 			ttf_render_text(rt->win->ren, face->font, &r, "CONE");
-		else
+		else if (tmp->type == CYLINDER)
 			ttf_render_text(rt->win->ren, face->font, &r, "CYLINDER");
+		else if (tmp->type == BOCAL_PLANE)
+			ttf_render_text(rt->win->ren, face->font, &r, "BOCAL");
 		r.y += 60;
 		tmp = tmp->next;
 	}
@@ -140,13 +143,13 @@ void draw_cam_angles(t_rt *rt, t_face *face)
 
 	if (face->o_focus == NULL)
 		return ;
-	s = get_str_from_double(rt->angle_x, "0c_x\xB0: ");
+	s = get_str_from_double(rt->angle_x, "0x\xB0: ");
 	ttf_render_text(rt->win->ren, face->font, &(C_XA), s);
 	free(s);
-	s = get_str_from_double(rt->angle_y, "0c_y\xB0: ");
+	s = get_str_from_double(rt->angle_y, "0y\xB0: ");
 	ttf_render_text(rt->win->ren, face->font, &(C_YA), s);
 	free(s);
-	s = get_str_from_double(0.0, "0c_z\xB0: ");
+	s = get_str_from_double(0.0, "0z\xB0: ");
 	ttf_render_text(rt->win->ren, face->font, &(C_ZA), s);
 	free(s);
 }
@@ -157,13 +160,13 @@ void draw_cam_xyz(t_rt *rt, t_face *face)
 	
 	if (face->o_focus == NULL)
 		return ;
-	s = get_str_from_double(rt->camera.x, "c_x: ");
+	s = get_str_from_double(rt->camera.x, "x: ");
 	ttf_render_text(rt->win->ren, face->font, &(C_X), s);
 	free(s);
-	s = get_str_from_double(rt->camera.y, "c_y: ");
+	s = get_str_from_double(rt->camera.y, "y: ");
 	ttf_render_text(rt->win->ren, face->font, &(C_Y), s);
 	free(s);
-	s = get_str_from_double(rt->camera.z, "c_z: ");
+	s = get_str_from_double(rt->camera.z, "z: ");
 	ttf_render_text(rt->win->ren, face->font, &(C_Z), s);
 	free(s);
 }
@@ -172,6 +175,8 @@ void text_draw(t_rt *rt, t_face *face)
 {
 	draw_rgb(rt, face);
 	draw_hsv(rt, face);
+	ttf_render_text(rt->win->ren,face->font, &(T_OBJ), "Object:");
+	ttf_render_text(rt->win->ren,face->font, &(T_CAM), "Camera:");
 	draw_xyz(rt, face);
 	draw_xyz_angles(rt, face);
 	draw_o_list(rt, face);

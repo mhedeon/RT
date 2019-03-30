@@ -6,7 +6,7 @@
 /*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/11 16:08:48 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/03/30 17:00:51 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/03/30 18:45:44 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -171,6 +171,7 @@ typedef struct		s_face
 	SDL_Rect		top_r;
 	t_rt			*rt;
 	t_object		*o_focus;
+	t_object		*o_start;
 	int start;
 	int end;
 	TTF_Font		*font;
@@ -342,6 +343,7 @@ double      dual_cone_spotlight(t_vec p, t_light *light, double cos_angle);
 int	init_face(t_face *face, t_rt *rt);
 void interface_set_obj(t_face *face, t_rt *rt);
 void interface_draw(t_face *face, t_rt *rt);
+t_object *in_list(t_rt *rt, t_face *face, int x, int y);
 
 
 void text_draw(t_rt *rt, t_face *face);

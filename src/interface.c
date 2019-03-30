@@ -1,5 +1,28 @@
 #include "rt.h"
 
+t_object *in_list(t_rt *rt, t_face *face, int x, int y)
+{
+	int i;
+	SDL_Rect r;
+	t_object *tmp;
+
+	r = T_LIST;
+	i = face->start;
+	while (i++ < face->end)
+	{
+		if (x >= r.x && x < (r.x + r.w) &&
+			y >= (r.y + 60 * (i - 1)) && y < (r.y + r.h + 60 * (i - 1)))
+			{
+				tmp = rt->obj;
+				while (--i > 0)
+					tmp = tmp->next;
+				face->o_focus = tmp;
+				return (tmp);
+			}
+	}
+	return (face->o_focus);
+}
+
 int			init_face(t_face *face, t_rt *rt)
 {
 	face->top_r = (SDL_Rect) { 0, 0, WIN_W, WIN_H - SCENE_H };
@@ -7,7 +30,7 @@ int			init_face(t_face *face, t_rt *rt)
 	face->right_r = (SDL_Rect) { SCENE_W + face->left_r.w, WIN_H - SCENE_H, (WIN_W - SCENE_W) / 2, SCENE_H };
 	face->rt = rt;
 	face->start = 0;
-	face->end = 5;
+	face->end = 12;
 	if ((face->picker = picker_create(200)) == NULL)
 		return (error_log("Interface initiation failed"));
 	// picker_set_pos(face->picker, face->right_r.x + 50, face->right_r.y + 50);
@@ -40,12 +63,17 @@ void interface_set_obj(t_face *face, t_rt *rt)
 
 void interface_draw(t_face *face, t_rt *rt)
 {
+	int i;
+	SDL_Rect r;
+
 	interface_draw_bg(face, rt);
 	interface_set_obj(face, rt);
 	picker_draw(rt->win, face->picker);
-	color_area(rt->win, &(SDL_Rect){ 25, 250, 250, 50 }, &(SDL_Color) {128, 128, 128, 0});
-	color_area(rt->win, &(SDL_Rect){ 25, 310, 250, 50 }, &(SDL_Color) {128, 128, 128, 0});
-	color_area(rt->win, &(SDL_Rect){ 25, 370, 250, 50 }, &(SDL_Color) {128, 128, 128, 0});
-	color_area(rt->win, &(SDL_Rect){ 25, 430, 250, 50 }, &(SDL_Color) {128, 128, 128, 0});
-	color_area(rt->win, &(SDL_Rect){ 25, 490, 250, 50 }, &(SDL_Color) {128, 128, 128, 0});
+	i = face->start;
+	r = T_LIST;
+	while ((face->end - i++) > 0)
+	{
+		color_area(rt->win, &r, &(SDL_Color) {128, 128, 128, 0});
+		r.y += 60;
+	}
 }

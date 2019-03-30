@@ -33,5 +33,5 @@ CONE:
 	rotation: -45 0 0
 #
 CAMERA:
-	position: 0 0 -30
+	position: -20 0 -30
 	angle_x: 0

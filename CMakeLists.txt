@@ -21,7 +21,7 @@ add_executable(RT
         src/init.c
         src/trace.c
         src/trash.c
-        src/slice.c)
+        src/slice.c src/bocal.c src/rot_composed.c)
 
 find_package(SDL2 REQUIRED)
 #find_package(SDL2_image REQUIRED)

@@ -106,10 +106,10 @@ SDL_Color		lighting(t_rt *rt, t_fov pv, t_vec normal, t_object *obj)
 	{
 		in += rt->light->type == AMBIENT ? rt->light->intens : 0.0;
 		in += rt->light->type == POINT ? point(rt, pv, normal, obj->specular, substruct(rt->light->pos, pv.cam)) : 0.0;
-		in += rt->light->type == PARALLEL ? point(rt, pv, normal, obj->specular, multiply(-1, rt->light->normal)) : 0.0;
+		in += rtv->light->type == PARALLEL ? point(rtv, pv, normal, obj->specular, substruct(multiply(-(1000000), rtv->light->normal), (t_vec){0,0,0})) : 0.0;
 		if (rt->light->type == DIRECT && (spot_effect = dual_cone_spotlight(pv.cam, rt->light, rt->light->cos_angle)) != 0.0)
 		{
-			t = rt->light->type == DIRECT ? point(rt, pv, normal, obj->specular, multiply(-1, rt->light->normal)) : 0.0;
+			t = rt->light->type == DIRECT ? point(rt, pv, normal, obj->specular, substruct(rtv->light->pos, pv.cam)) : 0.0;
 			in += (spot_effect * t);
 		}
 		rt->light = rt->light->next;

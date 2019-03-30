@@ -1,0 +1,121 @@
+AMBIENT:
+	intensivity: 0.15
+#
+POINT:
+	position: -4 8 -3
+	intensivity: 0.7
+#
+PLANE:
+	color: 121 110 122
+	rotation: 0 0 7
+#
+CAMERA:
+	position: -4 7 -15
+	angle_y: 20
+	angle_x: -10
+#
+PLANE:
+	color: 167 117 210
+	center: 0 0 10
+	rotation: 90 0 0
+	reflective: 0.3
+#
+PLANE:
+	color: 161 210 117
+	center: 5 0 0
+	rotation: 0 0 90
+	reflective: 0.3
+#
+PLANE:
+	color: 161 210 117
+	center: -5 0 0
+	rotation: 0 0 80
+	reflective: 0.3
+#
+PLANE:
+	color: 58 176 189
+	center: 0 10 0
+	rotation: 0 0 -15
+	reflective: 0.3
+#
+PLANE:
+	color: 168 131 28
+	center: 0 0 -20
+	rotation: 90 0 0
+	reflective: 0.3
+#
+CONE:
+	center: 0 4 5
+	rotation: 0 0 90
+#
+CONE:
+	center: 0 4 5
+	height: 5
+	height: 0
+#
+CYLINDER:
+	center: -2 3 6
+	radius: 0.5
+	rotation: 30 30 -15
+#
+CYLINDER:
+	center: 0 4 5
+	height: 0.2
+	radius: 1.5
+	rotation: 0 0 45
+#
+CYLINDER:
+	center: 0 4 5
+	height: 0.2
+	radius: 1.5
+	rotation: 0 0 -45
+#
+CYLINDER:
+	center: 5 11 10
+	height: 5
+	rotation: 90 40 -30
+#
+CYLINDER:
+	height: 2
+	color: 30 74 18
+	center: 0 -1 -3
+	radius: 3
+#
+PLANE:
+	radius: 3
+	color: 30 74 18
+	center: 0 1 -3
+#
+CYLINDER:
+	height: 1
+	center: 0 1 -3
+	radius: 2
+	color: 124 135 22
+#
+PLANE:
+	center: 0 2 -3
+	radius: 2
+	color: 124 135 22
+#
+CYLINDER:
+	height: 1
+	center: 0 2 -3
+	radius: 1
+	color: 65 183 132
+#
+PLANE:
+	center: 0 3 -3
+	radius: 1
+	color: 65 183 132
+#
+CYLINDER:
+	height: 0.5
+	center: 0 3 -3
+	radius: 0.3
+	color: 176 135 73
+#
+SPHERE:
+	radius: 0.3
+	center: 0 3.5 -3
+	color: 176 135 73
+#

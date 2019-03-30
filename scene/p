@@ -1,0 +1,7 @@
+PLANE:
+	color: 255 255 0
+#
+POINT:
+	position: 0 5 0
+	intensivity: 0.4
+#

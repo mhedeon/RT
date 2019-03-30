@@ -6,7 +6,7 @@
 /*   By: ikoloshy <ikoloshy@unit.student.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/11 16:08:48 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/03/30 20:45:15 by ikoloshy         ###   ########.fr       */
+/*   Updated: 2019/03/30 21:56:04 by ikoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ typedef enum		e_type
 	PLANE,
 	SPHERE,
 	CYLINDER,
+	PARABOLOID,
 	CONE,
 	BOCAL_PLANE,
 	BOCAL_CONE,
@@ -104,6 +105,11 @@ typedef struct		s_sphere
 {
 	double			radius_square;
 }					t_sphere;
+
+typedef struct		s_paraboloid
+{
+	double			distance;
+}					t_paraboloid;
 
 typedef struct		s_cylinder
 {
@@ -198,8 +204,19 @@ SDL_Color			get_bocal_color(t_object *bocal);
 /*
 **	rot_composed.c
 */
-void	rotation_bocal(t_object *bocal, int angle_x, int angle_y, int angle_z);
-void	translate_bocal(t_object *bocal, double x, double y, double z);
+void				rotation_bocal(t_object *bocal, int angle_x, int angle_y,
+									int angle_z);
+void				translate_bocal(t_object *bocal, double x, double y,
+									double z);
+
+/*
+**	paraboloid.c
+*/
+t_object			*add_paraboloid(t_object *obj);
+void				intersect_paraboloid(t_vec camera, t_vec dir,
+							 t_object *prbld, double *ts);
+t_vec				normal_paraboloid(t_rtv *rtv, t_vec camera, t_vec dir,
+								t_vec point);
 
 /*
 **	camera.c

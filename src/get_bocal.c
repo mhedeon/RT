@@ -6,7 +6,7 @@
 /*   By: ikoloshy <ikoloshy@unit.student.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/30 20:33:17 by ikoloshy          #+#    #+#             */
-/*   Updated: 2019/03/30 20:45:15 by ikoloshy         ###   ########.fr       */
+/*   Updated: 2019/03/30 21:25:49 by ikoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,21 +14,25 @@
 
 t_vec	get_bocal_center(t_object *bocal)
 {
-	if (!bocal->cmp_start)
+	t_object	*first;
+
+	if (!bocal)
 		return ((t_vec) {0.0, 0.0, 0.0});
-	return (bocal->next->center);
+	first = bocal->cmp_start;
+	return (first->next->center);
 }
 
 t_vec	get_bocal_axis(t_object *bocal)
 {
-	if (!bocal->cmp_start)
+	t_object	*first;
+
+	if (!bocal)
 		return ((t_vec) {0.0, 0.0, 0.0});
-	return (bocal->next->normal);
+	first = bocal->cmp_start;
+	return (first->next->normal);
 }
 
-SDL_Color	get_bocal_color(t_object *bocal)
+SDL_Color	get_color(t_object *object)
 {
-	if (!bocal->cmp_start)
-		return ((SDL_Color) {0, 0, 0, 0});
-	return (bocal->color);
+	return (object->color);
 }

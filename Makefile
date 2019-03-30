@@ -29,7 +29,8 @@ MAIN_SRC = main.c \
 			bocal.c \
 			rot_composed.c \
 			slice.c \
-			light_objects.c
+			light_objects.c \
+			get_bocal.c
 
 MAIN_SRC_LIST = $(addprefix $(MAIN_DIR)/, $(MAIN_SRC))
 #-------------------------------------------------------------------------------

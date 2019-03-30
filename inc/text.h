@@ -24,6 +24,9 @@
 # define T_YA (SDL_Rect) { 250, 100, 100, 30 }
 # define T_ZA (SDL_Rect) { 250, 140, 100, 30 }
 
+# define T_SPEC (SDL_Rect) { 550, 60, 300, 30}
+# define T_REFL (SDL_Rect) { 550, 100, 300, 30}
+
 # define T_CAM (SDL_Rect) { 1135, 20, 130, 30 }
 
 # define C_X (SDL_Rect) { 1050, 60, 100, 30 }

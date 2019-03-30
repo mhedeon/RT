@@ -97,16 +97,18 @@ void draw_xyz_angles(t_rt *rt, t_face *face)
 void draw_xyz(t_rt *rt, t_face *face)
 {
 	char *s;
+	t_vec data;
 	
 	if (face->o_focus == NULL)
 		return ;
-	s = get_str_from_double(face->o_focus->center.x, "x: ");
+	data = face->o_focus->center;
+	s = get_str_from_double(data.x, "x: ");
 	ttf_render_text(rt->win->ren, face->font, &(T_X), s);
 	free(s);
-	s = get_str_from_double(face->o_focus->center.y, "y: ");
+	s = get_str_from_double(data.y, "y: ");
 	ttf_render_text(rt->win->ren, face->font, &(T_Y), s);
 	free(s);
-	s = get_str_from_double(face->o_focus->center.z, "z: ");
+	s = get_str_from_double(data.z, "z: ");
 	ttf_render_text(rt->win->ren, face->font, &(T_Z), s);
 	free(s);
 }
@@ -131,7 +133,11 @@ void draw_o_list(t_rt *rt, t_face *face)
 		else if (tmp->type == CYLINDER)
 			ttf_render_text(rt->win->ren, face->font, &r, "CYLINDER");
 		else if (tmp->type == BOCAL_PLANE)
-			ttf_render_text(rt->win->ren, face->font, &r, "BOCAL");
+			ttf_render_text(rt->win->ren, face->font, &r, "BOCAL PLANE");
+		else if (tmp->type == BOCAL_CONE)
+			ttf_render_text(rt->win->ren, face->font, &r, "BOCAL CONE");
+		else if (tmp->type == BOCAL_CYLINDER)
+			ttf_render_text(rt->win->ren, face->font, &r, "BOCAL CYLINDER");
 		r.y += 60;
 		tmp = tmp->next;
 	}
@@ -157,17 +163,39 @@ void draw_cam_angles(t_rt *rt, t_face *face)
 void draw_cam_xyz(t_rt *rt, t_face *face)
 {
 	char *s;
+	t_vec data;
 	
 	if (face->o_focus == NULL)
 		return ;
-	s = get_str_from_double(rt->camera.x, "x: ");
+	if (face->o_focus->type >= 5 && face->o_focus->type <= 7)
+		data = get_bocal_center(face->o_focus);
+	else
+		data = face->o_focus->center;
+	s = get_str_from_double(data.x, "x: ");
 	ttf_render_text(rt->win->ren, face->font, &(C_X), s);
 	free(s);
-	s = get_str_from_double(rt->camera.y, "y: ");
+	s = get_str_from_double(data.y, "y: ");
 	ttf_render_text(rt->win->ren, face->font, &(C_Y), s);
 	free(s);
-	s = get_str_from_double(rt->camera.z, "z: ");
+	s = get_str_from_double(data.z, "z: ");
 	ttf_render_text(rt->win->ren, face->font, &(C_Z), s);
+	free(s);
+}
+
+void draw_sr(t_rt *rt, t_face *face)
+{
+	char *s;
+	double data;
+
+	if (face->o_focus == NULL)
+		return ;
+	data = face->o_focus->specular;
+	s = get_str_from_double(data, "Specular: ");
+	ttf_render_text(rt->win->ren, face->font, &(T_SPEC), s);
+	free(s);
+	data = face->o_focus->reflective;
+	s = get_str_from_double(data, "Reflective: ");
+	ttf_render_text(rt->win->ren, face->font, &(T_REFL), s);
 	free(s);
 }
 
@@ -182,4 +210,5 @@ void text_draw(t_rt *rt, t_face *face)
 	draw_o_list(rt, face);
 	draw_cam_xyz(rt, face);
 	draw_cam_angles(rt, face);
+	draw_sr(rt, face);
 }

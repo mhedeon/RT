@@ -6,7 +6,7 @@
 /*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/11 16:08:48 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/03/30 18:45:44 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/03/30 21:34:22 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -209,6 +209,13 @@ void				add_reflective_bocal(t_object *bocal, double reflective);
 void				add_color_bocal(t_object *bocal, SDL_Color color);
 
 /*
+** get_bocal.c
+*/
+t_vec    get_bocal_center(t_object *bocal);
+t_vec    get_bocal_axis(t_object *bocal);
+SDL_Color   get_bocal_color(t_object *bocal);
+
+/*
 **	rot_composed.c
 */
 void	rotation_bocal(t_object *bocal, int angle_x, int angle_y, int angle_z);
@@ -341,6 +348,7 @@ double      dual_cone_spotlight(t_vec p, t_light *light, double cos_angle);
 
 ////////////////////////
 int	init_face(t_face *face, t_rt *rt);
+int face_close(t_face *face, t_rt *rt);
 void interface_set_obj(t_face *face, t_rt *rt);
 void interface_draw(t_face *face, t_rt *rt);
 t_object *in_list(t_rt *rt, t_face *face, int x, int y);

@@ -14,7 +14,7 @@ t_object *in_list(t_rt *rt, t_face *face, int x, int y)
 			y >= (r.y + 60 * (i - 1)) && y < (r.y + r.h + 60 * (i - 1)))
 			{
 				tmp = rt->obj;
-				while (--i > 0)
+				while (tmp != NULL && --i > 0)
 					tmp = tmp->next;
 				face->o_focus = tmp;
 				return (tmp);
@@ -26,18 +26,34 @@ t_object *in_list(t_rt *rt, t_face *face, int x, int y)
 int			init_face(t_face *face, t_rt *rt)
 {
 	face->top_r = (SDL_Rect) { 0, 0, WIN_W, WIN_H - SCENE_H };
-	face->left_r = (SDL_Rect) { 0, WIN_H - SCENE_H, (WIN_W - SCENE_W) / 2, SCENE_H };
-	face->right_r = (SDL_Rect) { SCENE_W + face->left_r.w, WIN_H - SCENE_H, (WIN_W - SCENE_W) / 2, SCENE_H };
+	face->left_r = (SDL_Rect) { 0, WIN_H - SCENE_H, (WIN_W - SCENE_W) / 2,
+																	SCENE_H };
+	face->right_r = (SDL_Rect) { SCENE_W + face->left_r.w, WIN_H - SCENE_H,
+											(WIN_W - SCENE_W) / 2, SCENE_H };
 	face->rt = rt;
 	face->start = 0;
 	face->end = 12;
+	face->o_start = rt->obj;
+	face->o_focus = face->o_start;
+	face->font = NULL;
+	face->picker = NULL;
 	if ((face->picker = picker_create(200)) == NULL)
 		return (error_log("Interface initiation failed"));
-	// picker_set_pos(face->picker, face->right_r.x + 50, face->right_r.y + 50);
-
+	if ((face->font = ttf_open_font("./libraries/libmgl/ttf/OSR.ttf", 150)) ==
+																		NULL)
+		return (error_log("Interface initiation failed"));
 	return (1);
 }
 
+int face_close(t_face *face, t_rt *rt)
+{
+	garbage(rt);
+	if (face->picker != NULL)
+		picker_delete(&face->picker);
+	if (face->font != NULL)
+		ttf_close_font(face->font);
+	return (0);
+}
 
 static void interface_draw_bg(t_face *face, t_rt *rt)
 {

@@ -6,7 +6,7 @@
 /*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/11 15:42:36 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/03/30 18:46:57 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/03/30 22:01:28 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,15 @@ void	put_pixel(t_rt *rt, SDL_Color color, int x, int y)
 {
 	x = SCENE_W / 2 + x;
 	y = SCENE_H / 2 - y - 1;
+	
+	SDL_Color c;
+
+	c.r = fmin(color.r * 0.393 + color.g * 0.769 + color.b * 0.189, 255);
+	c.g = fmin(color.r * 0.349 + color.g * 0.686 + color.b * 0.168, 255);
+	c.b = fmin(color.r * 0.272 + color.g * 0.534 + color.b * 0.131, 256);
+
 	if (x >= 0 && x < SCENE_W && y >= 0 && y < SCENE_W)
-		set_pixel(rt->win, &color, x + rt->scene_r.x, y + rt->scene_r.y );
+		set_pixel(rt->win, &c, x + rt->scene_r.x, y + rt->scene_r.y );
 }
 
 int				rnd(void)
@@ -90,20 +97,18 @@ int main()
 		return (error_log("Could not allocate memory for rt"));
 	if (!init(rt))
 		return (garbage(rt));
-	face = (t_face*)malloc(sizeof(t_face));
-	init_face(face, rt);
-	
-	face->font = ttf_open_font("./libraries/libmgl/ttf/OSR.ttf", 150);
-	
+
 	// get_data(rt, av[ac - 1]);
 	get_data(rt, "./scene/scene1");
+
+	if ((face = (t_face*)malloc(sizeof(t_face))) == NULL)
+		return (error_log("Could not allocate memory for interface"));
+	if (!init_face(face, rt))
+		face_close(face, rt);
 
 add_bocal(rt->obj, (t_vec) {-25.0, -1.0, 0.0}, 10.0);
 
 	threads(rt);
-
-	face->o_start = rt->obj;
-	face->o_focus = face->o_start;
 
 	int click_pal = 0, click_hue = 0;
 	while (SDL_PollEvent(&e) || 1)
@@ -122,21 +127,35 @@ add_bocal(rt->obj, (t_vec) {-25.0, -1.0, 0.0}, 10.0);
 			if (picker_within_hue(face->picker, x, y) && !click_pal)
 			{
 				picker_set_h_by_pos(face->picker, y);
+				if (face->o_focus != NULL)
+				face->o_focus->color = hsv2rgb(face->picker->hsv.h,
+									face->picker->hsv.s, face->picker->hsv.v);
 				click_hue = 1;
 			}
 			else if (picker_within_pal(face->picker, x, y) && !click_hue)
 			{
 				picker_set_sv_by_pos(face->picker, x, y);
+				if (face->o_focus != NULL)
+				face->o_focus->color = hsv2rgb(face->picker->hsv.h,
+									face->picker->hsv.s, face->picker->hsv.v);
 				click_pal = 1;
 			}
 			if (click_hue == 1)
+			{
 				picker_set_h_by_pos(face->picker, y);
-			else if (click_pal == 1)
-				picker_set_sv_by_pos(face->picker, x, y);
-			
-			if (face->o_focus != NULL)
+				if (face->o_focus != NULL)
 				face->o_focus->color = hsv2rgb(face->picker->hsv.h,
 									face->picker->hsv.s, face->picker->hsv.v);
+			}
+			else if (click_pal == 1)
+			{
+				picker_set_sv_by_pos(face->picker, x, y);
+				if (face->o_focus != NULL)
+				face->o_focus->color = hsv2rgb(face->picker->hsv.h,
+									face->picker->hsv.s, face->picker->hsv.v);
+			}
+			
+			
 			threads(rt);
 
 			face->o_focus = in_list(rt, face, x, y);

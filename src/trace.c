@@ -6,7 +6,7 @@
 /*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/26 22:05:29 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/03/30 16:14:32 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/03/30 17:08:38 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,8 +52,9 @@ SDL_Color		trace(t_rt *rt, t_fov tmp)
 	close_inters(rt, rt->fov, EPSILON, INFINITY);
 	close = rt->close;
 	close_o = rt->close_o;
-	local_color = blind(rt);
-	rt->close_o = close_o;
+	// local_color = blind(rt);
+	// rt->close_o = close_o;
+	local_color = (SDL_Color) { 0 ,0, 0, 0 };
 	if (close_o == NULL)
 		return (local_color);
 	rt->fov.cam = add(rt->fov.cam, multiply(close, rt->fov.dir));

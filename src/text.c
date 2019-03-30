@@ -49,8 +49,6 @@ void draw_hsv(t_rt *rt, t_face *face)
 	rgb[3] = (int)h.v + '0';
 	ttf_render_text(rt->win->ren, face->font, &(T_V), rgb);
 }
-// "x: 999.999"
-
 
 static char *get_str_from_double(double xyz, char *start)
 {
@@ -64,7 +62,7 @@ static char *get_str_from_double(double xyz, char *start)
 	s = ft_strjoin(tmp, ".");
 	free(tmp);
 	tmp = s;
-	s = ft_strjoin(tmp, ft_itoa(modf(xyz, &i) * 100));
+	s = ft_strjoin(tmp, ft_itoa(abs((int)(modf(xyz, &i) * 100))));
 	free(tmp);
 	if (l < 7)
 		while (++l <= 10)
@@ -79,7 +77,7 @@ static char *get_str_from_double(double xyz, char *start)
 	return (s);
 }
 
-void draw_angles(t_rt *rt, t_face *face)
+void draw_xyz_angles(t_rt *rt, t_face *face)
 {
 	char *s;
 
@@ -136,11 +134,47 @@ void draw_o_list(t_rt *rt, t_face *face)
 	}
 }
 
+void draw_cam_angles(t_rt *rt, t_face *face)
+{
+	char *s;
+
+	if (face->o_focus == NULL)
+		return ;
+	s = get_str_from_double(rt->angle_x, "0c_x\xB0: ");
+	ttf_render_text(rt->win->ren, face->font, &(C_XA), s);
+	free(s);
+	s = get_str_from_double(rt->angle_y, "0c_y\xB0: ");
+	ttf_render_text(rt->win->ren, face->font, &(C_YA), s);
+	free(s);
+	s = get_str_from_double(0.0, "0c_z\xB0: ");
+	ttf_render_text(rt->win->ren, face->font, &(C_ZA), s);
+	free(s);
+}
+
+void draw_cam_xyz(t_rt *rt, t_face *face)
+{
+	char *s;
+	
+	if (face->o_focus == NULL)
+		return ;
+	s = get_str_from_double(rt->camera.x, "c_x: ");
+	ttf_render_text(rt->win->ren, face->font, &(C_X), s);
+	free(s);
+	s = get_str_from_double(rt->camera.y, "c_y: ");
+	ttf_render_text(rt->win->ren, face->font, &(C_Y), s);
+	free(s);
+	s = get_str_from_double(rt->camera.z, "c_z: ");
+	ttf_render_text(rt->win->ren, face->font, &(C_Z), s);
+	free(s);
+}
+
 void text_draw(t_rt *rt, t_face *face)
 {
 	draw_rgb(rt, face);
 	draw_hsv(rt, face);
 	draw_xyz(rt, face);
-	draw_angles(rt, face);
+	draw_xyz_angles(rt, face);
 	draw_o_list(rt, face);
+	draw_cam_xyz(rt, face);
+	draw_cam_angles(rt, face);
 }

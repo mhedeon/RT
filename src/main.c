@@ -6,7 +6,7 @@
 /*   By: ikoloshy <ikoloshy@unit.student.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/11 15:42:36 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/03/29 22:50:58 by ikoloshy         ###   ########.fr       */
+/*   Updated: 2019/03/30 20:48:11 by ikoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,6 +88,9 @@ int				main(int ac, char **av)
 
 	add_bocal(rtv->obj, (t_vec) {-25.0, -1.0, 0.0}, 10.0);
 	t_object *tmp;
+	t_vec	vector;
+	//SDL_Color	color;
+
 	tmp = rtv->obj;
 	while (tmp)
 	{
@@ -99,8 +102,14 @@ int				main(int ac, char **av)
 		tmp = tmp->next;
 	}
 
-	rotation_bocal(tmp, -45, -45, -45);
-	rotation_bocal(tmp, -45, -45, -45);
+	//rotation_bocal(tmp, 180, 0, 0);
+//	rotation_bocal(tmp, -45, -45, -45);
+
+	vector = get_bocal_axis(tmp);
+	printf("axis : %f, %f, %f\n", vector.x, vector.y, vector.z);
+
+	vector = get_bocal_center(tmp);
+	printf("center : %f, %f, %f\n", vector.x, vector.y, vector.z);
 
 	threads(rtv);
 	while (SDL_PollEvent(&e) || 1)

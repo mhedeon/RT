@@ -6,7 +6,7 @@
 /*   By: ikoloshy <ikoloshy@unit.student.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/11 16:08:48 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/03/29 21:22:09 by ikoloshy         ###   ########.fr       */
+/*   Updated: 2019/03/30 20:45:15 by ikoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -186,6 +186,14 @@ t_object			*add_bocal(t_object *obj, t_vec center, double size);
 void				add_specular_bocal(t_object *bocal, double specular);
 void				add_reflective_bocal(t_object *bocal, double reflective);
 void				add_color_bocal(t_object *bocal, SDL_Color color);
+
+
+/*
+**	get_bocal.c
+*/
+t_vec				get_bocal_center(t_object *bocal);
+t_vec				get_bocal_axis(t_object *bocal);
+SDL_Color			get_bocal_color(t_object *bocal);
 
 /*
 **	rot_composed.c

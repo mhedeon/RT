@@ -1,7 +1,30 @@
 PLANE:
-	color: 255 255 0
+	center: 0 0 10
+	rotation: 90 0 0
+	color: 50 50 200
 #
-POINT:
-	position: 0 5 0
+PLANE:
+	center: 0 0 -10
+	rotation: 90 0 0
+#
+PLANE:
+	center: 0 10 0
+	rotation: 0 90 0
+#
+PLANE:
+	center: 0 -10 0
+	rotation: 0 90 0
+#
+PLANE:
+	center: 10 0 0
+	rotation: 0 0 90
+#
+PLANE:
+	center: -10 0 0
+	rotation: 0 0 90
+#
+DIRECT:
+	position: 0 0 0
+	rotation: 0 0 1
 	intensivity: 0.4
-#
+	angle: 0.1

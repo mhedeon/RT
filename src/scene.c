@@ -25,7 +25,11 @@ int			check_struct(t_rt *rt, char *line)
 	else if (!ft_strcmp(line, "AMBIENT:"))
 		rt->light = add_ambient(rt->light);
 	else if (!ft_strcmp(line, "POINT:"))
-		rt->light = add_point(rt->light);
+		rtv->light = add_point(rtv->light);
+	else if (!ft_strcmp(line, "DIRECT:"))
+		rtv->light = add_direct(rtv->light);
+	else if (!ft_strcmp(line, "PARALLEL:"))
+		rtv->light = add_parallel(rtv->light);
 	else if (!ft_strcmp(line, "CAMERA:"))
 		;
 	else
@@ -97,9 +101,10 @@ void		get_data(t_rt *rt, char *name)
 		if (!check_struct(rt, line))
 			break ;
 		if (!ft_strcmp(line, "CAMERA:"))
-			start_camera(rt, &fd);
-		else if (!ft_strcmp(line, "AMBIENT:") || !ft_strcmp(line, "POINT:"))
-			start_light(rt, &fd);
+			start_camera(rtv, &fd);
+		else if (!ft_strcmp(line, "AMBIENT:") || !ft_strcmp(line, "POINT:") ||
+				!ft_strcmp(line, "DIRECT:") || !ft_strcmp(line, "PARALLEL:"))
+			start_light(rtv, &fd);
 		else
 			start_object(rt, &fd);
 		free(line);

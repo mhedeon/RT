@@ -23,6 +23,7 @@ t_object		*add_plane(t_object *obj)
 	new->type = PLANE;
 	new->center = (t_vec) { 0.0, 0.0, 0.0 };
 	new->normal = (t_vec) { 0.0, 1.0, 0.0 };
+	new->rot = (t_vec) { 0, 0, 0 };
 	new->color = (SDL_Color) { rnd(), rnd(), rnd(), 0 };
 	new->specular = 5.0;
 	new->reflective = 0.0;
@@ -51,6 +52,7 @@ t_object		*add_sphere(t_object *obj)
 	new->type = SPHERE;
 	new->center = (t_vec) { 0.0, 0.0, 0.0 };
 	new->normal = (t_vec) { 0.0, 1.0, 0.0 };
+	new->rot = (t_vec) { 0, 0, 0 };
 	new->color = (SDL_Color) { rnd(), rnd(), rnd(), 0 };
 	new->specular = 5.0;
 	new->reflective = 0.0;
@@ -82,6 +84,7 @@ t_object		*add_cylinder(t_object *obj)
 	new->type = CYLINDER;
 	new->center = (t_vec) { 0.0, 0.0, 0.0 };
 	new->normal = (t_vec) { 0.0, 1.0, 0.0 };
+	new->rot = (t_vec) { 0, 0, 0 };
 	new->color = (SDL_Color) { rnd(), rnd(), rnd(), 0 };
 	new->specular = 5.0;
 	new->reflective = 0.0;
@@ -112,6 +115,7 @@ t_object		*add_cone(t_object *obj)
 	new->type = CONE;
 	new->center = (t_vec) { 0.0, 0.0, 0.0 };
 	new->normal = (t_vec) { 0.0, -1.0, 0.0 };
+	new->rot = (t_vec) { 0, 0, 0 };
 	new->color = (SDL_Color) { rnd(), rnd(), rnd(), 0 };
 	new->specular = 5.0;
 	new->reflective = 0.0;

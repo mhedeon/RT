@@ -6,7 +6,7 @@
 /*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/22 15:59:02 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/03/28 18:16:51 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/03/29 22:44:53 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ int			check_option_o(t_object *tmp, char *line)
 	if (!ft_strncmp(line + 1, "center:", 7))
 		tmp->center = read_vec(line);
 	else if (!ft_strncmp(line + 1, "rotation:", 9))
-		tmp->normal = read_rot(line);
+		tmp->normal = read_rot(tmp, line);
 	else if (!ft_strncmp(line + 1, "color:", 6))
 		tmp->color = read_color(line);
 	else if (!ft_strncmp(line + 1, "specular:", 9))

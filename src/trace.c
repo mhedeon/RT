@@ -6,7 +6,7 @@
 /*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/26 22:05:29 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/03/28 19:50:28 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/03/28 22:16:47 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,5 +73,6 @@ void			threads(t_rt *rt)
 	}
 	while (--i >= 0)
 		SDL_WaitThread(thread[i], NULL);
-	upd_win(rt->win);
+	// upd_win(rt->win);
+	// upd_area_ren(rt->win, &rt->scene_r);
 }

@@ -3,7 +3,8 @@ NAME = RT
 #------------------------------- HEADERS ---------------------------------------
 H_DIR = ./inc
 
-H_LIST = rt.h
+H_LIST = rt.h \
+			text.h
 
 HEADERS = $(addprefix $(H_DIR)/, $(H_LIST))
 #-------------------------------------------------------------------------------
@@ -22,7 +23,9 @@ MAIN_SRC = main.c \
 			light.c \
 			init.c \
 			trace.c \
-			trash.c
+			trash.c \
+			interface.c \
+			text.c
 
 MAIN_SRC_LIST = $(addprefix $(MAIN_DIR)/, $(MAIN_SRC))
 #-------------------------------------------------------------------------------

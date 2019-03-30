@@ -3,6 +3,9 @@
 
 # include "libmgl.h"
 
-void foo(void);
+TTF_Font *ttf_open_font(char *name, int size);
+void ttf_close_font(TTF_Font *font);
+void ttf_render_text(SDL_Renderer *ren, TTF_Font *font, SDL_Rect *r, char *text);
+
 
 #endif

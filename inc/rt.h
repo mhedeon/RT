@@ -6,7 +6,7 @@
 /*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/11 16:08:48 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/03/28 19:50:51 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/03/29 23:07:01 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 # include "libmgl.h"
 # include "libft.h"
+# include "text.h"
 # include "get_next_line.h"
 # include <stdlib.h>
 # include <fcntl.h>
@@ -22,8 +23,10 @@
 # include <limits.h>
 # include <float.h>
 
-# define SCENE_W 600
-# define SCENE_H 600
+# define WIN_W 1400
+# define WIN_H 1000
+# define SCENE_W 800
+# define SCENE_H 800
 
 # define THREADS 8
 # define DEPTH 3
@@ -33,6 +36,7 @@
 **	from radians to degrees
 */
 # define RAD(a) ((double)a * M_PI / 180.0)
+# define DEG(a) ((double)a * 180.0 / M_PI)
 
 /*
 **	types of light
@@ -102,6 +106,7 @@ typedef struct		s_object
 	t_vec			center;
 	t_vec			normal;
 	SDL_Color		color;
+	t_vec			rot;
 	double			specular;
 	double			reflective;
 	void			*data;
@@ -130,7 +135,21 @@ typedef struct		s_rt
 	int				start;
 	int				end;
 	int				depth;
+	SDL_Rect		scene_r;
 }					t_rt;
+
+typedef struct		s_face
+{
+	t_picker		*picker;
+	SDL_Rect		left_r;
+	SDL_Rect		right_r;
+	SDL_Rect		top_r;
+	t_rt			*rt;
+	t_object		*o_focus;
+	int start;
+	int end;
+	TTF_Font		*font;
+}					t_face;
 
 /*
 **	camera.c
@@ -208,7 +227,7 @@ void				start_object(t_rt *rt, int *fd);
 SDL_Color			read_color(char *line);
 t_vec				read_vec(char *line);
 double				read_number(char *line);
-t_vec				read_rot(char *line);
+t_vec			read_rot(t_object *obj, char *line);
 
 /*
 **	scene.c
@@ -242,5 +261,15 @@ t_vec				substruct(t_vec v1, t_vec v2);
 double				length(t_vec v1);
 t_vec				multiply(double k, t_vec v1);
 t_vec				add(t_vec v1, t_vec v2);
+
+
+
+////////////////////////
+int	init_face(t_face *face, t_rt *rt);
+void interface_set_obj(t_face *face, t_rt *rt);
+void interface_draw(t_face *face, t_rt *rt);
+
+
+void text_draw(t_rt *rt, t_face *face);
 
 #endif

@@ -2,10 +2,10 @@
   "camera" : [
     {
       "origin" : [0,0,0],
-      "direction" : [0, 0, 0],
 	    "position" : [-4, 7, -15],
 	    "angle_y" : 20,
 	    "angle_x" : -10
+	    
     }
   ],
   "objects" : [
@@ -14,7 +14,19 @@
       "origin" : [0, 0, 20],
       "radius" : 1,
       "color" : [255, 0, 255],
-      "texture" : "chessboard"
+      "reflaction" :
+      "specular" :
+      "slice" : {
+		"point" : [0, 1, 2],
+		"axis" : [0, 1, 1],
+	      	"type" : "own" / "real"
+	}
+    },
+    {
+      "type" : "bocal",
+      "center" : [0, 0, 20],
+      "size" : 1,
+      "color" : [255, 0, 255],
     },
     {
       "type" : "sphere",

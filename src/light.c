@@ -12,10 +12,10 @@
 
 #include "rt.h"
 
-void		start_light(t_rt *rt, int *fd)
+void			start_light(t_rt *rt, int *fd)
 {
-	char	*line;
-	t_light	*tmp;
+	char		*line;
+	t_light		*tmp;
 
 	tmp = rt->light;
 	while (tmp != NULL && tmp->next != NULL)
@@ -39,30 +39,7 @@ void		start_light(t_rt *rt, int *fd)
 	}
 }
 
-double		point(t_rt *rt, t_fov pv, t_vec normal, double specular, t_vec vec_l)
-{
-	double	in;
-	t_vec	vec_r;
-	double	reflect_v;
-
-	in = 0.0;
-	close_inters(rt, (t_fov){pv.cam, vec_l}, EPSILON, 1.0);
-	if (rt->close_o == NULL)
-	{
-		rt->close = dot(normal, vec_l);
-		if (rt->close > 0.0)
-			in += rt->light->intens * rt->close / (length(normal) *
-																length(vec_l));
-		vec_r = reflect(vec_l, normal);
-		reflect_v = dot(vec_r, pv.dir);
-		if (reflect_v > 0.0)
-			in += rt->light->intens * pow(reflect_v / (length(vec_r) *
-													length(pv.dir)), specular);
-	}
-	return (in);
-}
-
-double		smoothstep(double min, double max, double x)
+double			smoothstep(double min, double max, double x)
 {
 	if (x < min)
 		return (0);
@@ -72,12 +49,12 @@ double		smoothstep(double min, double max, double x)
 						+ 3 * pow(((x - min) / (max - min)), 2));
 }
 
-double		dual_cone_spotlight(t_vec p, t_light *light, double cos_angle)
+double			dual_cone_spotlight(t_vec p, t_light *light, double cos_angle)
 {
-	t_vec	v;
-	double	cos_outer_cone;
-	double	cos_inner_cone;
-	double	cos_direction;
+	t_vec		v;
+	double		cos_outer_cone;
+	double		cos_inner_cone;
+	double		cos_direction;
 
 	v = substruct(p, light->pos);
 	v = normalize(v);
@@ -87,30 +64,50 @@ double		dual_cone_spotlight(t_vec p, t_light *light, double cos_angle)
 	return (smoothstep(cos_outer_cone, cos_inner_cone, cos_direction));
 }
 
+double			point(t_rt *rt, t_fov pv, t_vec normal, t_vecl vl)
+{
+	double		in;
+	t_vec		vec_r;
+	double		reflect_v;
+
+	in = 0.0;
+	close_inters(rt, (t_fov){pv.cam, vl.v}, EPSILON, 1.0);
+	if (rt->close_o == NULL)
+	{
+		rt->close = dot(normal, vl.v);
+		if (rt->close > 0.0)
+			in += rt->light->intens * rt->close / (length(normal) *
+																length(vl.v));
+		vec_r = reflect(vl.v, normal);
+		reflect_v = dot(vec_r, pv.dir);
+		if (reflect_v > 0.0)
+			in += rt->light->intens * pow(reflect_v / (length(vec_r) *
+				length(pv.dir)), vl.specular);
+	}
+	return (in);
+}
+
 SDL_Color		lighting(t_rt *rt, t_fov pv, t_vec normal, t_object *obj)
 {
-	double	in;
-	t_light	*tmp;
-	double	spot_effect;
-	double	t;
+	double		in;
+	t_light		*tmp;
+	double		spot_effect;
 
 	in = 0.0;
 	tmp = rt->light;
 	while (rt->light != NULL)
 	{
 		in += rt->light->type == AMBIENT ? rt->light->intens : 0.0;
-		in += rt->light->type == POINT ? point(rt, pv, normal, obj->specular,
-									substruct(rt->light->pos, pv.cam)) : 0.0;
-		in += rt->light->type == PARALLEL ? point(rt, pv, normal, obj->specular,
-							substruct(multiply(-(1000000), rt->light->normal),
-												(t_vec){ 0, 0, 0 })) : 0.0;
+		in += rt->light->type == POINT ? point(rt, pv, normal,
+			(t_vecl){substruct(rt->light->pos, pv.cam), obj->specular}) : 0.0;
+		in += rt->light->type == PARALLEL ? point(rt, pv, normal,
+			(t_vecl){substruct(multiply(-(1000000), rt->light->normal),
+			(t_vec){ 0, 0, 0 }), obj->specular}) : 0.0;
 		if (rt->light->type == DIRECT && (spot_effect =
 		dual_cone_spotlight(pv.cam, rt->light, rt->light->cos_angle)) != 0.0)
-		{
-			t = rt->light->type == DIRECT ? point(rt, pv, normal, obj->specular,
-									substruct(rt->light->pos, pv.cam)) : 0.0;
-			in += (spot_effect * t);
-		}
+			in += (spot_effect * rt->light->type == DIRECT ? point(rt, pv, \
+			normal, (t_vecl){substruct(rt->light->pos, pv.cam), obj->specular})
+			: 0.0);
 		rt->light = rt->light->next;
 	}
 	rt->light = tmp;

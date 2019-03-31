@@ -8,7 +8,7 @@ CONE:
 #
 BOCAL:
 	center: -20 0 0
-	rotation: 90 0 0
+	rotation: 30 0 0
 #
 PLANE:
 	color: 82 82 82

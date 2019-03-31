@@ -50,8 +50,8 @@ CONE:
 #
 CONE:
 	center: 0 4 5
-	height: 5
 	height: 0
+	height: 5
 #
 CYLINDER:
 	center: -2 3 6
@@ -78,7 +78,7 @@ CYLINDER:
 CYLINDER:
 	height: 2
 	color: 30 74 18
-	center: 0 -1 -3
+	center: 0 1 -3
 	radius: 3
 #
 PLANE:
@@ -88,7 +88,7 @@ PLANE:
 #
 CYLINDER:
 	height: 1
-	center: 0 1 -3
+	center: 0 2 -3
 	radius: 2
 	color: 124 135 22
 #
@@ -99,7 +99,7 @@ PLANE:
 #
 CYLINDER:
 	height: 1
-	center: 0 2 -3
+	center: 0 3 -3
 	radius: 1
 	color: 65 183 132
 #
@@ -110,7 +110,7 @@ PLANE:
 #
 CYLINDER:
 	height: 0.5
-	center: 0 3 -3
+	center: 0 3.5 -3
 	radius: 0.3
 	color: 176 135 73
 #

@@ -1,8 +1,20 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   checkbox_create.c                                  :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/03/31 04:52:25 by mhedeon           #+#    #+#             */
+/*   Updated: 2019/03/31 04:54:24 by mhedeon          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "libmgl.h"
 
-t_checkbox *checkbox_create(Uint8 status, Uint8 available, int x, int y)
+t_checkbox		*checkbox_create(Uint8 status, Uint8 available, int x, int y)
 {
-	t_checkbox *new;
+	t_checkbox	*new;
 
 	if ((new = (t_checkbox*)malloc(sizeof(t_checkbox))) == NULL)
 	{
@@ -22,10 +34,10 @@ t_checkbox *checkbox_create(Uint8 status, Uint8 available, int x, int y)
 	return (new);
 }
 
-void checkbox_delete(t_checkbox **check)
+void			checkbox_delete(t_checkbox **check)
 {
 	if (*check == NULL)
-		return;
+		return ;
 	free(*check);
 	*check = NULL;
 }

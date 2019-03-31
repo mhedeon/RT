@@ -6,7 +6,7 @@
 /*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/26 18:57:02 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/03/29 22:44:39 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/03/31 05:49:54 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,6 @@ t_vec			read_rot(t_object *obj, char *line)
 	t_vec		normal;
 
 	obj->rot = read_vec(line);
-
 	normal = rot_x((t_vec){ 0.0, 1.0, 0.0 }, obj->rot.x);
 	normal = rot_y(normal, obj->rot.y);
 	normal = rot_z(normal, obj->rot.z);

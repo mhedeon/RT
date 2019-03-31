@@ -6,7 +6,7 @@
 /*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/11 16:08:48 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/03/30 17:00:51 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/03/31 06:25:21 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -161,6 +161,7 @@ typedef struct		s_rt
 	int				end;
 	int				depth;
 	SDL_Rect		scene_r;
+	int sepia;
 }					t_rt;
 
 typedef struct		s_face
@@ -171,9 +172,11 @@ typedef struct		s_face
 	SDL_Rect		top_r;
 	t_rt			*rt;
 	t_object		*o_focus;
+	t_object		*o_start;
 	int start;
 	int end;
 	TTF_Font		*font;
+	t_checkbox		*sepia;
 }					t_face;
 
 
@@ -206,6 +209,13 @@ t_object			*add_bocal(t_object *obj, t_vec center, double size);
 void				add_specular_bocal(t_object *bocal, double specular);
 void				add_reflective_bocal(t_object *bocal, double reflective);
 void				add_color_bocal(t_object *bocal, SDL_Color color);
+
+/*
+** get_bocal.c
+*/
+t_vec    get_bocal_center(t_object *bocal);
+t_vec    get_bocal_axis(t_object *bocal);
+SDL_Color   get_bocal_color(t_object *bocal);
 
 /*
 **	rot_composed.c
@@ -267,6 +277,8 @@ SDL_Color				lighting(t_rt *rt, t_fov pv, t_vec normal,
 /*
 **	main.c
 */
+int		translate(t_rt *rt, SDL_Event e);
+int		rotate(t_rt *rt, SDL_Event e);
 void				put_pixel(t_rt *rt, SDL_Color color, int x, int y);
 int					rnd();
 SDL_Color			do_color(SDL_Color local, SDL_Color reflected,
@@ -340,10 +352,23 @@ double      dual_cone_spotlight(t_vec p, t_light *light, double cos_angle);
 
 ////////////////////////
 int	init_face(t_face *face, t_rt *rt);
+int face_close(t_face *face, t_rt *rt);
 void interface_set_obj(t_face *face, t_rt *rt);
 void interface_draw(t_face *face, t_rt *rt);
+t_object *in_list(t_rt *rt, t_face *face, int x, int y);
 
+int event(t_rt *rt, t_face *face);
 
-void text_draw(t_rt *rt, t_face *face);
+void obj_help(t_object *obj);
+
+/*
+**	text1-3.c
+*/
+void			text_draw(t_rt *rt, t_face *face);
+char		*get_str_from_double(double xyz, char *start);
+void			draw_xyz(t_rt *rt, t_face *face);
+void			draw_xyz_angles(t_rt *rt, t_face *face);
+void			draw_hsv(t_rt *rt, t_face *face);
+void			draw_rgb(t_rt *rt, t_face *face);
 
 #endif

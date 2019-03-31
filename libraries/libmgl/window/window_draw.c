@@ -1,11 +1,23 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   window_draw.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/03/31 05:21:54 by mhedeon           #+#    #+#             */
+/*   Updated: 2019/03/31 05:23:40 by mhedeon          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "libmgl.h"
 
-void  clear_area(t_window* win, SDL_Rect* area)
+void	clear_area(t_window *win, SDL_Rect *area)
 {
-	int x;
-	int y;
-	int h;
-	int w;
+	int	x;
+	int	y;
+	int	h;
+	int	w;
 
 	h = area->y + area->h;
 	w = area->x + area->w;
@@ -18,12 +30,12 @@ void  clear_area(t_window* win, SDL_Rect* area)
 	}
 }
 
-void color_area(t_window* win, SDL_Rect* area, SDL_Color* color)
+void	color_area(t_window *win, SDL_Rect *area, SDL_Color *color)
 {
-	int x;
-	int y;
-	int h;
-	int w;
+	int	x;
+	int	y;
+	int	h;
+	int	w;
 
 	h = area->y + area->h;
 	w = area->x + area->w;
@@ -36,7 +48,7 @@ void color_area(t_window* win, SDL_Rect* area, SDL_Color* color)
 	}
 }
 
-void	clear_buffer(t_window* win)
+void	clear_buffer(t_window *win)
 {
 	int	x;
 	int	y;
@@ -54,8 +66,7 @@ void	clear_buffer(t_window* win)
 	}
 }
 
-
-void	color_buffer(t_window* win, SDL_Color* color)
+void	color_buffer(t_window *win, SDL_Color *color)
 {
 	int	x;
 	int	y;

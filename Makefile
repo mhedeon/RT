@@ -25,11 +25,15 @@ MAIN_SRC = main.c \
 			trace.c \
 			trash.c \
 			interface.c \
-			text.c \
+			text1.c \
+			text2.c \
+			text3.c \
 			bocal.c \
 			rot_composed.c \
 			slice.c \
-			light_objects.c
+			light_objects.c \
+			get_bocal.c \
+			event.c
 
 MAIN_SRC_LIST = $(addprefix $(MAIN_DIR)/, $(MAIN_SRC))
 #-------------------------------------------------------------------------------

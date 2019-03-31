@@ -1,9 +1,21 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   picker_draw.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/03/31 05:02:28 by mhedeon           #+#    #+#             */
+/*   Updated: 2019/03/31 05:02:34 by mhedeon          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "libmgl.h"
 
-void picker_draw(t_window *win, t_picker *picker)
+void	picker_draw(t_window *win, t_picker *picker)
 {
-	int x;
-	int y;
+	int	x;
+	int	y;
 
 	y = picker->pos.y - 1;
 	while (++y < (picker->pos.y + picker->pos.h))

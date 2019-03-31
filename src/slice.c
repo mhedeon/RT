@@ -6,13 +6,13 @@
 /*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/21 20:36:33 by ikoloshy          #+#    #+#             */
-/*   Updated: 2019/03/30 15:46:04 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/03/31 05:51:53 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "rt.h"
 
-t_slice	*add_slice(t_slice *start, t_vec point, t_vec axis, int type)
+t_slice		*add_slice(t_slice *start, t_vec point, t_vec axis, int type)
 {
 	t_slice	*new;
 	t_slice	*tmp;
@@ -23,7 +23,7 @@ t_slice	*add_slice(t_slice *start, t_vec point, t_vec axis, int type)
 	new->point = point;
 	new->axis = normalize(axis);
 	new->next = NULL;
-	while(tmp && tmp->next)
+	while (tmp && tmp->next)
 		tmp = tmp->next;
 	if (tmp == NULL)
 		start = new;
@@ -32,7 +32,7 @@ t_slice	*add_slice(t_slice *start, t_vec point, t_vec axis, int type)
 	return (start);
 }
 
-int		check_slice(double t, t_slice *slc, t_vec start, t_vec direction)
+int			check_slice(double t, t_slice *slc, t_vec start, t_vec direction)
 {
 	t_vec	vector;
 	t_slice	*tmp;
@@ -50,12 +50,13 @@ int		check_slice(double t, t_slice *slc, t_vec start, t_vec direction)
 	return (0);
 }
 
-void	slice_axis_change(t_slice *slc, int angle_x, int angle_y, int angle_z)
+void		slice_axis_change(t_slice *slc, int angle_x, int angle_y,
+																int angle_z)
 {
 	t_slice	*tmp;
 
 	tmp = slc;
-	while(tmp)
+	while (tmp)
 	{
 		if (tmp->type == OWN)
 		{
@@ -67,12 +68,12 @@ void	slice_axis_change(t_slice *slc, int angle_x, int angle_y, int angle_z)
 	}
 }
 
-void	slice_point_change(t_slice *slc, double x, double y, double z)
+void		slice_point_change(t_slice *slc, double x, double y, double z)
 {
 	t_slice	*tmp;
 
 	tmp = slc;
-	while(tmp)
+	while (tmp)
 	{
 		if (tmp->type == OWN)
 		{

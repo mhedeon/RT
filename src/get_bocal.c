@@ -1,38 +1,38 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   vector.c                                           :+:      :+:    :+:   */
+/*   get_bocal.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/02/11 15:42:43 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/03/31 06:22:25 by mhedeon          ###   ########.fr       */
+/*   Created: 2019/03/30 20:33:17 by ikoloshy          #+#    #+#             */
+/*   Updated: 2019/03/31 05:34:59 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "rt.h"
 
-double	dot(t_vec v1, t_vec v2)
+t_vec			get_bocal_center(t_object *bocal)
 {
-	return (v1.x * v2.x + v1.y * v2.y + v1.z * v2.z);
+	t_object	*first;
+
+	if (!bocal)
+		return ((t_vec) {0.0, 0.0, 0.0});
+	first = bocal->cmp_start;
+	return (first->next->center);
 }
 
-double	length(t_vec v1)
+t_vec			get_bocal_axis(t_object *bocal)
 {
-	return (sqrt(dot(v1, v1)));
+	t_object	*first;
+
+	if (!bocal)
+		return ((t_vec) {0.0, 0.0, 0.0});
+	first = bocal->cmp_start;
+	return (first->next->normal);
 }
 
-t_vec	add(t_vec v1, t_vec v2)
+SDL_Color		get_color(t_object *object)
 {
-	return ((t_vec) { v1.x + v2.x, v1.y + v2.y, v1.z + v2.z });
-}
-
-t_vec	substruct(t_vec v1, t_vec v2)
-{
-	return ((t_vec) { v1.x - v2.x, v1.y - v2.y, v1.z - v2.z });
-}
-
-t_vec	multiply(double k, t_vec v1)
-{
-	return ((t_vec) { v1.x * k, v1.y * k, v1.z * k });
+	return (object->color);
 }

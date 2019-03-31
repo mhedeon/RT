@@ -6,7 +6,7 @@
 /*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/26 21:16:25 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/03/29 17:28:52 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/03/31 05:36:12 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,8 @@ int				init(t_rt *rt)
 	rt->angle_x = 0;
 	rt->angle_y = 0;
 	rt->camera = (t_vec) { 0.0, 0.5, -5.0 };
-	rt->scene_r = (SDL_Rect) { (WIN_W - SCENE_W) / 2, WIN_H - SCENE_H, SCENE_W, SCENE_H };
+	rt->scene_r = (SDL_Rect) { (WIN_W - SCENE_W) / 2, WIN_H - SCENE_H,
+															SCENE_W, SCENE_H };
 	clear_buffer(rt->win);
 	return (1);
 }
@@ -31,10 +32,17 @@ int				garbage(t_rt *rt)
 {
 	t_object	*o_tmp;
 	t_light		*l_tmp;
+	t_slice		*s_tmp;
 
 	while (rt->obj != NULL)
 	{
 		o_tmp = rt->obj;
+		while (rt->obj->slice != NULL)
+		{
+			s_tmp = rt->obj->slice;
+			rt->obj->slice = rt->obj->slice->next;
+			free(s_tmp);
+		}
 		rt->obj = rt->obj->next;
 		free(o_tmp->data);
 		free(o_tmp);
@@ -46,14 +54,12 @@ int				garbage(t_rt *rt)
 		free(l_tmp);
 	}
 	close_win(&rt->win);
-	free(rt);
-	SDL_Quit();
 	return (0);
 }
 
 int				matrix_height(char **m)
 {
-	int	i;
+	int			i;
 
 	i = 0;
 	while (m[i])
@@ -63,7 +69,7 @@ int				matrix_height(char **m)
 
 void			matrix_del(char **m)
 {
-	int	i;
+	int			i;
 
 	i = -1;
 	while (m[++i])

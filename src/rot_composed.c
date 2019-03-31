@@ -6,13 +6,14 @@
 /*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/29 20:38:49 by ikoloshy          #+#    #+#             */
-/*   Updated: 2019/03/30 15:45:52 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/03/31 05:50:39 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "rt.h"
 
-void	rotation_bocal(t_object *bocal, int angle_x, int angle_y, int angle_z)
+void			rotation_bocal(t_object *bocal, int angle_x, int angle_y,
+															int angle_z)
 {
 	t_object	*current;
 	double		size;
@@ -35,7 +36,7 @@ void	rotation_bocal(t_object *bocal, int angle_x, int angle_y, int angle_z)
 	current->normal = rot_z(current->normal, angle_z);
 }
 
-void	translate_bocal(t_object *bocal, double x, double y, double z)
+void			translate_bocal(t_object *bocal, double x, double y, double z)
 {
 	t_object	*current;
 
@@ -45,8 +46,8 @@ void	translate_bocal(t_object *bocal, double x, double y, double z)
 							current->center.z + z};
 	current = current->next;
 	current->center = (t_vec) {current->center.x + x, current->center.y + y,
-							   current->center.z + z};
+										current->center.z + z};
 	current = current->next;
 	current->center = (t_vec) {current->center.x + x, current->center.y + y,
-							   current->center.z + z};
+									current->center.z + z};
 }

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   light_objects.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/03/31 05:40:06 by mhedeon           #+#    #+#             */
+/*   Updated: 2019/03/31 05:40:24 by mhedeon          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "rt.h"
 
 t_light		*add_ambient(t_light *l)
@@ -82,20 +94,3 @@ t_light		*add_direct(t_light *l)
 		l->next = new;
 	return (start == NULL ? l : start);
 }
-
-/*t_light		*add_lights(t_light *l)
-{
-	t_light	*new;
-
-	new->type = DIRECT;
-	new->intens = 0.2;
-	new->pos = (t_vec){ 0.0, 0.0, 0.0 };
-	new->normal = (t_vec){ 0.0, 0.0, 1.0 };
-	new->cos_angle = 1;
-	new->next = NULL;
-
-	add_ambient();
-	add_point();
-	add_direct();
-	add_parallel();
-}*/

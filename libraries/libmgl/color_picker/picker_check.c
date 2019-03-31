@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   picker_check.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/03/31 05:01:51 by mhedeon           #+#    #+#             */
+/*   Updated: 2019/03/31 05:02:14 by mhedeon          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "libmgl.h"
 
-int picker_within_pal(t_picker *picker, int x, int y)
+int			picker_within_pal(t_picker *picker, int x, int y)
 {
 	if (picker == NULL)
 		return (0);
@@ -10,7 +22,7 @@ int picker_within_pal(t_picker *picker, int x, int y)
 	return (0);
 }
 
-int picker_within_hue(t_picker *picker, int x, int y)
+int			picker_within_hue(t_picker *picker, int x, int y)
 {
 	if (picker == NULL)
 		return (0);
@@ -20,11 +32,11 @@ int picker_within_hue(t_picker *picker, int x, int y)
 	return (0);
 }
 
-void picker_set_h_by_pos(t_picker *picker, int y)
+void		picker_set_h_by_pos(t_picker *picker, int y)
 {
-	double h;
-	double s;
-	double v;
+	double	h;
+	double	s;
+	double	v;
 
 	if (picker == NULL)
 		return ;
@@ -36,11 +48,11 @@ void picker_set_h_by_pos(t_picker *picker, int y)
 	picker_set_h_s_v(picker, h, s, v);
 }
 
-void picker_set_sv_by_pos(t_picker *picker, int x, int y)
+void		picker_set_sv_by_pos(t_picker *picker, int x, int y)
 {
-	double h;
-	double s;
-	double v;
+	double	h;
+	double	s;
+	double	v;
 
 	if (picker == NULL)
 		return ;

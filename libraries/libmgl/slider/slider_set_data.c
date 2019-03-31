@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   slider_set_data.c                                  :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/03/31 05:17:16 by mhedeon           #+#    #+#             */
+/*   Updated: 2019/03/31 05:17:26 by mhedeon          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "libmgl.h"
 
-void slider_set_pos(t_slider *sl, int x, int y)
+void	slider_set_pos(t_slider *sl, int x, int y)
 {
 	if (sl == NULL)
 		return ;
@@ -18,7 +30,7 @@ void slider_set_pos(t_slider *sl, int x, int y)
 		sl->pos.y = y - SLIDER_BORDER;
 }
 
-void slider_set_size(t_slider *sl, int width, int height)
+void	slider_set_size(t_slider *sl, int width, int height)
 {
 	if (sl == NULL)
 		return ;
@@ -26,7 +38,7 @@ void slider_set_size(t_slider *sl, int width, int height)
 	sl->pos.h = height;
 }
 
-void slider_set_color(t_slider *sl, SDL_Color *color)
+void	slider_set_color(t_slider *sl, SDL_Color *color)
 {
 	if (sl == NULL ||
 		color == NULL)
@@ -34,7 +46,7 @@ void slider_set_color(t_slider *sl, SDL_Color *color)
 	sl->color = *color;
 }
 
-void slider_set_border(t_slider *sl, SDL_Rect *b)
+void	slider_set_border(t_slider *sl, SDL_Rect *b)
 {
 	if (sl == NULL ||
 		b == NULL)

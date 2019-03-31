@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   convertion_hsv_rgb.c                               :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/03/31 04:56:44 by mhedeon           #+#    #+#             */
+/*   Updated: 2019/03/31 05:00:13 by mhedeon          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "libmgl.h"
 
 #define P pqt[0]
@@ -11,18 +23,17 @@
 **	value = [0, 1]
 */
 
-SDL_Color hsv2rgb(double h, double s, double v)
+SDL_Color	hsv2rgb(double h, double s, double v)
 {
-	double pqt[3];
-	double f;
-	int i;
+	double	pqt[3];
+	double	f;
+	int		i;
 
 	if (s == 0.0)
 		return ((SDL_Color) { BOOST(v), BOOST(v), BOOST(v), 0 });
 	h /= 60;
-	i = (int)floor(h);
-	f = h - (double)i;
-	i %= 6;
+	f = h - floor(h);
+	i = ((int)floor(h)) % 6;
 	P = v * (1.0 - s);
 	Q = v * (1.0 - s * f);
 	T = v * (1.0 - s * (1.0 - f));
@@ -41,18 +52,17 @@ SDL_Color hsv2rgb(double h, double s, double v)
 	return ((SDL_Color) { 0, 0, 0, 0 });
 }
 
-SDL_Color hsv_to_rgb(t_hsv *hsv)
+SDL_Color	hsv_to_rgb(t_hsv *hsv)
 {
-	double pqt[3];
-	double f;
-	int i;
+	double	pqt[3];
+	double	f;
+	int		i;
 
 	if (hsv->s == 0.0)
 		return ((SDL_Color) { BOOST(hsv->v), BOOST(hsv->v), BOOST(hsv->v), 0 });
 	hsv->h /= 60;
-	i = (int)floor(hsv->h);
-	f = hsv->h - (double)i;
-	i %= 6;
+	f = hsv->h - floor(hsv->h);
+	i = ((int)floor(hsv->h)) % 6;
 	P = hsv->v * (1.0 - hsv->s);
 	Q = hsv->v * (1.0 - hsv->s * f);
 	T = hsv->v * (1.0 - hsv->s * (1.0 - f));

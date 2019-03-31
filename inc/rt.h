@@ -6,7 +6,7 @@
 /*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/11 16:08:48 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/03/31 06:25:21 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/03/31 06:43:16 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,13 +41,13 @@
 /*
 **	types of light
 */
-typedef enum        e_ltype
+typedef enum		e_ltype
 {
-    AMBIENT = 1,
-    POINT,
-    DIRECT,
-    PARALLEL
-}                   t_ltype;
+	AMBIENT = 1,
+	POINT,
+	DIRECT,
+	PARALLEL
+}					t_ltype;
 
 /*
 **	types of objects
@@ -81,7 +81,6 @@ typedef struct		s_vec
 	double			z;
 }					t_vec;
 
-//add slice struct
 typedef struct		s_slice
 {
 	int				type;
@@ -94,7 +93,7 @@ typedef struct		s_light
 {
 	int				type;
 	double			intens;
-	double 			cos_angle;
+	double			cos_angle;
 	t_vec			pos;
 	t_vec			normal;
 	struct s_light	*next;
@@ -161,7 +160,7 @@ typedef struct		s_rt
 	int				end;
 	int				depth;
 	SDL_Rect		scene_r;
-	int sepia;
+	int				sepia;
 }					t_rt;
 
 typedef struct		s_face
@@ -173,27 +172,22 @@ typedef struct		s_face
 	t_rt			*rt;
 	t_object		*o_focus;
 	t_object		*o_start;
-	int start;
-	int end;
+	int				start;
+	int				end;
 	TTF_Font		*font;
 	t_checkbox		*sepia;
 }					t_face;
 
-
-
-
-
 /*
 ** Slice the object
 */
-
 typedef enum		e_slice_type
 {
 	REAL,
 	OWN
 }					t_slice_type;
 
-t_slice	*			add_slice(t_slice *start, t_vec point,
+t_slice				*add_slice(t_slice *start, t_vec point,
 									t_vec axis, int type);
 int					check_slice(double t, t_slice *slc, t_vec start,
 									t_vec direction);
@@ -213,20 +207,17 @@ void				add_color_bocal(t_object *bocal, SDL_Color color);
 /*
 ** get_bocal.c
 */
-t_vec    get_bocal_center(t_object *bocal);
-t_vec    get_bocal_axis(t_object *bocal);
-SDL_Color   get_bocal_color(t_object *bocal);
+t_vec				get_bocal_center(t_object *bocal);
+t_vec				get_bocal_axis(t_object *bocal);
+SDL_Color			get_bocal_color(t_object *bocal);
 
 /*
 **	rot_composed.c
 */
-void	rotation_bocal(t_object *bocal, int angle_x, int angle_y, int angle_z);
-void	translate_bocal(t_object *bocal, double x, double y, double z);
-
-
-
-
-
+void				rotation_bocal(t_object *bocal, int angle_x, int angle_y,
+													int angle_z);
+void				translate_bocal(t_object *bocal, double x, double y,
+															double z);
 
 /*
 **	camera.c
@@ -270,15 +261,16 @@ t_light				*add_direct(t_light *l);
 **	light.c
 */
 void				start_light(t_rt *rt, int *fd);
-double		point(t_rt *rt, t_fov pv, t_vec normal, double specular, t_vec vec_l);
-SDL_Color				lighting(t_rt *rt, t_fov pv, t_vec normal,
-								  t_object *obj);
+double				point(t_rt *rt, t_fov pv, t_vec normal, double specular,
+													t_vec vec_l);
+SDL_Color			lighting(t_rt *rt, t_fov pv, t_vec normal,
+								t_object *obj);
 
 /*
 **	main.c
 */
-int		translate(t_rt *rt, SDL_Event e);
-int		rotate(t_rt *rt, SDL_Event e);
+int					translate(t_rt *rt, SDL_Event e);
+int					rotate(t_rt *rt, SDL_Event e);
 void				put_pixel(t_rt *rt, SDL_Color color, int x, int y);
 int					rnd();
 SDL_Color			do_color(SDL_Color local, SDL_Color reflected,
@@ -312,7 +304,7 @@ void				start_object(t_rt *rt, int *fd);
 SDL_Color			read_color(char *line);
 t_vec				read_vec(char *line);
 double				read_number(char *line);
-t_vec			read_rot(t_object *obj, char *line);
+t_vec				read_rot(t_object *obj, char *line);
 
 /*
 **	scene.c
@@ -348,27 +340,24 @@ t_vec				multiply(double k, t_vec v1);
 t_vec				add(t_vec v1, t_vec v2);
 double				ft_vangle(t_vec a, t_vec b);
 
-double      dual_cone_spotlight(t_vec p, t_light *light, double cos_angle);
-
-////////////////////////
-int	init_face(t_face *face, t_rt *rt);
-int face_close(t_face *face, t_rt *rt);
-void interface_set_obj(t_face *face, t_rt *rt);
-void interface_draw(t_face *face, t_rt *rt);
-t_object *in_list(t_rt *rt, t_face *face, int x, int y);
-
-int event(t_rt *rt, t_face *face);
-
-void obj_help(t_object *obj);
+double				dual_cone_spotlight(t_vec p, t_light *light,
+												double cos_angle);
+int					init_face(t_face *face, t_rt *rt);
+int					face_close(t_face *face, t_rt *rt);
+void				interface_set_obj(t_face *face, t_rt *rt);
+void				interface_draw(t_face *face, t_rt *rt);
+t_object			*in_list(t_rt *rt, t_face *face, int x, int y);
+int					event(t_rt *rt, t_face *face);
+void				obj_help(t_object *obj);
 
 /*
 **	text1-3.c
 */
-void			text_draw(t_rt *rt, t_face *face);
-char		*get_str_from_double(double xyz, char *start);
-void			draw_xyz(t_rt *rt, t_face *face);
-void			draw_xyz_angles(t_rt *rt, t_face *face);
-void			draw_hsv(t_rt *rt, t_face *face);
-void			draw_rgb(t_rt *rt, t_face *face);
+void				text_draw(t_rt *rt, t_face *face);
+char				*get_str_from_double(double xyz, char *start);
+void				draw_xyz(t_rt *rt, t_face *face);
+void				draw_xyz_angles(t_rt *rt, t_face *face);
+void				draw_hsv(t_rt *rt, t_face *face);
+void				draw_rgb(t_rt *rt, t_face *face);
 
 #endif

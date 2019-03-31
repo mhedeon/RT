@@ -6,7 +6,7 @@
 /*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/31 05:52:02 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/03/31 06:15:56 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/03/31 06:33:40 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,6 @@ static void		draw_sr(t_rt *rt, t_face *face)
 
 void			text_draw(t_rt *rt, t_face *face)
 {
-	face->end = 12;
 	draw_rgb(rt, face);
 	draw_hsv(rt, face);
 	ttf_render_text(rt->win->ren, face->font, &(T_OBJ), "Object:");
@@ -105,4 +104,5 @@ void			text_draw(t_rt *rt, t_face *face)
 	draw_cam_xyz(rt, face);
 	draw_cam_angles(rt, face);
 	draw_sr(rt, face);
+	face->end = 12;
 }

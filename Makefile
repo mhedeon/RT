@@ -25,7 +25,9 @@ MAIN_SRC = main.c \
 			trace.c \
 			trash.c \
 			interface.c \
-			text.c \
+			text1.c \
+			text2.c \
+			text3.c \
 			bocal.c \
 			rot_composed.c \
 			slice.c \

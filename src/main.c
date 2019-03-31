@@ -6,19 +6,18 @@
 /*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/11 15:42:36 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/03/31 01:05:48 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/03/31 05:48:13 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "rt.h"
 
-void	put_pixel(t_rt *rt, SDL_Color color, int x, int y)
+void			put_pixel(t_rt *rt, SDL_Color color, int x, int y)
 {
-	SDL_Color c;
-	
+	SDL_Color	c;
+
 	x = SCENE_W / 2 + x;
 	y = SCENE_H / 2 - y - 1;
-
 	c = color;
 	if (rt->sepia)
 	{
@@ -27,22 +26,13 @@ void	put_pixel(t_rt *rt, SDL_Color color, int x, int y)
 		c.b = fmin(color.r * 0.272 + color.g * 0.534 + color.b * 0.131, 256);
 	}
 	if (x >= 0 && x < SCENE_W && y >= 0 && y < SCENE_W)
-		set_pixel(rt->win, &c, x + rt->scene_r.x, y + rt->scene_r.y );
-}
-
-int				rnd(void)
-{
-	static int	seed = 0;
-
-	seed = seed == 0 ? SDL_GetTicks() : seed;
-	seed = (Uint8)(1664525 * seed + 1013904223);
-	return (seed);
+		set_pixel(rt->win, &c, x + rt->scene_r.x, y + rt->scene_r.y);
 }
 
 SDL_Color		do_color(SDL_Color local, SDL_Color reflected, double reflect)
 {
 	SDL_Color	result;
-	
+
 	result.r = (Uint8)((1.0 - reflect) * local.r + reflect * reflected.r);
 	result.g = (Uint8)((1.0 - reflect) * local.g + reflect * reflected.g);
 	result.b = (Uint8)((1.0 - reflect) * local.b + reflect * reflected.b);
@@ -50,7 +40,7 @@ SDL_Color		do_color(SDL_Color local, SDL_Color reflected, double reflect)
 	return (result);
 }
 
-static int		translate(t_rt *rt, SDL_Event e)
+int				translate(t_rt *rt, SDL_Event e)
 {
 	if (KEY == SDLK_LEFT)
 		rt->camera = add(rt->camera, multiply(0.25,
@@ -69,7 +59,7 @@ static int		translate(t_rt *rt, SDL_Event e)
 	return (1);
 }
 
-static int		rotate(t_rt *rt, SDL_Event e)
+int				rotate(t_rt *rt, SDL_Event e)
 {
 	if (KEY == SDLK_w)
 		rt->angle_x -= 5;
@@ -84,57 +74,28 @@ static int		rotate(t_rt *rt, SDL_Event e)
 	return (1);
 }
 
-// int				main(int ac, char **av)
-int main()
+int				main(int ac, char **av)
 {
 	t_rt		*rt;
 	t_face		*face;
-	SDL_Event	e;
 
-	// if (ac != 2)
-	// {
-	// 	write(1, "Usage: ./rt ./scene/<scene file>\n", 36);
-	// 	return (0);
-	// }
+	if (ac != 2)
+	{
+		write(1, "Usage: ./rt ./scene/<scene file>\n", 36);
+		return (0);
+	}
 	if ((rt = (t_rt *)malloc(sizeof(t_rt))) == NULL)
 		return (error_log("Could not allocate memory for rt"));
 	if (!init(rt))
 		return (garbage(rt));
-
-	// get_data(rt, av[ac - 1]);
-	get_data(rt, "./scene/scene1");
-
+	get_data(rt, av[ac - 1]);
 	if ((face = (t_face*)malloc(sizeof(t_face))) == NULL)
 		return (error_log("Could not allocate memory for interface"));
 	if (!init_face(face, rt))
 		face_close(face, rt);
-
-add_bocal(rt->obj, (t_vec) {-25.0, -2.0, 0.0}, 10.0);
-
 	threads(rt);
-
-	while (SDL_PollEvent(&e) || 1)
-	{
-		
-		if (e.type == SDL_QUIT || (KEY == SDLK_ESCAPE))
-			break ;
-		else if (rotate(rt, e) || translate(rt, e))
-			threads(rt);
-
-		event_mouse(rt, face);
-		
-		
-		interface_draw(face, rt);
-		SDL_UpdateTexture(rt->win->tex, NULL, rt->win->buff,
-							rt->win->w * sizeof(Uint32));
-							
-		// SDL_RenderClear(rt->win->ren);
-		SDL_RenderCopy(rt->win->ren, rt->win->tex, NULL, NULL);
-	text_draw(rt, face);
-		SDL_RenderPresent(rt->win->ren);
-		// upd_win(rt->win);
-	}
+	while (event(rt, face))
+		;
 	face_close(face, rt);
-	// system("leaks RT");
 	return (0);
 }

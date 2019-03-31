@@ -1,10 +1,22 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   interface.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/03/31 05:36:55 by mhedeon           #+#    #+#             */
+/*   Updated: 2019/03/31 05:39:40 by mhedeon          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "rt.h"
 
-t_object *in_list(t_rt *rt, t_face *face, int x, int y)
+t_object		*in_list(t_rt *rt, t_face *face, int x, int y)
 {
-	int i;
-	SDL_Rect r;
-	t_object *tmp;
+	int			i;
+	SDL_Rect	r;
+	t_object	*tmp;
 
 	r = T_LIST;
 	i = face->start;
@@ -12,18 +24,18 @@ t_object *in_list(t_rt *rt, t_face *face, int x, int y)
 	{
 		if (x >= r.x && x < (r.x + r.w) &&
 			y >= (r.y + 60 * (i - 1)) && y < (r.y + r.h + 60 * (i - 1)))
-			{
-				tmp = rt->obj;
-				while (tmp != NULL && --i > 0)
-					tmp = tmp->next;
-				face->o_focus = tmp;
-				return (tmp);
-			}
+		{
+			tmp = rt->obj;
+			while (tmp != NULL && --i > 0)
+				tmp = tmp->next;
+			face->o_focus = tmp;
+			return (tmp);
+		}
 	}
 	return (face->o_focus);
 }
 
-int			init_face(t_face *face, t_rt *rt)
+int				init_face(t_face *face, t_rt *rt)
 {
 	face->top_r = (SDL_Rect) { 0, 0, WIN_W, WIN_H - SCENE_H };
 	face->left_r = (SDL_Rect) { 0, WIN_H - SCENE_H, (WIN_W - SCENE_W) / 2,
@@ -50,9 +62,10 @@ int			init_face(t_face *face, t_rt *rt)
 	return (1);
 }
 
-int face_close(t_face *face, t_rt *rt)
+int				face_close(t_face *face, t_rt *rt)
 {
 	garbage(rt);
+	free(face->rt);
 	if (face->picker != NULL)
 		picker_delete(&face->picker);
 	if (face->font != NULL)
@@ -63,14 +76,14 @@ int face_close(t_face *face, t_rt *rt)
 	return (0);
 }
 
-static void interface_draw_bg(t_face *face, t_rt *rt)
+static void		interface_draw_bg(t_face *face, t_rt *rt)
 {
-	rt->win->color = hsv_to_rgb(&(t_hsv) { 0, 0 ,0.15 });
+	rt->win->color = hsv_to_rgb(&(t_hsv) { 0, 0, 0.15 });
 	color_area(rt->win, &face->top_r, &rt->win->color);
-	rt->win->color = hsv_to_rgb(&(t_hsv) { 0, 0 ,0.20 });
-	color_area(rt->win, &face->left_r, &rt->win->color);	
-	color_area(rt->win, &face->right_r, &rt->win->color);		
-	rt->win->color = hsv_to_rgb(&(t_hsv) { 0, 0 ,0.35 });
+	rt->win->color = hsv_to_rgb(&(t_hsv) { 0, 0, 0.20 });
+	color_area(rt->win, &face->left_r, &rt->win->color);
+	color_area(rt->win, &face->right_r, &rt->win->color);
+	rt->win->color = hsv_to_rgb(&(t_hsv) { 0, 0, 0.35 });
 	color_area(rt->win, &(SDL_Rect) { rt->scene_r.x - 1, rt->scene_r.y, 2,
 													SCENE_H }, &rt->win->color);
 	color_area(rt->win, &(SDL_Rect) { 0, rt->scene_r.y - 1,
@@ -81,19 +94,13 @@ static void interface_draw_bg(t_face *face, t_rt *rt)
 	color_area(rt->win, &(T_SHOT), &rt->win->color);
 }
 
-void interface_set_obj(t_face *face, t_rt *rt)
+void			interface_draw(t_face *face, t_rt *rt)
 {
-	rt->start = rt->start;
-	picker_set_pos(face->picker, face->right_r.x + 40, face->right_r.y + 40);
-}
-
-void interface_draw(t_face *face, t_rt *rt)
-{
-	int i;
-	SDL_Rect r;
+	int			i;
+	SDL_Rect	r;
 
 	interface_draw_bg(face, rt);
-	interface_set_obj(face, rt);
+	picker_set_pos(face->picker, face->right_r.x + 40, face->right_r.y + 40);
 	picker_draw(rt->win, face->picker);
 	draw_checkbox(rt->win, face->sepia);
 	i = face->start;

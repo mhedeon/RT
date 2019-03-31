@@ -6,7 +6,7 @@
 /*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/11 16:08:48 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/03/31 00:50:27 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/03/31 06:25:21 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -277,6 +277,8 @@ SDL_Color				lighting(t_rt *rt, t_fov pv, t_vec normal,
 /*
 **	main.c
 */
+int		translate(t_rt *rt, SDL_Event e);
+int		rotate(t_rt *rt, SDL_Event e);
 void				put_pixel(t_rt *rt, SDL_Color color, int x, int y);
 int					rnd();
 SDL_Color			do_color(SDL_Color local, SDL_Color reflected,
@@ -355,8 +357,18 @@ void interface_set_obj(t_face *face, t_rt *rt);
 void interface_draw(t_face *face, t_rt *rt);
 t_object *in_list(t_rt *rt, t_face *face, int x, int y);
 
-void event_mouse(t_rt *rt, t_face *face);
+int event(t_rt *rt, t_face *face);
 
-void text_draw(t_rt *rt, t_face *face);
+void obj_help(t_object *obj);
+
+/*
+**	text1-3.c
+*/
+void			text_draw(t_rt *rt, t_face *face);
+char		*get_str_from_double(double xyz, char *start);
+void			draw_xyz(t_rt *rt, t_face *face);
+void			draw_xyz_angles(t_rt *rt, t_face *face);
+void			draw_hsv(t_rt *rt, t_face *face);
+void			draw_rgb(t_rt *rt, t_face *face);
 
 #endif

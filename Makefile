@@ -90,15 +90,13 @@ lib:
 	@make -C $(LIB_DIR)/libft
 
 clean:
+	@make clean -C $(LIB_DIR)/libmgl
+	@make clean -C $(LIB_DIR)/libft
 	@rm -rf $(OBJ_DIR)
 
 fclean: clean
+	@make fclean -C $(LIB_DIR)/libmgl
+	@make fclean -C $(LIB_DIR)/libft
 	@rm -f $(NAME)
 
 re: fclean all
-
-#------------------------------- DEBUG -----------------------------------------
-pr: print-OBJ_LIST print-HEADERS
-
-print-%  : ; @echo $* = $($*)
-#-------------------------------------------------------------------------------

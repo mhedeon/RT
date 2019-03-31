@@ -267,8 +267,7 @@ t_light				*add_direct(t_light *l);
 **	light.c
 */
 void				start_light(t_rt *rt, int *fd);
-double				point(t_rt *rt, t_fov pv, t_vec normal, double specular,
-													t_vec vec_l, t_fov f);
+double				point(t_rt *rt, t_fov pv, t_vec normal, t_fov f);
 SDL_Color			lighting(t_rt *rt, t_fov pv, t_vec normal,
 								t_object *obj);
 

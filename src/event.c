@@ -6,7 +6,7 @@
 /*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/31 05:33:43 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/03/31 05:33:43 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/03/31 18:31:31 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,15 +35,18 @@ static void		event_picker(t_face *face, int *xy, int click)
 
 	click_hue = click_hue & click;
 	click_pal = click_pal & click;
-	if (picker_within_hue(face->picker, xy[0], xy[1]) && !click_pal && click)
-		event_picker_click(face, xy, &click_hue, 'h');
-	else if (picker_within_pal(face->picker, xy[0], xy[1]) && !click_hue &&
-																		click)
-		event_picker_click(face, xy, &click_pal, 'p');
-	if (click_hue)
-		event_picker_click(face, xy, &click_hue, 'h');
-	else if (click_pal)
-		event_picker_click(face, xy, &click_pal, 'p');
+	if (face->o_focus != NULL && face->o_start != NULL)
+	{
+		if (picker_within_hue(face->picker, xy[0], xy[1]) && !click_pal && click)
+			event_picker_click(face, xy, &click_hue, 'h');
+		else if (picker_within_pal(face->picker, xy[0], xy[1]) && !click_hue &&
+																			click)
+			event_picker_click(face, xy, &click_pal, 'p');
+		if (click_hue)
+			event_picker_click(face, xy, &click_hue, 'h');
+		else if (click_pal)
+			event_picker_click(face, xy, &click_pal, 'p');
+	}
 }
 
 static void		event_button(t_face *face, t_rt *rt, int *xy, int clicked)

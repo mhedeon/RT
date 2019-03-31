@@ -6,7 +6,7 @@
 /*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/11 15:42:36 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/03/31 05:48:13 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/03/31 16:45:23 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,5 +97,6 @@ int				main(int ac, char **av)
 	while (event(rt, face))
 		;
 	face_close(face, rt);
+	system("leaks RT");
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/26 18:57:02 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/03/31 05:49:54 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/03/31 17:34:01 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ t_vec			read_vec(char *line)
 	char		*s;
 
 	m = ft_strsplit(line, ' ');
-	if (matrix_height(m) != 4)
+	if (matrix_height(m) < 4)
 	{
 		matrix_del(m);
 		return ((t_vec){ 0.0, 0.0, 0.0 });
@@ -83,4 +83,48 @@ t_vec			read_rot(t_object *obj, char *line)
 	normal = rot_y(normal, obj->rot.y);
 	normal = rot_z(normal, obj->rot.z);
 	return (normal);
+}
+
+t_slice *read_slice(t_object *obj, char *line)
+{
+	char 		**m;
+	int type;
+	t_vec origin;
+	t_vec axis;
+
+	if (obj->slice != NULL)
+		return (obj->slice);
+	m = ft_strsplit(line, ' ');
+	if (matrix_height(m) != 10)
+	{
+		matrix_del(m);
+		return (NULL);
+	}
+	if (!ft_strcmp(m[1], "own"))
+		type = OWN;
+	else if (!ft_strcmp(m[1], "real"))
+		type = REAL;
+	else
+	{
+		matrix_del(m);
+		return (NULL);
+	}
+	if (!ft_strcmp(m[2], "origin:"))
+		origin = read_vec(line + ft_strlen(m[0]) + ft_strlen(m[1]) + 2);
+	else
+	{
+		matrix_del(m);
+		return (NULL);
+	}
+	if (!ft_strcmp(m[6], "axis:"))
+		axis = read_vec(line + ft_strlen(m[0]) + ft_strlen(m[1]) +
+				ft_strlen(m[2]) + ft_strlen(m[3]) + ft_strlen(m[4]) +
+												ft_strlen(m[5]) + 6);
+	else
+	{
+		matrix_del(m);
+		return (NULL);
+	}
+	matrix_del(m);
+	return (add_slice(obj->slice, origin, axis,type));
 }

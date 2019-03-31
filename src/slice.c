@@ -6,30 +6,25 @@
 /*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/21 20:36:33 by ikoloshy          #+#    #+#             */
-/*   Updated: 2019/03/31 05:51:53 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/03/31 17:04:25 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "rt.h"
 
-t_slice		*add_slice(t_slice *start, t_vec point, t_vec axis, int type)
+t_slice		*add_slice(t_slice *slice, t_vec point, t_vec axis, int type)
 {
 	t_slice	*new;
-	t_slice	*tmp;
 
-	tmp = start;
-	new = (t_slice*)malloc(sizeof(t_slice));
+	if (slice != NULL)
+		return (slice);
+	if ((new = (t_slice*)malloc(sizeof(t_slice))) == NULL)
+		return (NULL);
 	new->type = type;
 	new->point = point;
 	new->axis = normalize(axis);
 	new->next = NULL;
-	while (tmp && tmp->next)
-		tmp = tmp->next;
-	if (tmp == NULL)
-		start = new;
-	else
-		tmp->next = new;
-	return (start);
+	return (new);
 }
 
 int			check_slice(double t, t_slice *slc, t_vec start, t_vec direction)

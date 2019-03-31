@@ -1,3 +1,16 @@
+
+CONE:
+	color: 255 255 0
+	center: 7 0 -10
+	angle: 15
+	rotation: -45 0 0
+	slice: own origin: 0 0 0 axis: 0 1 0
+	slice: own origin: 0 0 0 axis: 0 1 0
+#
+BOCAL:
+	center: -20 0 0
+	rotation: 90 0 0
+#
 PLANE:
 	color: 82 82 82
 	center: 0 -15 0
@@ -17,12 +30,6 @@ CYLINDER:
 	color: 65 230 75
 	center: -5 0 0
 	radius: 1
-	rotation: -45 0 0
-#
-CONE:
-	color: 255 255 0
-	center: 7 0 -10
-	angle: 15
 	rotation: -45 0 0
 #
 CAMERA:

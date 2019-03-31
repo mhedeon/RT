@@ -6,7 +6,7 @@
 /*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/26 18:55:32 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/03/31 06:26:27 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/03/31 17:25:49 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,8 @@ t_object		*add_plane(t_object *obj)
 	start = obj;
 	while (obj != NULL && obj->next != NULL)
 		obj = obj->next;
-	new = (t_object *)malloc(sizeof(t_object));
+	if ((new = (t_object *)malloc(sizeof(t_object))) == NULL)
+		return (NULL);
 	new->type = PLANE;
 	obj_help(new);
 	new->data = (t_plane *)malloc(sizeof(t_plane));
@@ -44,7 +45,8 @@ t_object		*add_sphere(t_object *obj)
 	start = obj;
 	while (obj != NULL && obj->next != NULL)
 		obj = obj->next;
-	new = (t_object *)malloc(sizeof(t_object));
+	if ((new = (t_object *)malloc(sizeof(t_object))) == NULL)
+		return (NULL);
 	new->type = SPHERE;
 	obj_help(new);
 	new->data = (t_sphere *)malloc(sizeof(t_sphere));
@@ -68,7 +70,8 @@ t_object		*add_cylinder(t_object *obj)
 	start = obj;
 	while (obj != NULL && obj->next != NULL)
 		obj = obj->next;
-	new = (t_object *)malloc(sizeof(t_object));
+	if ((new = (t_object *)malloc(sizeof(t_object))) == NULL)
+		return (NULL);
 	new->type = CYLINDER;
 	obj_help(new);
 	new->data = (t_cylinder *)malloc(sizeof(t_cylinder));
@@ -93,7 +96,8 @@ t_object		*add_cone(t_object *obj)
 	start = obj;
 	while (obj != NULL && obj->next != NULL)
 		obj = obj->next;
-	new = (t_object *)malloc(sizeof(t_object));
+	if ((new = (t_object *)malloc(sizeof(t_object))) == NULL)
+		return (NULL);
 	new->type = CONE;
 	obj_help(new);
 	new->data = (t_cone *)malloc(sizeof(t_cone));

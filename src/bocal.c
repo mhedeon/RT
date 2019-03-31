@@ -6,7 +6,7 @@
 /*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/29 15:16:25 by ikoloshy          #+#    #+#             */
-/*   Updated: 2019/03/31 05:32:29 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/03/31 18:19:10 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,8 @@ t_object		*add_bocal(t_object *obj, t_vec center, double size)
 	obj = add_cone(obj);
 	(bocal->next)->type = BOCAL_CONE;
 	(bocal->next)->center = center;
-	((t_cone*)((bocal->next)->data))->height1 = 0.0;
-	((t_cone*)((bocal->next)->data))->height2 = size / 2;
+	((t_cone*)((bocal->next)->data))->height2 = 0.0;
+	((t_cone*)((bocal->next)->data))->height1 = size / 2;
 	((t_cone*)((bocal->next)->data))->angle = tan(RAD(60));
 	bocal->next->cmp_start = bocal;
 	obj = add_cylinder(obj);
@@ -90,4 +90,23 @@ void			add_color_bocal(t_object *bocal, SDL_Color color)
 		amount++;
 		tmp = tmp->next;
 	}
+}
+
+void set_bocal_origin(t_object *bocal, t_vec center)
+{
+	t_object *tmp;
+
+	tmp = bocal->cmp_start;
+	tmp->center = (t_vec) {center.x, center.y - 10.0, center.z};
+	((t_plane*)(tmp->data))->radius = 10.0 / 2;
+	tmp = tmp->next;
+	tmp->center = center;
+	((t_cone*)((tmp)->data))->height1 = 0.0;
+	((t_cone*)((tmp)->data))->height2 = 10.0 / 2;
+	((t_cone*)((tmp)->data))->angle = tan(RAD(60));
+	tmp = tmp->next;
+	tmp->center = center;
+	tmp->normal = (t_vec) {0.0, -1.0, 0.0};
+	((t_cylinder*)((tmp)->data))->height = 10.0;
+	((t_cylinder*)((tmp)->data))->radius = 10.0 / 50;
 }

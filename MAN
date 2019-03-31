@@ -1,0 +1,45 @@
+Version: 0.5 (alfa-test) 31.03.2019
+
+Add camera, object, light after '#'.
+
+Camera have position. Rotation can be missed(default angle_x: 0, angle_y: 0). 
+
+Put '#' in single line, after type in new line name of object(primitive or light or camera) with ":".
+Than in new line after one tabulation put name of parameter, ":" and data divided by 'space'.
+
+!!If you miss some object/parameter or make mistake in syntax, program will fill it by default values!!
+!!Undefined behaviour: put light spot on object surface!!
+!!Undefined behaviour: put view of camera on object surface!!
+!!Undefined behaviour: !!
+
+Objects and parameters:
+1. CAMERA: position, angle_x, angle_y
+2. Lights:
+  -AMBIENT: intensivity;                     --- ambient light
+  -POINT: intensivity, position;             --- spot light
+  -DIRECT: intensivity, rotation;            --- directional light
+  -PARALLEL: intensivity, rotation, angle    --- parallel light
+3. Primitive:
+  -PLANE: center, rotation, color, reflective, specular, slice;
+  -SPHERE: center, radius, color, reflective, specular, slice;
+  -CYLINDER: center, rotation, radius, color, reflective, specular, slice;
+  -CONE: center, rotation, angle, color, reflective, specular, slice;
+  -BOCAL: center, rotation, color, reflective, specular, slice.
+
+To add slice type: slice: own origin: 0 0 0 axis: 0 1 0
+Only one slice is accepted
+
+Exemple:
+#
+POINT:
+	position: -4 8 -3
+	intensivity: 0.7
+#
+PLANE:
+	color: 121 110 122
+	rotation: 0 0 7
+#
+CAMERA:
+	position: -4 7 -15
+	angle_y: 20
+	angle_x: -10

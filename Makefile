@@ -33,7 +33,8 @@ MAIN_SRC = main.c \
 			slice.c \
 			light_objects.c \
 			get_bocal.c \
-			event.c
+			event.c \
+			sl.c
 
 MAIN_SRC_LIST = $(addprefix $(MAIN_DIR)/, $(MAIN_SRC))
 #-------------------------------------------------------------------------------

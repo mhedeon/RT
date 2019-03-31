@@ -6,7 +6,7 @@
 /*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/29 20:38:49 by ikoloshy          #+#    #+#             */
-/*   Updated: 2019/03/31 18:02:07 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/03/31 18:38:45 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,12 +41,12 @@ void			translate_bocal(t_object *bocal, t_vec origin)
 
 	if (!(current = bocal->cmp_start))
 		return ;
-	current->center = (t_vec) {current->center.x + origin.x, current->center.y + origin.y,
-							current->center.z + origin.z};
+	current->center = (t_vec) {current->center.x + origin.x, current->center.y +
+										origin.y, current->center.z + origin.z};
 	current = current->next;
-	current->center = (t_vec) {current->center.x + origin.x, current->center.y + origin.y,
-										current->center.z + origin.z};
+	current->center = (t_vec) {current->center.x + origin.x, current->center.y +
+										origin.y, current->center.z + origin.z};
 	current = current->next;
-	current->center = (t_vec) {current->center.x + origin.x, current->center.y + origin.y,
-									current->center.z + origin.z};
+	current->center = (t_vec) {current->center.x + origin.x, current->center.y +
+										origin.y, current->center.z + origin.z};
 }

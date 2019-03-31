@@ -6,7 +6,7 @@
 /*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/22 15:59:02 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/03/31 18:22:39 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/03/31 19:07:55 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,9 +32,7 @@ int			check_struct(t_rt *rt, char *line)
 		rt->light = add_direct(rt->light);
 	else if (!ft_strcmp(line, "PARALLEL:"))
 		rt->light = add_parallel(rt->light);
-	else if (!ft_strcmp(line, "CAMERA:"))
-		;
-	else
+	else if (ft_strcmp(line, "CAMERA:"))
 	{
 		free(line);
 		return (0);
@@ -51,9 +49,11 @@ int			check_option_bocal(t_object *bocal, char *line)
 	else if (!ft_strncmp(line + 1, "color:", 6))
 		add_color_bocal(bocal, read_color(line));
 	else if (!ft_strncmp(line + 1, "specular:", 9))
-		add_specular_bocal(bocal, read_number(line) < 2 ? 2 : read_number(line));
+		add_specular_bocal(bocal, read_number(line) < 2 ? 2 :
+															read_number(line));
 	else if (!ft_strncmp(line + 1, "reflective:", 11))
-		add_reflective_bocal(bocal, read_number(line) < 2 ? 2 : read_number(line));
+		add_reflective_bocal(bocal, read_number(line) < 2 ? 2 :
+															read_number(line));
 	else
 		return (0);
 	return (1);

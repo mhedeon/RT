@@ -6,7 +6,7 @@
 /*   By: mhedeon <mhedeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/11 16:08:48 by mhedeon           #+#    #+#             */
-/*   Updated: 2019/03/31 18:09:32 by mhedeon          ###   ########.fr       */
+/*   Updated: 2019/03/31 19:09:26 by mhedeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -209,7 +209,6 @@ t_object			*add_bocal(t_object *obj, t_vec center, double size);
 void				add_specular_bocal(t_object *bocal, double specular);
 void				add_reflective_bocal(t_object *bocal, double reflective);
 void				add_color_bocal(t_object *bocal, SDL_Color color);
-void set_bocal_origin(t_object *bocal, t_vec center);
 
 /*
 ** get_bocal.c
@@ -221,8 +220,8 @@ SDL_Color			get_bocal_color(t_object *bocal);
 /*
 **	rot_composed.c
 */
-void			rotation_bocal(t_object *bocal, t_vec rot);
-void			translate_bocal(t_object *bocal, t_vec origin);
+void				rotation_bocal(t_object *bocal, t_vec rot);
+void				translate_bocal(t_object *bocal, t_vec origin);
 
 /*
 **	camera.c
@@ -309,7 +308,7 @@ SDL_Color			read_color(char *line);
 t_vec				read_vec(char *line);
 double				read_number(char *line);
 t_vec				read_rot(t_object *obj, char *line);
-t_slice *read_slice(t_object *obj, char *line);
+t_slice				*read_slice(t_object *obj, char *line);
 
 /*
 **	scene.c
@@ -318,7 +317,7 @@ int					check_struct(t_rt *rt, char *line);
 int					check_option_o2(t_object *tmp, char *line);
 int					check_option_o(t_object *tmp, char *line);
 void				get_data(t_rt *rt, char *name);
-int			check_option_bocal(t_object *bocal, char *line);
+int					check_option_bocal(t_object *bocal, char *line);
 
 /*
 **	trace.c
